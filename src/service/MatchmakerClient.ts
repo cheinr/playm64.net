@@ -1,7 +1,7 @@
 import GameServerClient from './GameServerClient';
 
 
-interface GameRoomInfo {
+export interface GameRoomInfo {
   gameRoomId: string;
 }
 

@@ -5,6 +5,7 @@ import { Dispatch } from 'redux';
 
 import RomUploadContainer from './containers/RomUploadContainer';
 import PlayModeSelectContainer from './containers/PlayModeSelectContainer';
+import GameRoomOverviewContainer from './containers/GameRoomOverviewContainer';
 import { RootState } from './redux/reducers';
 
 const mapStateToProps = (state: RootState) => ({
@@ -32,10 +33,15 @@ function App(props: AppProps) {
       <i className="fa fa-upload" aria-hidden="true" />
       <header className="App-header">
 
+        {(props.uiState === 0) &&
+          < RomUploadContainer />}
 
-        <RomUploadContainer />
+        {(props.uiState === 1 || props.uiState === 2)
+          && <PlayModeSelectContainer />}
 
-        {props.uiState === 1 && <PlayModeSelectContainer />}
+        {(props.uiState === 4 || props.uiState === 5)
+          && <GameRoomOverviewContainer />}
+
 
       </header>
     </div>
