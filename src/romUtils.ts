@@ -1,17 +1,11 @@
 
 function getRomHeaderFirstWord(romData: ArrayBuffer): number {
-
-  return new DataView(romData).getUint32(0);
-  
+  return new DataView(romData).getUint32(0);  
 }
 
 export function getRomShortName(romData: ArrayBuffer): string {
 
-
-  console.log(getRomHeaderFirstWord(romData).toString(16));
-
   const romHeaderHex = getRomHeaderFirstWord(romData).toString(16);
-
 
   const view = new Uint8Array(romData);
   const shortNameData = view.slice(32, 48);

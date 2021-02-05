@@ -20,6 +20,8 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-redux": "^7.1.16",
     "@types/redux": "^3.6.0",
+    "@types/webrtc": "0.0.26",
+    "@types/websocket": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
     "babel-eslint": "^10.1.0",
@@ -162,5 +164,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "http-proxy-middleware": "^1.0.6"
   }
 }
