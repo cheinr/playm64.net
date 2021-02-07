@@ -26,9 +26,10 @@ class MatchmakerClient {
   private onGameRoomCreateResponse: Function | null = null;
 
   // TODO - types
-  rtcConnection?: RTCPeerConnection;
-  rtcReliableChannel?: RTCDataChannel;
-  rtcUnreliableChannel?: RTCDataChannel;
+  private rtcConnection?: RTCPeerConnection;
+  private rtcRoomControlChannel?: RTCDataChannel;
+  private rtcReliableChannel?: RTCDataChannel;
+  private rtcUnreliableChannel?: RTCDataChannel;
 
   activeGameServerClient?: GameServerClient;
   requestCount: number = 0;
@@ -219,13 +220,13 @@ class MatchmakerClient {
 
   }
 
-  async joinGame(alias: string, gameId: string) {
+  async joinGame(alias: string, gameId: string): Promise<GameServerClient> {
 
     if (this.rtcConnection) {
       throw 'Attempted to join multiple games at once';
     }
 
-    const gameJoinConnectionPromise = new Promise((resolve, reject) => {
+    const gameJoinConnectionPromise = new Promise<GameServerClient>((resolve, reject) => {
       this.gameConnectionListeners.push(resolve);
       this.gameConnectRejectionListeners.push(reject);
     });
@@ -242,11 +243,24 @@ class MatchmakerClient {
       });
 
       serverRTCConnection.ondatachannel = (event) => {
-        console.log('unreliable data channel assigned!');
 
-        this.rtcUnreliableChannel = event.channel;
+        const channel = event.channel;
 
-        this.rtcUnreliableChannel.binaryType = 'arraybuffer';
+        if (channel.label === 'room-control') {
+
+          console.log('room control channel assigned!');
+          this.rtcRoomControlChannel = channel;
+
+        } else if (channel.label === 'unreliable') {
+
+          console.log('unreliable data channel assigned!');
+          this.rtcUnreliableChannel = channel;
+          this.rtcUnreliableChannel.binaryType = 'arraybuffer';
+
+        } else {
+          console.error("Invalid channel created: %s", channel.label);
+        }
+
 
         console.log('Waiting for data channels to connect');
         this._waitForChannelsToBeReady().then(() => {
@@ -370,6 +384,7 @@ class MatchmakerClient {
 
   _onGameServerClientConnected(gameRoomId: string) {
 
+    const rtcRoomControlChannel = this.rtcRoomControlChannel;
     const rtcReliableChannel = this.rtcReliableChannel;
     const rtcUnreliableChannel = this.rtcUnreliableChannel;
 
@@ -379,6 +394,7 @@ class MatchmakerClient {
     }
 
     const gameServerClient = new GameServerClient(gameRoomId,
+      rtcRoomControlChannel,
       rtcReliableChannel,
       rtcUnreliableChannel);
 

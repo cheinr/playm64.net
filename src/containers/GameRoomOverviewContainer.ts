@@ -14,7 +14,8 @@ type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 const mapStateToProps = (state: RootState) => ({
   gameRoomId: state.gameRoomId,
   joinGameRoomInput: state.joinGameRoomInput,
-  romShortName: state.selectedRomShortName
+  romShortName: state.selectedRomShortName,
+  gameRoomPlayerInfo: state.roomPlayerInfo
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({

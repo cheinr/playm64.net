@@ -1,4 +1,12 @@
-import { SET_SELECTED_ROM_DATA, SET_UI_STATE, SET_GAME_ROOM_ID, SET_JOIN_GAME_ROOM_INPUT } from './actions';
+import {
+  SET_ALIAS,
+  SET_SELECTED_ROM_DATA,
+  SET_UI_STATE,
+  SET_GAME_ROOM_ID,
+  SET_JOIN_GAME_ROOM_INPUT,
+  SET_ROOM_PLAYER_INFO
+} from './actions';
+
 import { getRomShortName } from '../romUtils';
 
 export enum UI_STATE {
@@ -11,11 +19,13 @@ export enum UI_STATE {
 }
 
 const initialState = {
+  alias: '',
   uiState: UI_STATE.PENDING_ROM_LOAD,
   selectedRomData: null,
   selectedRomShortName: null,
   joinGameRoomInput: '',
   gameRoomId: null,
+  roomPlayerInfo: null
 };
 
 
@@ -44,6 +54,16 @@ export default function appReducer(state: any, action: any) {
     case SET_JOIN_GAME_ROOM_INPUT:
       return Object.assign({}, state, {
         joinGameRoomInput: action.joinGameRoomInput
+      });
+
+    case SET_ROOM_PLAYER_INFO:
+      return Object.assign({}, state, {
+        roomPlayerInfo: action.roomPlayerInfo
+      });
+
+    case SET_ALIAS:
+      return Object.assign({}, state, {
+        alias: action.alias
       });
   }
 

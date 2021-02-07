@@ -1,9 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGamepad, faTv } from '@fortawesome/free-solid-svg-icons';
+import { faTv } from '@fortawesome/free-solid-svg-icons';
 
 import { GameRoomOverviewProps } from '../containers/GameRoomOverviewContainer';
+import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
 
 const GameRoomOverviewComponent = (props: GameRoomOverviewProps) => {
+
+  const players = props.gameRoomPlayerInfo
+    ? props.gameRoomPlayerInfo.playerNames
+    : [];
+
+  const gamePads = players.map((playerName: string) => {
+    return (<GamePadDisplayContainer playerName={playerName} />);
+  });
 
   return (
     <div>
@@ -14,14 +23,12 @@ const GameRoomOverviewComponent = (props: GameRoomOverviewProps) => {
       <div>
         <FontAwesomeIcon icon={faTv} size="10x" />
       </div>
-      <FontAwesomeIcon icon={faGamepad} size="4x" />
-    &nbsp;
-      <FontAwesomeIcon icon={faGamepad} size="4x" />
-    &nbsp;
-      <FontAwesomeIcon icon={faGamepad} size="4x" />
-    &nbsp;
-      <FontAwesomeIcon icon={faGamepad} size="4x" />
+
+      {gamePads}
+
     </div>
+
+
   );
 };
 
