@@ -242,6 +242,11 @@ class MatchmakerClient {
         iceServers
       });
 
+      const serverReliableChannel = serverRTCConnection.createDataChannel('reliable');
+      serverReliableChannel.binaryType = 'arraybuffer';
+
+      this.rtcReliableChannel = serverReliableChannel;
+
       serverRTCConnection.ondatachannel = (event) => {
 
         const channel = event.channel;
@@ -261,21 +266,20 @@ class MatchmakerClient {
           console.error("Invalid channel created: %s", channel.label);
         }
 
+        if (this.rtcReliableChannel
+          && this.rtcUnreliableChannel
+          && this.rtcRoomControlChannel) {
 
-        console.log('Waiting for data channels to connect');
-        this._waitForChannelsToBeReady().then(() => {
-          console.log('Channels ready; connection is complete');
-          this._onGameServerClientConnected(gameId);
-        }).catch((err) => {
-          console.error('Something went wrong while waiting for rtc channels to become ready: ', err);
-        });
-
+          console.log('Waiting for data channels to connect');
+          this._waitForChannelsToBeReady().then(() => {
+            console.log('Channels ready; connection is complete');
+            this._onGameServerClientConnected(gameId);
+          }).catch((err) => {
+            console.error('Something went wrong while waiting for rtc channels to become ready: ', err);
+          });
+        }
       };
 
-      const serverReliableChannel = serverRTCConnection.createDataChannel('reliable');
-      serverReliableChannel.binaryType = 'arraybuffer';
-
-      this.rtcReliableChannel = serverReliableChannel;
 
       setTimeout(() => {
         console.log(serverRTCConnection);
@@ -337,47 +341,62 @@ class MatchmakerClient {
     return gameJoinConnectionPromise;
   }
 
-  _waitForChannelsToBeReady() {
+  private allChannelsAreConnected(): boolean {
+    if (!this.rtcReliableChannel
+      || !this.rtcUnreliableChannel
+      || !this.rtcRoomControlChannel) {
+
+      throw "invalid state: expected all channels to at least be present";
+    }
+
+    return this.rtcReliableChannel.readyState === 'open'
+      && this.rtcUnreliableChannel.readyState === 'open'
+      && this.rtcRoomControlChannel.readyState === 'open';
+  }
+
+  private _waitForChannelsToBeReady(): Promise<void> {
 
     return new Promise<void>((resolve, reject) => {
-      if (!this.rtcReliableChannel || !this.rtcUnreliableChannel) {
-        reject("invalid state: expected both channels to be present");
-        throw "invalid state: expected both channels to be present";
+
+      if (!this.rtcReliableChannel
+        || !this.rtcUnreliableChannel
+        || !this.rtcRoomControlChannel) {
+
+        throw "invalid state: expected all channels to at least be present";
       }
 
-      // What?
-      if (this.rtcUnreliableChannel) {
 
-        if (this.rtcReliableChannel.readyState === 'closed'
-          || this.rtcUnreliableChannel.readyState === 'closed') {
-          reject('Failed while waiting for data channels to open, as at least on of them is closed');
-        }
+      if (this.rtcReliableChannel.readyState === 'closed'
+        || this.rtcUnreliableChannel.readyState === 'closed'
+        || this.rtcRoomControlChannel.readyState === 'closed') {
 
-        if (this.rtcReliableChannel.readyState === 'open'
-          && this.rtcUnreliableChannel.readyState === 'open') {
-          resolve();
-        }
+        reject('Failed while waiting for data channels to open, as at least on of them is closed');
       }
 
-      this.rtcReliableChannel.onopen = () => {
-        if (this.rtcUnreliableChannel && this.rtcUnreliableChannel.readyState === 'open') {
+      if (this.rtcReliableChannel.readyState === 'open'
+        && this.rtcUnreliableChannel.readyState === 'open'
+        && this.rtcRoomControlChannel.readyState === 'open') {
+
+        resolve();
+      }
+
+      const onChannelOpen = () => {
+        if (this.allChannelsAreConnected()) {
           resolve();
         }
       };
 
-      this.rtcReliableChannel.onclose = () => {
-        reject('Reliable data channel failed to connect');
-      };
+      this.rtcReliableChannel.onopen = onChannelOpen;
+      this.rtcUnreliableChannel.onopen = onChannelOpen;
+      this.rtcRoomControlChannel.onopen = onChannelOpen;
 
-      this.rtcUnreliableChannel.onopen = () => {
-        if (this.rtcReliableChannel && this.rtcReliableChannel.readyState === 'open') {
-          resolve();
-        }
-      };
+      const onChannelClose = () => {
+        reject('A channel closed while we were waiting for them to become ready');
+      }
 
-      this.rtcUnreliableChannel.onclose = () => {
-        reject('Unreliable data channel failed to connect');
-      };
+      this.rtcReliableChannel.onclose = onChannelClose;
+      this.rtcUnreliableChannel.onclose = onChannelClose;
+      this.rtcRoomControlChannel.onclose = onChannelClose;
 
     });
   }
