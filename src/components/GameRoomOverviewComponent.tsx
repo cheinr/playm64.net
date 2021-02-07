@@ -10,8 +10,8 @@ const GameRoomOverviewComponent = (props: GameRoomOverviewProps) => {
     ? props.gameRoomPlayerInfo.playerNames
     : [];
 
-  const gamePads = players.map((playerName: string) => {
-    return (<GamePadDisplayContainer playerName={playerName} />);
+  const gamePads = players.map((playerName: string, index: number) => {
+    return (<GamePadDisplayContainer playerName={playerName} key={`GamePadDisplayContainer-${index}`} />);
   });
 
   return (

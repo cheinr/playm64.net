@@ -22,6 +22,10 @@ class GameServerClient {
       console.log('Reliable channel closed');
       //if (onDisconnect) onDisconnect();
     };
+
+    this.rtcRoomControlChannel.send(JSON.stringify({
+      type: 'init'
+    }));
   }
 
   public onRoomPlayerInfoUpdate(cb: Function): void {

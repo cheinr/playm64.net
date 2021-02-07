@@ -189,7 +189,6 @@ class MatchmakerClient {
     };
   }
 
-
   async createGameRoom(romSimpleName: string,
     serverRegion: string): Promise<GameRoomInfo> {
 
