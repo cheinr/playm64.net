@@ -18,6 +18,8 @@ export const SET_UI_STATE = 'SET_UI_STATE';
 export const SET_GAME_ROOM_ID = 'SET_GAME_ROOM_ID';
 export const SET_JOIN_GAME_ROOM_INPUT = 'SET_JOIN_GAME_ROOM_INPUT';
 export const SET_ROOM_PLAYER_INFO = 'SET_ROOM_PLAYER_INFO';
+export const SET_GAME_SERVER_CONNECTION = 'SET_GAME_SERVER_CONNECTION';
+export const START_GAME = 'START_GAME';
 
 export function setUiState(uiState: UI_STATE) {
   return { type: 'SET_UI_STATE', state: uiState };
@@ -25,6 +27,20 @@ export function setUiState(uiState: UI_STATE) {
 
 export function setSelectedROMData(romData: ArrayBuffer) {
   return { type: 'SET_SELECTED_ROM_DATA', data: romData };
+}
+
+export function requestGameStart() {
+  return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+
+    const gameServerConnection: GameServerClient = getState()
+      .gameServerConnection;
+
+    if (gameServerConnection) {
+      gameServerConnection.requestGameStart();
+    } else {
+      console.error("requestGameStart called but no gameServerClient is present");
+    }
+  }
 }
 
 export function createGameRoom() {
@@ -64,6 +80,7 @@ export function joinGameRoom(gameRoomId: string) {
       console.log("Finished joining game room: %o", gameServerClient);
 
       dispatch(setUiState(UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION));
+      dispatch(setGameServerConnection(gameServerClient));
 
       gameServerClient.onRoomPlayerInfoUpdate((roomPlayerInfo: any) => {
         dispatch(setRoomPlayerInfo(roomPlayerInfo));
@@ -71,6 +88,10 @@ export function joinGameRoom(gameRoomId: string) {
       //dispatch(setGameRoomClient(gameServerClient));
     });
   };
+}
+
+export function setGameServerConnection(gameServerConnection: GameServerClient) {
+  return { type: SET_GAME_SERVER_CONNECTION, gameServerConnection };
 }
 
 export function setRoomPlayerInfo(roomPlayerInfo: any) {

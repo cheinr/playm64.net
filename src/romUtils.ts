@@ -1,6 +1,6 @@
 
 function getRomHeaderFirstWord(romData: ArrayBuffer): number {
-  return new DataView(romData).getUint32(0);  
+  return new DataView(romData).getUint32(0);
 }
 
 export function getRomShortName(romData: ArrayBuffer): string {
@@ -17,7 +17,7 @@ export function getRomShortName(romData: ArrayBuffer): string {
     bigEndianData = shortNameData;
 
   } else if (romHeaderHex === "37804012") { // byte swapped
-    
+
     const inDataView = new DataView(shortNameData.buffer);
     const outDataView = new DataView(bigEndianData);
 
@@ -25,12 +25,12 @@ export function getRomShortName(romData: ArrayBuffer): string {
 
       outDataView.setUint16(i * 2, inDataView.getUint16(i * 2, true));
     }
-    
+
   } else if (romHeaderHex === "40123780") { // little endian
 
     const inDataView = new DataView(shortNameData.buffer);
     const outDataView = new DataView(bigEndianData);
-    
+
     for (let i = 0; i < 4; i++) {
 
       outDataView.setUint32(i * 4, inDataView.getUint32(i * 4, true));
@@ -40,11 +40,13 @@ export function getRomShortName(romData: ArrayBuffer): string {
   }
 
   const bigEndianBytes = new Uint8Array(bigEndianData);
-  
+
   let shortName = '';
   for (let i = 0; i < bigEndianBytes.length; i++) {
     shortName += String.fromCharCode(bigEndianBytes[i]);
   }
+
+  console.log("after load: %o", getRomHeaderFirstWord(romData).toString(16));
 
   return shortName;
 }

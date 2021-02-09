@@ -1,3 +1,4 @@
+import { Store } from 'redux';
 import GameServerClient from './GameServerClient';
 
 
@@ -31,6 +32,8 @@ class MatchmakerClient {
   private rtcReliableChannel?: RTCDataChannel;
   private rtcUnreliableChannel?: RTCDataChannel;
 
+  private uiStore?: Store;
+
   activeGameServerClient?: GameServerClient;
   requestCount: number = 0;
 
@@ -41,6 +44,10 @@ class MatchmakerClient {
     // TODO - local connection
     //this.socketEndpoint = "wss://yqet5adtzg.execute-api.us-west-2.amazonaws.com/dev";
     this.socketEndpoint = matchmakingServiceEndpoint;
+  }
+
+  public setUiStore(uiStore: Store): void {
+    this.uiStore = uiStore;
   }
 
   addGameConnectionListener(cb: Function) {
@@ -411,10 +418,15 @@ class MatchmakerClient {
       throw 'FATAL: _onGameServerClientConnected called before data channels are ready';
     }
 
+    if (!this.uiStore) {
+      throw 'FATAL: uiStore should be set before any connection are being made';
+    }
+
     const gameServerClient = new GameServerClient(gameRoomId,
       rtcRoomControlChannel,
       rtcReliableChannel,
-      rtcUnreliableChannel);
+      rtcUnreliableChannel,
+      this.uiStore);
 
     this.gameConnectionListeners.forEach((cb) => cb(gameServerClient));
 

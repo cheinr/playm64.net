@@ -5,30 +5,11 @@ import { GameRoomOverviewProps } from '../containers/GameRoomOverviewContainer';
 import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
 
 const GameRoomOverviewComponent = (props: GameRoomOverviewProps) => {
-
-  const players = props.gameRoomPlayerInfo
-    ? props.gameRoomPlayerInfo.playerNames
-    : [];
-
-  const gamePads = players.map((playerName: string, index: number) => {
-    return (<GamePadDisplayContainer playerName={playerName} key={`GamePadDisplayContainer-${index}`} />);
-  });
-
   return (
     <div>
-
       <h4>Playing "{props.romShortName}"</h4>
       <h5>Join Code: {props.gameRoomId}</h5>
-
-      <div>
-        <FontAwesomeIcon icon={faTv} size="10x" />
-      </div>
-
-      {gamePads}
-
-    </div>
-
-
+    </div >
   );
 };
 

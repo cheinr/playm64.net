@@ -6,6 +6,9 @@ import { Dispatch } from 'redux';
 import RomUploadContainer from './containers/RomUploadContainer';
 import PlayModeSelectContainer from './containers/PlayModeSelectContainer';
 import GameRoomOverviewContainer from './containers/GameRoomOverviewContainer';
+import GameRoomPlayerInfoContainer from './containers/GameRoomPlayerInfoContainer';
+import Mupen64PlusEmuContainer from './containers/Mupen64PlusEmuContainer';
+
 import { RootState } from './redux/reducers';
 
 const mapStateToProps = (state: RootState) => ({
@@ -24,7 +27,6 @@ const connector = connect(
 export type AppProps = ConnectedProps<typeof connector>;
 export default connector(App);
 
-
 function App(props: AppProps) {
 
   console.log("props: %o", props.uiState);
@@ -42,9 +44,17 @@ function App(props: AppProps) {
         {(props.uiState === 4 || props.uiState === 5)
           && <GameRoomOverviewContainer />}
 
+        <canvas className="emscripten" id="canvas" onContextMenu={(event) => event.preventDefault()}></canvas>
+
+        {(props.uiState === 3 || props.uiState === 5)
+          && <Mupen64PlusEmuContainer />}
+
+
+        {(props.uiState === 4 || props.uiState === 5)
+          && <GameRoomPlayerInfoContainer />}
 
       </header>
-    </div>
+    </div >
   );
 }
 

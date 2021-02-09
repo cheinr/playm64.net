@@ -4,7 +4,8 @@ import {
   SET_UI_STATE,
   SET_GAME_ROOM_ID,
   SET_JOIN_GAME_ROOM_INPUT,
-  SET_ROOM_PLAYER_INFO
+  SET_ROOM_PLAYER_INFO,
+  SET_GAME_SERVER_CONNECTION
 } from './actions';
 
 import { getRomShortName } from '../romUtils';
@@ -25,7 +26,8 @@ const initialState = {
   selectedRomShortName: null,
   joinGameRoomInput: '',
   gameRoomId: null,
-  roomPlayerInfo: null
+  roomPlayerInfo: null,
+  gameServerConnection: null
 };
 
 
@@ -65,6 +67,12 @@ export default function appReducer(state: any, action: any) {
       return Object.assign({}, state, {
         alias: action.alias
       });
+
+    case SET_GAME_SERVER_CONNECTION:
+      return Object.assign({}, state, {
+        gameServerConnection: action.gameServerConnection
+      });
+
   }
 
   return initialState;
