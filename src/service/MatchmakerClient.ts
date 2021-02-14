@@ -37,6 +37,9 @@ class MatchmakerClient {
   activeGameServerClient?: GameServerClient;
   requestCount: number = 0;
 
+  private remoteDescriptionSet = false;
+  private pendingIceCandidates: RTCIceCandidate[] = [];
+
   constructor(matchmakingServiceEndpoint: string) {
 
     const location = window.location;
@@ -112,6 +115,7 @@ class MatchmakerClient {
           if (message.type === 'identity-confirm') {
             this.token = message.payload.token;
             resolve();
+            return;
           }
 
           this._handleMessage(message);
@@ -169,6 +173,12 @@ class MatchmakerClient {
           usernameFragment: c.usernameFragment
         };
         if (this.rtcConnection) {
+
+          if (!this.remoteDescriptionSet) {
+            this.pendingIceCandidates.push(new RTCIceCandidate(iceCandidate));
+            return;
+          }
+
           this.rtcConnection.addIceCandidate(
             new RTCIceCandidate(iceCandidate)
           ).then(() => {
@@ -180,7 +190,24 @@ class MatchmakerClient {
       case 'wrtc-answer':
         if (this.rtcConnection) {
           console.log('wrtc-answer');
-          this.rtcConnection.setRemoteDescription(message.payload.sdpAnswer);
+          this.rtcConnection.setRemoteDescription(message.payload.sdpAnswer)
+            .then(() => {
+
+              this.remoteDescriptionSet = true;
+
+              this.pendingIceCandidates.forEach((iceCandidate) => {
+                if (!this.rtcConnection) {
+                  return;
+                }
+
+                this.rtcConnection.addIceCandidate(
+                  iceCandidate
+                ).then(() => {
+                  console.log('ice candidate successfully added');
+                }).catch(this._errorHandler('AddIceCandidate'));
+
+              });
+            });
         }
         break;
 
@@ -298,7 +325,8 @@ class MatchmakerClient {
         }
 
         console.log(event);
-        if (event.candidate) {
+        if (event.candidate && event.candidate.candidate) {
+
 
           this.requestCount++;
           console.log("Matchmaker RequestCount increased: ", this.requestCount);
