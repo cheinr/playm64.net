@@ -44,7 +44,6 @@ function App(props: AppProps) {
         {(props.uiState === 4 || props.uiState === 5)
           && <GameRoomOverviewContainer />}
 
-        <canvas className="emscripten" id="canvas" onContextMenu={(event) => event.preventDefault()}></canvas>
 
         {(props.uiState === 3 || props.uiState === 5)
           && <Mupen64PlusEmuContainer />}
