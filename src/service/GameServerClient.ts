@@ -1,10 +1,9 @@
 import pako from 'pako';
 
-import { setUiState } from "../redux/actions";
+import { setUiState, setPing } from "../redux/actions";
 import { UI_STATE } from "../redux/reducers";
 
 import createMupen64PlusWeb from 'mupen64plus-web';
-//import { Store } from "redux";
 
 
 export interface BinaryRTCDataChannel {
@@ -76,6 +75,8 @@ class CompressedBinaryRTCChannelWrapper implements BinaryRTCDataChannel {
   }
 }
 
+const NUMBER_OF_PINGS_PER_CHECK = 5;
+const PING_CHECK_INTERVAL_MILLIS = 60000;
 
 class GameServerClient {
 
@@ -89,6 +90,7 @@ class GameServerClient {
   private gameStarted = false;
 
   private readonly roomPlayerInfoUpdateListeners: Function[] = [];
+  private readonly pingDataPoints: number[] = [];
 
   constructor(gameRoomId: string, rtcRoomControlChannel: any, rtcReliableChannel: any, rtcUnreliableChannel: any, uiStore: any) {
     this.gameRoomId = gameRoomId;
@@ -100,6 +102,11 @@ class GameServerClient {
     this.uiStore = uiStore;
 
     this.rtcRoomControlChannel.onmessage = this.handleRoomControlMessage.bind(this);
+
+    this.checkPing();
+    setInterval(() => {
+      this.checkPing();
+    }, PING_CHECK_INTERVAL_MILLIS);
 
     //TODO - should this be handled by the matchmaker client?
     this.rtcReliableChannel.onclose = () => {
@@ -122,6 +129,38 @@ class GameServerClient {
     }));
   }
 
+  private checkPing(): void {
+    for (let i = 0; i < NUMBER_OF_PINGS_PER_CHECK; i++) {
+      setTimeout(() => this.sendPing(), i * 1000);
+    }
+  }
+
+  private sendPing(): void {
+    this.rtcRoomControlChannel.send(JSON.stringify({
+      type: 'ping',
+      payload: {
+        sendTime: Date.now()
+      }
+    }));
+  }
+
+  private handlePong(pingSendTime: number): void {
+    const ping = Date.now() - pingSendTime;
+    this.pingDataPoints.push(ping);
+
+    while (this.pingDataPoints.length > NUMBER_OF_PINGS_PER_CHECK) {
+      this.pingDataPoints.splice(0, 1);
+    }
+
+    const pingSum = this.pingDataPoints.reduce((previousValue: number, currentValue: number) => {
+      return previousValue + currentValue;
+    });
+
+    const pingAverage = Math.round(pingSum / this.pingDataPoints.length);
+
+    this.uiStore.dispatch(setPing(pingAverage));
+  }
+
   private handleRoomControlMessage(event: any): void {
 
     console.log("Received Room Control message: %o", event);
@@ -129,6 +168,11 @@ class GameServerClient {
     const message = JSON.parse(event.data);
 
     switch (message.type) {
+
+      case 'pong':
+        this.handlePong(message.payload.t);
+        break;
+
       case 'room-player-info':
 
         const roomPlayerInfo = message.payload;

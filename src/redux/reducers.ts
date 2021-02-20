@@ -5,7 +5,8 @@ import {
   SET_GAME_ROOM_ID,
   SET_JOIN_GAME_ROOM_INPUT,
   SET_ROOM_PLAYER_INFO,
-  SET_GAME_SERVER_CONNECTION
+  SET_GAME_SERVER_CONNECTION,
+  SET_PING
 } from './actions';
 
 import { getRomShortName } from '../romUtils';
@@ -27,7 +28,8 @@ const initialState = {
   joinGameRoomInput: '',
   gameRoomId: null,
   roomPlayerInfo: null,
-  gameServerConnection: null
+  gameServerConnection: null,
+  ping: 0
 };
 
 
@@ -73,6 +75,10 @@ export default function appReducer(state: any, action: any) {
         gameServerConnection: action.gameServerConnection
       });
 
+    case SET_PING:
+      return Object.assign({}, state, {
+        ping: action.ping
+      });
   }
 
   return initialState;

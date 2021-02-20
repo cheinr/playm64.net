@@ -19,6 +19,7 @@ export const SET_GAME_ROOM_ID = 'SET_GAME_ROOM_ID';
 export const SET_JOIN_GAME_ROOM_INPUT = 'SET_JOIN_GAME_ROOM_INPUT';
 export const SET_ROOM_PLAYER_INFO = 'SET_ROOM_PLAYER_INFO';
 export const SET_GAME_SERVER_CONNECTION = 'SET_GAME_SERVER_CONNECTION';
+export const SET_PING = 'SET_PING';
 export const START_GAME = 'START_GAME';
 
 export function setUiState(uiState: UI_STATE) {
@@ -108,4 +109,8 @@ export function setJoinGameRoomInput(joinGameRoomInput: string) {
 
 export function setAlias(alias: string) {
   return { type: SET_ALIAS, alias };
+}
+
+export function setPing(ping: number) {
+  return { type: SET_PING, ping };
 }

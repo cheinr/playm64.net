@@ -17,6 +17,12 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
   return (
     <div>
 
+      <div>
+        <small>
+          ping: {(props.ping)}
+        </small>
+      </div>
+
       {gamePads}
 
       {

@@ -14,7 +14,8 @@ type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 const mapStateToProps = (state: RootState) => ({
   gameRoomPlayerInfo: state.roomPlayerInfo,
   // TODO - Remove assumption player 0 is the host
-  localPlayerIsHost: state.roomPlayerInfo?.clientPlayerId === 0
+  localPlayerIsHost: state.roomPlayerInfo?.clientPlayerId === 0,
+  ping: state.ping
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
