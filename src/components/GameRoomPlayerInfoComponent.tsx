@@ -23,12 +23,14 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
         </small>
       </div>
 
-      {gamePads}
+      <div id="gamepads">
+        {gamePads}
+      </div>
 
       {
         props.localPlayerIsHost && (
           <div>
-            <button onClick={props.onStartGameClick}>
+            <button name="startGameButton" onClick={props.onStartGameClick}>
               Start Game
             </button>
           </div>

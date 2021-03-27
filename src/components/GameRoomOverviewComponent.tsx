@@ -8,7 +8,7 @@ const GameRoomOverviewComponent = (props: GameRoomOverviewProps) => {
   return (
     <div>
       <h4>Playing "{props.romShortName}"</h4>
-      <h5>Join Code: {props.gameRoomId}</h5>
+      <h5 id="joinCode">Join Code: {props.gameRoomId}</h5>
     </div >
   );
 };

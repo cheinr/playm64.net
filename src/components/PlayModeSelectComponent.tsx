@@ -11,10 +11,11 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
       </div>
 
       <div>
-        <input value={props.alias} onChange={props.onAliasInputChange} placeholder="Enter an alias..."></input>
+        <input name="aliasInput" value={props.alias} onChange={props.onAliasInputChange} placeholder="Enter an alias..."></input>
       </div>
 
       <button
+        name="hostGameButton"
         onClick={() => props.createGameRoom()}
         disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}
       >
@@ -23,12 +24,12 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
       <p>- or -</p>
 
-      <input disabled={props.alias == ''}
+      <input name="joinCodeInput" disabled={props.alias == ''}
         value={props.joinGameRoomInput}
         onChange={props.onJoinGameRoomInputChange}>
       </input>
 
-      <button onClick={() => props.joinGame(props.joinGameRoomInput)}
+      <button name="joinGameButton" onClick={() => props.joinGame(props.joinGameRoomInput)}
         disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}>
         Join Game
       </button>

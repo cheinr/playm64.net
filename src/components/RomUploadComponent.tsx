@@ -8,7 +8,7 @@ const RomUploadComponent = (props: RomUploadProps) => {
   console.log('Rendering EditPanelComponent');
 
   return (
-    <div>
+    <div id="romUploadContainer">
       <Dropzone onDrop={acceptedFiles => props.onFileChange(acceptedFiles)}>
         {({ getRootProps, getInputProps }) => (
           <section>

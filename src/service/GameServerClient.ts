@@ -202,7 +202,7 @@ class GameServerClient {
           romData: uiState.selectedRomData,
           romPath: '/roms/tmp_rom_path',
           coreConfig: {
-            emuMode: 1
+            emuMode: 0
           },
           netplayConfig: {
             player: uiState.roomPlayerInfo.clientPlayerId + 1,
