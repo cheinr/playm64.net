@@ -5,7 +5,10 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import PlayModeSelectComponent from '../components/PlayModeSelectComponent';
 import { RootState } from '../redux/reducers';
-import { setAlias, createGameRoom, joinGameRoom, setJoinGameRoomInput } from '../redux/actions';
+import {
+  setAlias, createGameRoom, joinGameRoom, setJoinGameRoomInput,
+  startLocalGame
+} from '../redux/actions';
 import MatchmakerClient from '../service/MatchmakerClient';
 
 
@@ -17,8 +20,6 @@ const mapStateToProps = (state: RootState) => ({
   romShortName: state.selectedRomShortName,
   uiState: state.uiState,
   joinGameRoomInput: state.joinGameRoomInput,
-
-
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
@@ -33,6 +34,9 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   },
   onAliasInputChange: (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setAlias(event.target.value));
+  },
+  startLocalGame: () => {
+    dispatch(startLocalGame());
   }
 });
 

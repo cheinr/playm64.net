@@ -8,7 +8,6 @@ import { RootState } from '../redux/reducers';
 
 const mapStateToProps = (state: RootState) => {
   return {
-    playerId: state.roomPlayerInfo.clientPlayerId,
     gameServerConnection: state.gameServerConnection,
     selectedRomData: state.selectedRomData
   };

@@ -10,6 +10,14 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
       <div>
       </div>
 
+      <button
+        name="playLocalButton"
+        onClick={() => props.startLocalGame()}
+      >
+        Play Locally
+      </button>
+
+      <hr />
       <div>
         <input name="aliasInput" value={props.alias} onChange={props.onAliasInputChange} placeholder="Enter an alias..."></input>
       </div>

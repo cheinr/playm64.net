@@ -1,5 +1,7 @@
 import { Action, Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+import createMupen64PlusWeb from 'mupen64plus-web';
+
 import GameServerClient from "../service/GameServerClient";
 import MatchmakerClient from "../service/MatchmakerClient";
 
@@ -113,4 +115,37 @@ export function setAlias(alias: string) {
 
 export function setPing(ping: number) {
   return { type: SET_PING, ping };
+}
+
+export function startLocalGame() {
+  return (dispatch: Dispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+
+    dispatch(setUiState(UI_STATE.PLAYING_LOCAL_SESSION));
+
+    const state = getState();
+
+    setTimeout(() => {
+      createMupen64PlusWeb({
+        canvas: document.getElementById('canvas'),
+        romData: state.selectedRomData,
+        romPath: '/roms/tmp_rom_path',
+        coreConfig: {
+          emuMode: 0
+        },
+        locateFile: (path: string, prefix: string) => {
+
+          console.log("path: %o", path);
+          console.log("env: %o", process.env.PUBLIC_URL);
+
+          const publicURL = process.env.PUBLIC_URL;
+
+          if (path.endsWith('.wasm') || path.endsWith('.data')) {
+            return publicURL + "/dist/" + path;
+          }
+
+          return prefix + path;
+        }
+      });
+    });
+  }
 }

@@ -32,9 +32,6 @@ class Mupen64PlusEmuComponent extends React.Component {
     );
   }
 
-  //playerId: 1,
-  //gameServerConnection: state.gameServerConnection,
-  //selectedRomData: state.selectedRomData
 };
 
 export default Mupen64PlusEmuComponent;
