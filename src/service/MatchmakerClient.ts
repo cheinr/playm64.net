@@ -40,6 +40,9 @@ class MatchmakerClient {
   private remoteDescriptionSet = false;
   private pendingIceCandidates: RTCIceCandidate[] = [];
 
+  private iceCandidatesPendingSend: { gameId: string, candidate: RTCIceCandidate }[] = [];
+  private wrtcAnswerReceived: boolean = false;
+
   constructor(matchmakingServiceEndpoint: string) {
 
     const location = window.location;
@@ -164,7 +167,7 @@ class MatchmakerClient {
       }
 
       case 'ice-candidate':
-        console.log('Received ice candidate from server: %o', message.payload);
+        console.log('Received ice candidate from server: %o', message.payload.candidate.candidate);
         const c = message.payload.candidate;
         const iceCandidate: RTCIceCandidateInit = {
           candidate: c.candidate,
@@ -188,8 +191,12 @@ class MatchmakerClient {
         break;
 
       case 'wrtc-answer':
+
+        console.log('wrtc-answer');
         if (this.rtcConnection) {
-          console.log('wrtc-answer');
+          this.wrtcAnswerReceived = true;
+          this.drainIceCandidatesToSend();
+
           this.rtcConnection.setRemoteDescription(message.payload.sdpAnswer)
             .then(() => {
 
@@ -214,6 +221,36 @@ class MatchmakerClient {
       default:
         console.log(`Unidentified message: ${JSON.stringify(message)}`);
         break;
+    }
+  }
+
+  private drainIceCandidatesToSend(): void {
+    while (this.iceCandidatesPendingSend.length > 0) {
+
+      const candidatePair = this.iceCandidatesPendingSend.pop();
+
+      if (!candidatePair) {
+        continue;
+      }
+
+      this.requestCount++;
+      console.log("Matchmaker RequestCount increased: ", this.requestCount);
+
+      if (!this.socket) {
+        throw "No socket for sending wrtc-ice-candidates is available!";
+      }
+
+      this.socket.send(JSON.stringify({
+        action: 'sendmessage',
+        data: {
+          type: 'wrtc-ice-candidate',
+          payload: {
+            token: this.token,
+            game_id: candidatePair.gameId,
+            candidate: candidatePair.candidate,
+          },
+        }
+      }));
     }
   }
 
@@ -328,20 +365,30 @@ class MatchmakerClient {
         if (event.candidate && event.candidate.candidate) {
 
 
-          this.requestCount++;
-          console.log("Matchmaker RequestCount increased: ", this.requestCount);
+          // We wait for this to ensure the server is ready for ice candidates
+          if (this.wrtcAnswerReceived) {
+            this.requestCount++;
+            console.log("Matchmaker RequestCount increased: ", this.requestCount);
 
-          this.socket.send(JSON.stringify({
-            action: 'sendmessage',
-            data: {
-              type: 'wrtc-ice-candidate',
-              payload: {
-                token: this.token,
-                game_id: gameId,
-                candidate: event.candidate,
-              },
-            }
-          }));
+            this.socket.send(JSON.stringify({
+              action: 'sendmessage',
+              data: {
+                type: 'wrtc-ice-candidate',
+                payload: {
+                  token: this.token,
+                  game_id: gameId,
+                  candidate: event.candidate,
+                },
+              }
+            }));
+
+          } else {
+
+            this.iceCandidatesPendingSend.push({
+              gameId,
+              candidate: event.candidate
+            });
+          }
         }
       };
 
