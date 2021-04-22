@@ -50,7 +50,7 @@ export function createGameRoom() {
   return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
 
     const state = getState();
-    const romSimpleName = state.romShortName;
+    const romSimpleName = state.selectedRomShortName;
     const region = "us-foo-2";
 
     dispatch(setUiState(UI_STATE.PENDING_GAME_JOIN));
@@ -75,10 +75,12 @@ export function joinGameRoom(gameRoomId: string) {
     dispatch(setGameRoomId(gameRoomId));
     dispatch(setUiState(UI_STATE.PENDING_GAME_JOIN));
 
-    const alias = getState().alias;
+    const state = getState();
+    const alias = state.alias;
+    const romSimpleName = state.selectedRomShortName;
 
     //establishing connection
-    matchmakerService.joinGame(alias, gameRoomId).then((gameServerClient: GameServerClient) => {
+    matchmakerService.joinGame(alias, gameRoomId, romSimpleName).then((gameServerClient: GameServerClient) => {
 
       console.log("Finished joining game room: %o", gameServerClient);
 

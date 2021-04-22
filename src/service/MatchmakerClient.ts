@@ -290,7 +290,7 @@ class MatchmakerClient {
 
   }
 
-  async joinGame(alias: string, gameId: string): Promise<GameServerClient> {
+  async joinGame(alias: string, gameId: string, romSimpleName: string): Promise<GameServerClient> {
 
     if (this.rtcConnection) {
       throw 'Attempted to join multiple games at once';
@@ -396,7 +396,7 @@ class MatchmakerClient {
       serverRTCConnection.createOffer((desc) => {
         serverRTCConnection.setLocalDescription(desc);
 
-        this._sendJoinRequest(gameId, alias, desc);
+        this._sendJoinRequest(gameId, alias, romSimpleName, desc);
       }, this._errorHandler('PeerConnection.CreateOffer'));
 
       serverRTCConnection.oniceconnectionstatechange = () => {
@@ -522,14 +522,13 @@ class MatchmakerClient {
     }
   }
 
-  _sendJoinRequest(gameId: string, alias: string, desc: any) {
+  _sendJoinRequest(gameId: string, alias: string, romSimpleName: string, desc: any) {
     if (!this.socket) {
       throw "Tried to join game before we were connected to the matchmaker";
     }
 
     this.requestCount++;
     console.log("Matchmaker RequestCount increased: ", this.requestCount);
-
 
     this.socket.send(JSON.stringify({
       action: 'sendmessage',
@@ -538,6 +537,7 @@ class MatchmakerClient {
         payload: {
           sdp_offer: desc,
           game_id: gameId,
+          romSimpleName,
           playerInfo: {
             name: alias,
             token: this.token,
