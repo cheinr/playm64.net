@@ -41,7 +41,14 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
         disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}>
         Join Game
       </button>
-    </div >
+
+      <br />
+      <br />
+
+      <div className={`connection-state-message ${props.connectionStateMessage.isError ? 'connection-state-error' : ''}`}>
+        <small>{props.connectionStateMessage.message}</small>
+      </div>
+    </div>
   );
 };
 

@@ -20,6 +20,7 @@ const mapStateToProps = (state: RootState) => ({
   romShortName: state.selectedRomShortName,
   uiState: state.uiState,
   joinGameRoomInput: state.joinGameRoomInput,
+  connectionStateMessage: state.connectionStateMessage
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({

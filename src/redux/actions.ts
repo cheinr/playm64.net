@@ -15,6 +15,7 @@ type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 
 
 export const SET_ALIAS = 'SET_ALIAS';
+export const SET_CONNECTION_STATE_MESSAGE = 'SET_CONNECTION_STATE_MESSAGE';
 export const SET_SELECTED_ROM_DATA = 'SET_SELECTED_ROM_DATA';
 export const SET_UI_STATE = 'SET_UI_STATE';
 export const SET_GAME_ROOM_ID = 'SET_GAME_ROOM_ID';
@@ -23,6 +24,16 @@ export const SET_ROOM_PLAYER_INFO = 'SET_ROOM_PLAYER_INFO';
 export const SET_GAME_SERVER_CONNECTION = 'SET_GAME_SERVER_CONNECTION';
 export const SET_PING = 'SET_PING';
 export const START_GAME = 'START_GAME';
+
+
+export function setConnectionStateMessage(message: string, isError: boolean) {
+  return {
+    type: SET_CONNECTION_STATE_MESSAGE, connectionStateMessage: {
+      message,
+      isError
+    }
+  };
+}
 
 export function setUiState(uiState: UI_STATE) {
   return { type: 'SET_UI_STATE', state: uiState };

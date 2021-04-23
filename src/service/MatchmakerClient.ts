@@ -1,3 +1,7 @@
+import {
+  setConnectionStateMessage
+} from '../redux/actions';
+
 import { Store } from 'redux';
 import GameServerClient from './GameServerClient';
 
@@ -11,7 +15,6 @@ export interface GameRoomInfo {
  * game-servers. Can only be used to connect to one game server at a time
  */
 class MatchmakerClient {
-
 
   connectionPromise: Promise<void> | null = null;
   connectionRetryDelayMillis: number = 1000;
@@ -263,6 +266,8 @@ class MatchmakerClient {
   async createGameRoom(romSimpleName: string,
     serverRegion: string): Promise<GameRoomInfo> {
 
+    this.uiStore?.dispatch(setConnectionStateMessage('Creating a new Game Room', false));
+
     return new Promise<GameRoomInfo>((resolve, reject) => {
       this._connectAsync().then(() => {
         if (this.socket === null) {
@@ -280,9 +285,14 @@ class MatchmakerClient {
           }
         }));
 
-        this.onGameRoomCreateResponse = resolve;
+        this.onGameRoomCreateResponse = (gameRoomInfo: GameRoomInfo) => {
+          this.uiStore?.dispatch(setConnectionStateMessage(`Created game room '${gameRoomInfo.gameRoomId}'`, false));
+          resolve(gameRoomInfo);
+        }
 
         setTimeout(() => {
+          this.uiStore?.dispatch(setConnectionStateMessage(
+            'Timed out waiting for a new game room to be created. Please refresh the page and try again', true));
           reject("Timed out waiting for game server creation");
         }, 90000);
       });
@@ -295,6 +305,8 @@ class MatchmakerClient {
     if (this.rtcConnection) {
       throw 'Attempted to join multiple games at once';
     }
+
+    this.uiStore?.dispatch(setConnectionStateMessage(`Attempting to join game room '${gameId}'`, false));
 
     const gameJoinConnectionPromise = new Promise<GameServerClient>((resolve, reject) => {
       this.gameConnectionListeners.push(resolve);
@@ -406,6 +418,10 @@ class MatchmakerClient {
             break;
           case 'disconnected':
           case 'failed':
+
+            this.uiStore?.dispatch(setConnectionStateMessage(
+              `Failed to connect to game room ${gameId}. Please refresh the page and try again`, true));
+
             // One or more transports has terminated unexpectedly or in an error
             console.log('We\'ve been disconnected from the game server');
             serverRTCConnection.close();

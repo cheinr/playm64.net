@@ -6,7 +6,8 @@ import {
   SET_JOIN_GAME_ROOM_INPUT,
   SET_ROOM_PLAYER_INFO,
   SET_GAME_SERVER_CONNECTION,
-  SET_PING
+  SET_PING,
+  SET_CONNECTION_STATE_MESSAGE
 } from './actions';
 
 import { getRomShortName } from '../romUtils';
@@ -29,7 +30,11 @@ const initialState = {
   gameRoomId: null,
   roomPlayerInfo: null,
   gameServerConnection: null,
-  ping: 0
+  ping: 0,
+  connectionStateMessage: {
+    message: '',
+    isError: false
+  }
 };
 
 
@@ -43,6 +48,11 @@ export default function appReducer(state: any, action: any) {
         uiState: UI_STATE.PENDING_MODE_SELECT,
         selectedRomData: action.data,
         selectedRomShortName: getRomShortName(action.data)
+      });
+
+    case SET_CONNECTION_STATE_MESSAGE:
+      return Object.assign({}, state, {
+        connectionStateMessage: action.connectionStateMessage
       });
 
     case SET_UI_STATE:
