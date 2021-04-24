@@ -102,6 +102,9 @@ export function joinGameRoom(gameRoomId: string) {
         dispatch(setRoomPlayerInfo(roomPlayerInfo));
       });
       //dispatch(setGameRoomClient(gameServerClient));
+    }).catch((err) => {
+      // Do nothing, error message should be displayed by Matchmaker client
+      // Though we should consider moving it here.
     });
   };
 }

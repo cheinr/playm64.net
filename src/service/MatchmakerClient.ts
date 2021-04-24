@@ -155,10 +155,9 @@ class MatchmakerClient {
       case 'game-join-request-rejected': {
         const gameRoomId = message.payload.gameRoomId;
         const reason = message.payload.reason;
-        //console.log("Unable to join game-room [%s]: %s", gameRoomId, reason);
 
         this.gameConnectRejectionListeners.forEach((cb) => {
-          cb(`Unable to join game-room [${gameRoomId}]: ${reason}`);
+          cb(reason);
         });
 
         if (this.rtcConnection) {
@@ -309,8 +308,23 @@ class MatchmakerClient {
     this.uiStore?.dispatch(setConnectionStateMessage(`Attempting to join game room '${gameId}'`, false));
 
     const gameJoinConnectionPromise = new Promise<GameServerClient>((resolve, reject) => {
-      this.gameConnectionListeners.push(resolve);
-      this.gameConnectRejectionListeners.push(reject);
+
+      const onConnect = (gameServerClient: GameServerClient) => {
+        this.uiStore?.dispatch(setConnectionStateMessage(
+          `Successfully joined game room ${gameId}`, false));
+
+        resolve(gameServerClient);
+      }
+
+      const onError = (err: any) => {
+        this.uiStore?.dispatch(setConnectionStateMessage(
+          `Failed to join game: ${gameId}. ${err}`, true));
+
+        reject();
+      }
+
+      this.gameConnectionListeners.push(onConnect);
+      this.gameConnectRejectionListeners.push(onError);
     });
 
     this._connectAsync().then(() => {
