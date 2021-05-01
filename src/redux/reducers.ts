@@ -1,5 +1,6 @@
 import {
   SET_ALIAS,
+  SET_ALIAS_INPUT,
   SET_SELECTED_ROM_DATA,
   SET_UI_STATE,
   SET_GAME_ROOM_ID,
@@ -23,6 +24,7 @@ export enum UI_STATE {
 
 const initialState = {
   alias: '',
+  aliasInput: '',
   uiState: UI_STATE.PENDING_ROM_LOAD,
   selectedRomData: null,
   selectedRomShortName: null,
@@ -79,6 +81,12 @@ export default function appReducer(state: any, action: any) {
       return Object.assign({}, state, {
         alias: action.alias
       });
+
+    case SET_ALIAS_INPUT:
+      return Object.assign({}, state, {
+        aliasInput: action.alias
+      });
+
 
     case SET_GAME_SERVER_CONNECTION:
       return Object.assign({}, state, {

@@ -1,12 +1,15 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Dispatch, Action } from 'redux';
+import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import PlayModeSelectComponent from '../components/PlayModeSelectComponent';
 import { RootState } from '../redux/reducers';
 import {
-  setAlias, createGameRoom, joinGameRoom, setJoinGameRoomInput,
+  updateAlias,
+  setAlias,
+  setAliasInput,
+  createGameRoom, joinGameRoom, setJoinGameRoomInput,
   startLocalGame
 } from '../redux/actions';
 import MatchmakerClient from '../service/MatchmakerClient';
@@ -17,6 +20,7 @@ type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 
 const mapStateToProps = (state: RootState) => ({
   alias: state.alias,
+  aliasInput: state.aliasInput,
   romShortName: state.selectedRomShortName,
   uiState: state.uiState,
   joinGameRoomInput: state.joinGameRoomInput,
@@ -36,10 +40,22 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
     dispatch(setJoinGameRoomInput(joinCode));
   },
   onAliasInputChange: (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setAlias(event.target.value));
+    dispatch(setAliasInput(event.target.value));
   },
   startLocalGame: () => {
     dispatch(startLocalGame());
+  },
+  onAliasInputKeyPress: (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      dispatch(updateAlias());
+    }
+  },
+  onPlayerAliasEditClick: (event: MouseEvent) => {
+    event.preventDefault();
+    dispatch(setAlias(''));
+  },
+  onAliasEnterButtonClicked: (event: MouseEvent) => {
+    dispatch(updateAlias());
   }
 });
 

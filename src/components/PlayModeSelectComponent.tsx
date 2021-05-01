@@ -10,45 +10,72 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
       <div>
       </div>
 
+      <div>
+        <hr />
+        Play Locally
+      </div>
       <button
         name="playLocalButton"
         onClick={() => props.startLocalGame()}
       >
-        Play Locally
+        Start Emulator
       </button>
 
       <hr />
-      <div>
-        <input name="aliasInput" value={props.alias} onChange={props.onAliasInputChange} placeholder="Enter an alias..."></input>
-      </div>
 
-      <button
-        name="hostGameButton"
-        onClick={() => props.createGameRoom()}
-        disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}
-      >
-        Host Game
-      </button>
+      Play Online
 
-      <p>- or -</p>
 
-      <input name="joinCodeInput" disabled={props.alias == ''}
-        value={props.joinGameRoomInput}
-        onChange={props.onJoinGameRoomInputChange}>
-      </input>
+      { !props.alias &&
+        <div>
 
-      <button name="joinGameButton" onClick={() => props.joinGame(props.joinGameRoomInput)}
-        disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}>
-        Join Game
-      </button>
+          <input name="aliasInput" value={props.aliasInput} onChange={props.onAliasInputChange} onKeyPress={props.onAliasInputKeyPress} placeholder="Enter an alias..."></input>
 
-      <br />
-      <br />
+          <button name="aliasInputEnterButton" onClick={props.onAliasEnterButtonClicked}>Enter</button>
+        </div >
+      }
 
-      <div className={`connection-state-message ${props.connectionStateMessage.isError ? 'connection-state-error' : ''}`}>
-        <small>{props.connectionStateMessage.message}</small>
-      </div>
-    </div>
+      {
+        props.alias &&
+        <div>
+
+          <div>
+            <small>
+              player alias: {props.alias} <a href='#' onClick={props.onPlayerAliasEditClick}> edit</a>
+            </small>
+          </div>
+
+          <br />
+
+          <button
+            name="hostGameButton"
+            onClick={() => props.createGameRoom()}
+            disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}
+          >
+            Host Game
+         </button>
+
+          <p>- or -</p>
+
+          <input name="joinCodeInput" disabled={props.alias == ''}
+            value={props.joinGameRoomInput}
+            onChange={props.onJoinGameRoomInputChange}>
+          </input>
+
+          <button name="joinGameButton" onClick={() => props.joinGame(props.joinGameRoomInput)}
+            disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}>
+            Join Game
+         </button>
+
+          <br />
+          <br />
+
+          <div className={`connection-state-message ${props.connectionStateMessage.isError ? 'connection-state-error' : ''}`}>
+            <small>{props.connectionStateMessage.message}</small>
+          </div>
+        </div>
+      }
+    </div >
   );
 };
 

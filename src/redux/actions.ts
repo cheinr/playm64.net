@@ -15,6 +15,7 @@ type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 
 
 export const SET_ALIAS = 'SET_ALIAS';
+export const SET_ALIAS_INPUT = 'SET_ALIAS_INPUT';
 export const SET_CONNECTION_STATE_MESSAGE = 'SET_CONNECTION_STATE_MESSAGE';
 export const SET_SELECTED_ROM_DATA = 'SET_SELECTED_ROM_DATA';
 export const SET_UI_STATE = 'SET_UI_STATE';
@@ -124,8 +125,19 @@ export function setJoinGameRoomInput(joinGameRoomInput: string) {
   return { type: SET_JOIN_GAME_ROOM_INPUT, joinGameRoomInput };
 }
 
+export function updateAlias() {
+  return (dispatch: Dispatch, getState: () => RootState) => {
+    const alias = getState().aliasInput;
+    dispatch(setAlias(alias));
+  };
+}
+
 export function setAlias(alias: string) {
   return { type: SET_ALIAS, alias };
+}
+
+export function setAliasInput(alias: string) {
+  return { type: SET_ALIAS_INPUT, alias };
 }
 
 export function setPing(ping: number) {
