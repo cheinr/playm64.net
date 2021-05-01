@@ -125,13 +125,6 @@ export function setJoinGameRoomInput(joinGameRoomInput: string) {
   return { type: SET_JOIN_GAME_ROOM_INPUT, joinGameRoomInput };
 }
 
-export function updateAlias() {
-  return (dispatch: Dispatch, getState: () => RootState) => {
-    const alias = getState().aliasInput;
-    dispatch(setAlias(alias));
-  };
-}
-
 export function setAlias(alias: string) {
   return { type: SET_ALIAS, alias };
 }

@@ -29,9 +29,11 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
       { !props.alias &&
         <div>
 
-          <input name="aliasInput" value={props.aliasInput} onChange={props.onAliasInputChange} onKeyPress={props.onAliasInputKeyPress} placeholder="Enter a player alias..."></input>
+          <input name="aliasInput" value={props.aliasInput} onChange={props.onAliasInputChange}
+            onKeyPress={(e) => props.onAliasInputKeyPress(e, props.aliasInput)}
+            placeholder="Enter a player alias..."></input>
 
-          <button name="aliasInputEnterButton" onClick={props.onAliasEnterButtonClicked}>Enter</button>
+          <button name="aliasInputEnterButton" onClick={(e) => props.onAliasEnterButtonClicked(props.aliasInput)}>Enter</button>
         </div >
       }
 

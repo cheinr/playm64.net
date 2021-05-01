@@ -6,7 +6,6 @@ import { ThunkDispatch } from 'redux-thunk';
 import PlayModeSelectComponent from '../components/PlayModeSelectComponent';
 import { RootState } from '../redux/reducers';
 import {
-  updateAlias,
   setAlias,
   setAliasInput,
   createGameRoom, joinGameRoom, setJoinGameRoomInput,
@@ -45,18 +44,18 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   startLocalGame: () => {
     dispatch(startLocalGame());
   },
-  onAliasInputKeyPress: (event: KeyboardEvent<HTMLInputElement>) => {
+  onAliasInputKeyPress: (event: KeyboardEvent<HTMLInputElement>, aliasInput: string) => {
     if (event.key === 'Enter') {
-      dispatch(updateAlias());
+      dispatch(setAlias(aliasInput));
     }
+  },
+  onAliasEnterButtonClicked: (aliasInput: string) => {
+    dispatch(setAlias(aliasInput));
   },
   onPlayerAliasEditClick: (event: MouseEvent) => {
     event.preventDefault();
     dispatch(setAlias(''));
   },
-  onAliasEnterButtonClicked: (event: MouseEvent) => {
-    dispatch(updateAlias());
-  }
 });
 
 const connector = connect(
