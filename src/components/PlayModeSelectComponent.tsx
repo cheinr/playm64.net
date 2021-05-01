@@ -29,7 +29,7 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
       { !props.alias &&
         <div>
 
-          <input name="aliasInput" value={props.aliasInput} onChange={props.onAliasInputChange} onKeyPress={props.onAliasInputKeyPress} placeholder="Enter an alias..."></input>
+          <input name="aliasInput" value={props.aliasInput} onChange={props.onAliasInputChange} onKeyPress={props.onAliasInputKeyPress} placeholder="Enter a player alias..."></input>
 
           <button name="aliasInputEnterButton" onClick={props.onAliasEnterButtonClicked}>Enter</button>
         </div >
@@ -47,25 +47,27 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
           <br />
 
-          <button
-            name="hostGameButton"
-            onClick={() => props.createGameRoom()}
-            disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}
-          >
-            Host Game
-         </button>
-
-          <p>- or -</p>
-
           <input name="joinCodeInput" disabled={props.alias == ''}
             value={props.joinGameRoomInput}
-            onChange={props.onJoinGameRoomInputChange}>
+            onChange={props.onJoinGameRoomInputChange}
+            placeholder="Enter a join code...">
           </input>
 
           <button name="joinGameButton" onClick={() => props.joinGame(props.joinGameRoomInput)}
             disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}>
             Join Game
-         </button>
+          </button>
+
+          <div>
+            <small>or - &nbsp;
+
+              {
+                props.uiState === UI_STATE.PENDING_MODE_SELECT
+                  ? <a href="#" onClick={() => props.createGameRoom()} >host a new game</a>
+                  : <a href="#" style={{ pointerEvents: 'none' }}>host a new game</a>
+              }
+            </small>
+          </div>
 
           <br />
           <br />
