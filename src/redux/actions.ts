@@ -17,6 +17,7 @@ type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 export const SET_ALIAS = 'SET_ALIAS';
 export const SET_ALIAS_INPUT = 'SET_ALIAS_INPUT';
 export const SET_CONNECTION_STATE_MESSAGE = 'SET_CONNECTION_STATE_MESSAGE';
+export const SET_HOSTING_REGION = 'SET_HOSTING_REGION';
 export const SET_SELECTED_ROM_DATA = 'SET_SELECTED_ROM_DATA';
 export const SET_UI_STATE = 'SET_UI_STATE';
 export const SET_GAME_ROOM_ID = 'SET_GAME_ROOM_ID';
@@ -25,7 +26,11 @@ export const SET_ROOM_PLAYER_INFO = 'SET_ROOM_PLAYER_INFO';
 export const SET_GAME_SERVER_CONNECTION = 'SET_GAME_SERVER_CONNECTION';
 export const SET_PING = 'SET_PING';
 export const START_GAME = 'START_GAME';
+export const TOGGLE_HOST_NEW_GAME_MENU = 'TOGGLE_HOST_NEW_GAME_MENU';
 
+export function setHostingRegion(region: string) {
+  return { type: SET_HOSTING_REGION, region };
+}
 
 export function setConnectionStateMessage(message: string, isError: boolean) {
   return {
@@ -58,12 +63,16 @@ export function requestGameStart() {
   }
 }
 
+export function toggleHostNewGameMenu() {
+  return { type: TOGGLE_HOST_NEW_GAME_MENU };
+}
+
 export function createGameRoom() {
   return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
 
     const state = getState();
     const romSimpleName = state.selectedRomShortName;
-    const region = "us-foo-2";
+    const region = state.hostingRegion;
 
     dispatch(setUiState(UI_STATE.PENDING_GAME_JOIN));
 
@@ -77,6 +86,9 @@ export function createGameRoom() {
       setTimeout(() => {
         dispatch(joinGameRoom(gameRoomInfo.gameRoomId));
       }, 100);
+    }).catch((exceptionMessage) => {
+      dispatch(setUiState(UI_STATE.PENDING_MODE_SELECT));
+      dispatch(setConnectionStateMessage(exceptionMessage, true));
     });
   };
 }

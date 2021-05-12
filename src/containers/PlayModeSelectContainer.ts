@@ -9,7 +9,9 @@ import {
   setAlias,
   setAliasInput,
   createGameRoom, joinGameRoom, setJoinGameRoomInput,
-  startLocalGame
+  toggleHostNewGameMenu,
+  startLocalGame,
+  setHostingRegion
 } from '../redux/actions';
 import MatchmakerClient from '../service/MatchmakerClient';
 
@@ -23,7 +25,9 @@ const mapStateToProps = (state: RootState) => ({
   romShortName: state.selectedRomShortName,
   uiState: state.uiState,
   joinGameRoomInput: state.joinGameRoomInput,
-  connectionStateMessage: state.connectionStateMessage
+  connectionStateMessage: state.connectionStateMessage,
+  showHostingMenu: state.displayHostNewGameMenu,
+  hostingRegion: state.hostingRegion
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
@@ -56,6 +60,12 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
     event.preventDefault();
     dispatch(setAlias(''));
   },
+  toggleHostingMenu: () => {
+    dispatch(toggleHostNewGameMenu());
+  },
+  onHostingRegionSelectChange: (event: ChangeEvent<HTMLSelectElement>) => {
+    dispatch(setHostingRegion(event.target.value));
+  }
 });
 
 const connector = connect(

@@ -28,6 +28,7 @@ class MatchmakerClient {
   gameDisconnectListener: Function | undefined;
 
   private onGameRoomCreateResponse: Function | null = null;
+  private onUnexpectedExceptionMessage: Function | null = null;
 
   // TODO - types
   private rtcConnection?: RTCPeerConnection;
@@ -220,6 +221,13 @@ class MatchmakerClient {
         }
         break;
 
+      case 'unexpected-exception':
+        console.log("Received unexpected exception message: %o", message);
+
+        if (this.onUnexpectedExceptionMessage)
+          this.onUnexpectedExceptionMessage(message.payload.exceptionMessage);
+
+        break;
       default:
         console.log(`Unidentified message: ${JSON.stringify(message)}`);
         break;
@@ -284,16 +292,26 @@ class MatchmakerClient {
           }
         }));
 
-        this.onGameRoomCreateResponse = (gameRoomInfo: GameRoomInfo) => {
-          this.uiStore?.dispatch(setConnectionStateMessage(`Created game room '${gameRoomInfo.gameRoomId}'`, false));
-          resolve(gameRoomInfo);
-        }
-
-        setTimeout(() => {
+        const createTimeout = setTimeout(() => {
+          this.onUnexpectedExceptionMessage = null;
           this.uiStore?.dispatch(setConnectionStateMessage(
             'Timed out waiting for a new game room to be created. Please refresh the page and try again', true));
           reject("Timed out waiting for game server creation");
         }, 90000);
+
+        this.onGameRoomCreateResponse = (gameRoomInfo: GameRoomInfo) => {
+          this.onUnexpectedExceptionMessage = null;
+          clearTimeout(createTimeout);
+
+          this.uiStore?.dispatch(setConnectionStateMessage(`Created game room '${gameRoomInfo.gameRoomId}'`, false));
+          resolve(gameRoomInfo);
+        }
+
+        this.onUnexpectedExceptionMessage = (exceptionMessage: string) => {
+          clearTimeout(createTimeout);
+          reject(`Unexpected exception while creating game room: ${exceptionMessage} `);
+        }
+
       });
     });
 
@@ -311,14 +329,14 @@ class MatchmakerClient {
 
       const onConnect = (gameServerClient: GameServerClient) => {
         this.uiStore?.dispatch(setConnectionStateMessage(
-          `Successfully joined game room ${gameId}`, false));
+          `Successfully joined game room ${gameId} `, false));
 
         resolve(gameServerClient);
       }
 
       const onError = (err: any) => {
         this.uiStore?.dispatch(setConnectionStateMessage(
-          `Failed to join game: ${gameId}. ${err}`, true));
+          `Failed to join game: ${gameId}.${err} `, true));
 
         reject();
       }
@@ -434,7 +452,7 @@ class MatchmakerClient {
           case 'failed':
 
             this.uiStore?.dispatch(setConnectionStateMessage(
-              `Failed to connect to game room ${gameId}. Please refresh the page and try again`, true));
+              `Failed to connect to game room ${gameId}.Please refresh the page and try again`, true));
 
             // One or more transports has terminated unexpectedly or in an error
             console.log('We\'ve been disconnected from the game server');

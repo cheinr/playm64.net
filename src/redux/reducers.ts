@@ -8,7 +8,9 @@ import {
   SET_ROOM_PLAYER_INFO,
   SET_GAME_SERVER_CONNECTION,
   SET_PING,
-  SET_CONNECTION_STATE_MESSAGE
+  SET_CONNECTION_STATE_MESSAGE,
+  TOGGLE_HOST_NEW_GAME_MENU,
+  SET_HOSTING_REGION
 } from './actions';
 
 import { getRomShortName } from '../romUtils';
@@ -25,6 +27,8 @@ export enum UI_STATE {
 const initialState = {
   alias: '',
   aliasInput: '',
+  displayHostNewGameMenu: false,
+  hostingRegion: 'us-west-2',
   uiState: UI_STATE.PENDING_ROM_LOAD,
   selectedRomData: null,
   selectedRomShortName: null,
@@ -55,6 +59,11 @@ export default function appReducer(state: any, action: any) {
     case SET_CONNECTION_STATE_MESSAGE:
       return Object.assign({}, state, {
         connectionStateMessage: action.connectionStateMessage
+      });
+
+    case SET_HOSTING_REGION:
+      return Object.assign({}, state, {
+        hostingRegion: action.region
       });
 
     case SET_UI_STATE:
@@ -97,6 +106,12 @@ export default function appReducer(state: any, action: any) {
       return Object.assign({}, state, {
         ping: action.ping
       });
+
+    case TOGGLE_HOST_NEW_GAME_MENU:
+      return Object.assign({}, state, {
+        displayHostNewGameMenu: state.displayHostNewGameMenu ? false : true
+      });
+
   }
 
   return initialState;

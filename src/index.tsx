@@ -12,7 +12,7 @@ import { setAlias } from './redux/actions';
 
 import MatchmakerService from './service/MatchmakerClient';
 
-const matchmakerService = new MatchmakerService("wss://yqet5adtzg.execute-api.us-west-2.amazonaws.com/dev");
+const matchmakerService = new MatchmakerService("wss://agd73oj5c9.execute-api.us-west-2.amazonaws.com/beta");
 
 const store: Store = createStore(appReducer, applyMiddleware(
   thunk.withExtraArgument({
