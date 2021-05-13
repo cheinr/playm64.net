@@ -1,5 +1,5 @@
 import {
-  setConnectionStateMessage
+  setConnectionStateMessage, setHostRegionOptions
 } from '../redux/actions';
 
 import { Store } from 'redux';
@@ -139,6 +139,10 @@ class MatchmakerClient {
     console.log("Matchmaker RequestCount increased: ", this.requestCount);
 
     switch (message.type) {
+
+      case 'hosting-region-options':
+        this.uiStore?.dispatch(setHostRegionOptions(message.payload.hostingRegionOptions));
+        break;
 
       case 'room-create-response':
 
@@ -593,6 +597,17 @@ class MatchmakerClient {
         },
       }
     }));
+  }
+
+  public requestHostingRegionOptions(): void {
+    this._connectAsync().then(() => {
+      this.socket?.send(JSON.stringify({
+        action: 'sendmessage',
+        data: {
+          type: 'request-hosting-region-options'
+        }
+      }));
+    });
   }
 }
 

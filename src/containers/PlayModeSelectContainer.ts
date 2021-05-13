@@ -11,7 +11,8 @@ import {
   createGameRoom, joinGameRoom, setJoinGameRoomInput,
   toggleHostNewGameMenu,
   startLocalGame,
-  setHostingRegion
+  setHostingRegion,
+  requestHostingRegionOptionsIfNotLoaded
 } from '../redux/actions';
 import MatchmakerClient from '../service/MatchmakerClient';
 
@@ -27,6 +28,7 @@ const mapStateToProps = (state: RootState) => ({
   joinGameRoomInput: state.joinGameRoomInput,
   connectionStateMessage: state.connectionStateMessage,
   showHostingMenu: state.displayHostNewGameMenu,
+  hostRegionOptions: state.hostRegionOptions,
   hostingRegion: state.hostingRegion
 });
 
@@ -62,6 +64,7 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   },
   toggleHostingMenu: () => {
     dispatch(toggleHostNewGameMenu());
+    dispatch(requestHostingRegionOptionsIfNotLoaded());
   },
   onHostingRegionSelectChange: (event: ChangeEvent<HTMLSelectElement>) => {
     dispatch(setHostingRegion(event.target.value));

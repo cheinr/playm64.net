@@ -3,6 +3,16 @@ import { UI_STATE } from '../redux/reducers';
 
 const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
+  let regionOptions = null;
+  if (props.hostRegionOptions) {
+    regionOptions = props.hostRegionOptions.map((o: any, index: number) => {
+      return (
+        <option value={o.regionValue} key={`regionOption-${index}`}>
+          { o.regionName}
+        </option >);
+    });
+  }
+
   return (
     <div>
       Loaded: { props.romShortName}
@@ -54,15 +64,20 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
             <div>
 
-              Hosting region: &nbsp;
-              <select onChange={props.onHostingRegionSelectChange} value={props.hostingRegion}>
-                <option value='us-west-2'>U.S. Oregon 🇺🇸</option>
-                <option value='us-blam-2'>Blam! 🇺🇸</option>
-              </select>
+              <label>select game room region: &nbsp;
+
+                {regionOptions &&
+                  <select onChange={props.onHostingRegionSelectChange} value={props.hostingRegion}>
+                    {regionOptions}
+                  </select>
+                }
+
+                {!regionOptions && <small>Loading...</small>}
+              </label>
 
               <div>
                 <button name="createGameButton" onClick={() => props.createGameRoom()}
-                  disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}>
+                  disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !regionOptions}>
                   Create Game Room
                 </button>
 

@@ -10,7 +10,8 @@ import {
   SET_PING,
   SET_CONNECTION_STATE_MESSAGE,
   TOGGLE_HOST_NEW_GAME_MENU,
-  SET_HOSTING_REGION
+  SET_HOSTING_REGION,
+  SET_HOST_REGION_OPTIONS
 } from './actions';
 
 import { getRomShortName } from '../romUtils';
@@ -28,6 +29,7 @@ const initialState = {
   alias: '',
   aliasInput: '',
   displayHostNewGameMenu: false,
+  hostRegionOptions: null,
   hostingRegion: 'us-west-2',
   uiState: UI_STATE.PENDING_ROM_LOAD,
   selectedRomData: null,
@@ -59,6 +61,11 @@ export default function appReducer(state: any, action: any) {
     case SET_CONNECTION_STATE_MESSAGE:
       return Object.assign({}, state, {
         connectionStateMessage: action.connectionStateMessage
+      });
+
+    case SET_HOST_REGION_OPTIONS:
+      return Object.assign({}, state, {
+        hostRegionOptions: action.regionOptions
       });
 
     case SET_HOSTING_REGION:

@@ -22,14 +22,28 @@ export const SET_SELECTED_ROM_DATA = 'SET_SELECTED_ROM_DATA';
 export const SET_UI_STATE = 'SET_UI_STATE';
 export const SET_GAME_ROOM_ID = 'SET_GAME_ROOM_ID';
 export const SET_JOIN_GAME_ROOM_INPUT = 'SET_JOIN_GAME_ROOM_INPUT';
+export const SET_HOST_REGION_OPTIONS = 'SET_HOST_REGION_OPTIONS';
 export const SET_ROOM_PLAYER_INFO = 'SET_ROOM_PLAYER_INFO';
 export const SET_GAME_SERVER_CONNECTION = 'SET_GAME_SERVER_CONNECTION';
 export const SET_PING = 'SET_PING';
 export const START_GAME = 'START_GAME';
 export const TOGGLE_HOST_NEW_GAME_MENU = 'TOGGLE_HOST_NEW_GAME_MENU';
 
+export function setHostRegionOptions(regionOptions: any) {
+  return { type: SET_HOST_REGION_OPTIONS, regionOptions };
+}
+
 export function setHostingRegion(region: string) {
   return { type: SET_HOSTING_REGION, region };
+}
+
+export function requestHostingRegionOptionsIfNotLoaded() {
+  return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+
+    if (!getState().hostRegionOptions) {
+      matchmakerService.requestHostingRegionOptions();
+    }
+  }
 }
 
 export function setConnectionStateMessage(message: string, isError: boolean) {
@@ -73,6 +87,8 @@ export function createGameRoom() {
     const state = getState();
     const romSimpleName = state.selectedRomShortName;
     const region = state.hostingRegion;
+
+    console.log("Creating game room for region: '%s'", region);
 
     dispatch(setUiState(UI_STATE.PENDING_GAME_JOIN));
 
