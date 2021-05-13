@@ -12,7 +12,7 @@ const RomUploadComponent = (props: RomUploadProps) => {
       <Dropzone onDrop={acceptedFiles => props.onFileChange(acceptedFiles)}>
         {({ getRootProps, getInputProps }) => (
           <section>
-            <div {...getRootProps()}>
+            <div {...getRootProps()} className="romDropZone">
               <FontAwesomeIcon icon={faUpload} size="4x" />
               <input {...getInputProps()} />
               <p>Click or drag to load a ROM to play</p>
