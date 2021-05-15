@@ -2,6 +2,7 @@ import { Action, Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import createMupen64PlusWeb from 'mupen64plus-web';
 
+import stats from '../Stats';
 import GameServerClient from "../service/GameServerClient";
 import MatchmakerClient from "../service/MatchmakerClient";
 
@@ -177,6 +178,8 @@ export function startLocalGame() {
         canvas: document.getElementById('canvas'),
         romData: state.selectedRomData,
         romPath: '/roms/tmp_rom_path',
+        beginStats: stats.begin,
+        endStats: stats.end,
         coreConfig: {
           emuMode: 0
         },

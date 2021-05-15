@@ -1,5 +1,6 @@
 import pako from 'pako';
 
+import stats from '../Stats';
 import { setUiState, setPing } from "../redux/actions";
 import { UI_STATE } from "../redux/reducers";
 
@@ -201,6 +202,8 @@ class GameServerClient {
           canvas: document.getElementById('canvas'),
           romData: uiState.selectedRomData,
           romPath: '/roms/tmp_rom_path',
+          beginStats: stats.begin,
+          endStats: stats.end,
           coreConfig: {
             emuMode: 0
           },
