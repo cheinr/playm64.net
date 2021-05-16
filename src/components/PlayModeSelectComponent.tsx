@@ -6,9 +6,10 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
   let regionOptions = null;
   if (props.hostRegionOptions) {
     regionOptions = props.hostRegionOptions.map((o: any, index: number) => {
+      const capacityPercent = (o.capacity * 1).toFixed(1);
       return (
         <option value={o.regionValue} key={`regionOption-${index}`}>
-          { o.regionName}
+          { o.regionName} &nbsp; ({capacityPercent}% capacity available)
         </option >);
     });
   }
