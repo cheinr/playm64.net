@@ -239,14 +239,19 @@ class MatchmakerClient {
   }
 
   private drainIceCandidatesToSend(): void {
-    while (this.iceCandidatesPendingSend.length > 0) {
 
-      const candidatePair = this.iceCandidatesPendingSend.pop();
+    const candidatesByGameId: Map<string, RTCIceCandidate[]> = new Map();
 
-      if (!candidatePair) {
-        continue;
+    this.iceCandidatesPendingSend.forEach((candidatePair) => {
+      if (!(candidatesByGameId.has(candidatePair.gameId))) {
+        candidatesByGameId.set(candidatePair.gameId, []);
       }
 
+      candidatesByGameId.get(candidatePair.gameId)!.push(
+        candidatePair.candidate);
+    });
+
+    candidatesByGameId.forEach((candidates, gameId) => {
       this.requestCount++;
       console.log("Matchmaker RequestCount increased: ", this.requestCount);
 
@@ -257,15 +262,15 @@ class MatchmakerClient {
       this.socket.send(JSON.stringify({
         action: 'sendmessage',
         data: {
-          type: 'wrtc-ice-candidate',
+          type: 'wrtc-ice-candidates',
           payload: {
             token: this.token,
-            game_id: candidatePair.gameId,
-            candidate: candidatePair.candidate,
+            gameId: gameId,
+            candidates: candidates,
           },
         }
       }));
-    }
+    });
   }
 
   _errorHandler(context: unknown) {
