@@ -271,6 +271,8 @@ class MatchmakerClient {
         }
       }));
     });
+
+    this.iceCandidatesPendingSend = [];
   }
 
   _errorHandler(context: unknown) {
@@ -426,11 +428,11 @@ class MatchmakerClient {
             this.socket.send(JSON.stringify({
               action: 'sendmessage',
               data: {
-                type: 'wrtc-ice-candidate',
+                type: 'wrtc-ice-candidates',
                 payload: {
                   token: this.token,
-                  game_id: gameId,
-                  candidate: event.candidate,
+                  gameId,
+                  candidates: [event.candidate],
                 },
               }
             }));
