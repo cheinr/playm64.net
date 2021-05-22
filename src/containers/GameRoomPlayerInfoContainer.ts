@@ -2,6 +2,7 @@ import { requestGameStart } from '../redux/actions';
 import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { UI_STATE } from '../redux/reducers';
 
 import GameRoomPlayerInfoComponent from '../components/GameRoomPlayerInfoComponent';
 import { RootState } from '../redux/reducers';
@@ -15,7 +16,9 @@ const mapStateToProps = (state: RootState) => ({
   gameRoomPlayerInfo: state.roomPlayerInfo,
   // TODO - Remove assumption player 0 is the host
   localPlayerIsHost: state.roomPlayerInfo?.clientPlayerId === 0,
-  ping: state.ping
+  ping: state.ping,
+  gameIsPendingStart: state.uiState
+    === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({

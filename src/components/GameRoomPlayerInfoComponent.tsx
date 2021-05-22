@@ -6,12 +6,14 @@ import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
 
 const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
 
+
+  console.log(props.gameRoomPlayerInfo);
   const players = props.gameRoomPlayerInfo
     ? props.gameRoomPlayerInfo.playerNames
     : [];
 
   const gamePads = players.map((playerName: string, index: number) => {
-    return (<GamePadDisplayContainer playerName={playerName} key={`GamePadDisplayContainer-${index}`} />);
+    return (<GamePadDisplayContainer playerId={`P${index + 1}`} playerName={playerName} key={`GamePadDisplayContainer-${index}`} />);
   });
 
   return (
@@ -27,16 +29,32 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
         {gamePads}
       </div>
 
-      {
-        props.localPlayerIsHost && (
-          <div>
-            <button name="startGameButton" onClick={props.onStartGameClick}>
-              Start Game
-            </button>
-          </div>
-        )
-      }
+      { props.gameIsPendingStart && (
 
+        <div>
+          {
+            props.localPlayerIsHost && (
+              <div>
+                <button name="startGameButton" onClick={props.onStartGameClick}>
+                  Start Game
+                  </button>
+              </div>
+
+            )
+          }
+
+          {
+            !props.localPlayerIsHost && (
+              <small>
+                waiting for P1 to start the game
+              </small>
+
+            )
+          }
+        </div>
+
+      )
+      }
     </div >
 
 

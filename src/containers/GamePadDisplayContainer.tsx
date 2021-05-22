@@ -16,5 +16,5 @@ const connector = connect(
   mapDispatchToProps
 );
 
-export type GamePadDisplayProps = { playerName: string };
+export type GamePadDisplayProps = { playerName: string, playerId: string };
 export default connector(GamePadDisplayComponent);

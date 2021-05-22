@@ -10,6 +10,9 @@ const GamePadDisplayComponent = (props: GamePadDisplayProps) => {
   return (
     <div className="gamepad-display">
       <div>
+        <small>{props.playerId}</small>
+      </div>
+      <div>
         <FontAwesomeIcon icon={faGamepad} size="4x" />
       </div>
       <div>
