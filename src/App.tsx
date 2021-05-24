@@ -5,7 +5,7 @@ import { Dispatch } from 'redux';
 
 import RomUploadContainer from './containers/RomUploadContainer';
 import PlayModeSelectContainer from './containers/PlayModeSelectContainer';
-import GameRoomOverviewContainer from './containers/GameRoomOverviewContainer';
+import GameOverviewContainer from './containers/GameOverviewContainer';
 import GameRoomPlayerInfoContainer from './containers/GameRoomPlayerInfoContainer';
 import Mupen64PlusEmuContainer from './containers/Mupen64PlusEmuContainer';
 
@@ -41,8 +41,8 @@ function App(props: AppProps) {
         {(props.uiState === 1 || props.uiState === 2)
           && <PlayModeSelectContainer />}
 
-        {(props.uiState === 4 || props.uiState === 5)
-          && <GameRoomOverviewContainer />}
+        {(props.uiState === 3 || props.uiState === 4 || props.uiState === 5)
+          && <GameOverviewContainer />}
 
 
         {(props.uiState === 3 || props.uiState === 5)
