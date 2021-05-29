@@ -89,8 +89,10 @@ class GameServerClient {
   public rtcUnreliableChannel: BinaryRTCDataChannel;
 
   private gameStarted = false;
+  private connectionClosed = false;
 
   private readonly roomPlayerInfoUpdateListeners: Function[] = [];
+  private readonly gameRoomDisconnectListeners: Function[] = [];
   private readonly pingDataPoints: number[] = [];
 
   constructor(gameRoomId: string, rtcRoomControlChannel: any, rtcReliableChannel: any, rtcUnreliableChannel: any, uiStore: any) {
@@ -112,7 +114,20 @@ class GameServerClient {
     //TODO - should this be handled by the matchmaker client?
     this.rtcReliableChannel.onclose = () => {
       console.log('Reliable channel closed');
-      //if (onDisconnect) onDisconnect();
+      if (!this.connectionClosed) {
+        this.connectionClosed = true;
+
+        this.gameRoomDisconnectListeners.forEach((cb) => cb());
+      }
+    };
+
+    this.rtcUnreliableChannel.onclose = () => {
+      console.log('Unreliable channel closed');
+      if (!this.connectionClosed) {
+        this.connectionClosed = true;
+
+        this.gameRoomDisconnectListeners.forEach((cb) => cb());
+      }
     };
 
     this.rtcRoomControlChannel.send(JSON.stringify({
@@ -122,6 +137,10 @@ class GameServerClient {
 
   public onRoomPlayerInfoUpdate(cb: Function): void {
     this.roomPlayerInfoUpdateListeners.push(cb);
+  }
+
+  public onDisconnect(cb: Function): void {
+    this.gameRoomDisconnectListeners.push(cb);
   }
 
   public requestGameStart(): void {
@@ -137,12 +156,16 @@ class GameServerClient {
   }
 
   private sendPing(): void {
-    this.rtcRoomControlChannel.send(JSON.stringify({
-      type: 'ping',
-      payload: {
-        sendTime: Date.now()
-      }
-    }));
+    try {
+      this.rtcRoomControlChannel.send(JSON.stringify({
+        type: 'ping',
+        payload: {
+          sendTime: Date.now()
+        }
+      }));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   private handlePong(pingSendTime: number): void {
@@ -195,7 +218,6 @@ class GameServerClient {
         this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_NETPLAY_SESSION));
 
         const uiState = this.uiStore.getState();
-
 
 
         createMupen64PlusWeb({

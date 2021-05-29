@@ -49,8 +49,6 @@ class MatchmakerClient {
 
   constructor(matchmakingServiceEndpoint: string) {
 
-    const location = window.location;
-
     // TODO - local connection
     //this.socketEndpoint = "wss://yqet5adtzg.execute-api.us-west-2.amazonaws.com/dev";
     this.socketEndpoint = matchmakingServiceEndpoint;

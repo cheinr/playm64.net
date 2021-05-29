@@ -128,6 +128,11 @@ export function joinGameRoom(gameRoomId: string) {
       dispatch(setUiState(UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION));
       dispatch(setGameServerConnection(gameServerClient));
 
+      gameServerClient.onDisconnect(() => {
+        alert("Lost connection to the game room, you will not be able to rejoin."
+          + " Please refresh the page to start a new session.");
+      });
+
       gameServerClient.onRoomPlayerInfoUpdate((roomPlayerInfo: any) => {
         dispatch(setRoomPlayerInfo(roomPlayerInfo));
       });
