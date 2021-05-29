@@ -9,7 +9,7 @@ import GameOverviewContainer from './containers/GameOverviewContainer';
 import GameRoomPlayerInfoContainer from './containers/GameRoomPlayerInfoContainer';
 import Mupen64PlusEmuContainer from './containers/Mupen64PlusEmuContainer';
 
-import { RootState } from './redux/reducers';
+import { RootState, UI_STATE } from './redux/reducers';
 
 const mapStateToProps = (state: RootState) => ({
   uiState: state.uiState
@@ -35,21 +35,29 @@ function App(props: AppProps) {
       <i className="fa fa-upload" aria-hidden="true" />
       <header className="App-header">
 
-        {(props.uiState === 0) &&
-          < RomUploadContainer />}
+        {(props.uiState === UI_STATE.PENDING_ROM_LOAD)
+          && < RomUploadContainer />}
 
-        {(props.uiState === 1 || props.uiState === 2)
+        {(props.uiState === UI_STATE.PENDING_MODE_SELECT
+          || props.uiState === UI_STATE.PENDING_GAME_JOIN)
           && <PlayModeSelectContainer />}
 
-        {(props.uiState === 3 || props.uiState === 4 || props.uiState === 5)
+        {(props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
+          || props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
           && <GameOverviewContainer />}
 
 
-        {(props.uiState === 3 || props.uiState === 5)
+        {(props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
           && <Mupen64PlusEmuContainer />}
 
 
-        {(props.uiState === 4 || props.uiState === 5)
+        {(props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
           && <GameRoomPlayerInfoContainer />}
 
       </header>

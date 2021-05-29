@@ -1,8 +1,6 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTv } from '@fortawesome/free-solid-svg-icons';
-
 import { GameRoomPlayerInfoProps } from '../containers/GameRoomPlayerInfoContainer';
 import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
+import { UI_STATE } from '../redux/reducers';
 
 const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
 
@@ -16,12 +14,26 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
     return (<GamePadDisplayContainer playerId={`P${index + 1}`} playerName={playerName} key={`GamePadDisplayContainer-${index}`} />);
   });
 
+  let pingColor = "red";
+  if (props.ping < 120) {
+    pingColor = "yellow";
+  }
+  if (props.ping < 60) {
+    pingColor = "green";
+  }
+
   return (
     <div>
 
       <div>
         <small>
-          ping: {(props.ping)}
+          {(props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION &&
+            <small style={{ color: 'red' }}>DISCONNECTED</small>)}
+
+          {(props.uiState !== UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION &&
+            <small style={{ color: pingColor }}>ping: {(props.ping)}</small>)}
+
+
         </small>
       </div>
 
@@ -29,31 +41,32 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
         {gamePads}
       </div>
 
-      { props.gameIsPendingStart && (
+      {
+        props.gameIsPendingStart && (
 
-        <div>
-          {
-            props.localPlayerIsHost && (
-              <div>
-                <button name="startGameButton" onClick={props.onStartGameClick}>
-                  Start Game
+          <div>
+            {
+              props.localPlayerIsHost && (
+                <div>
+                  <button name="startGameButton" onClick={props.onStartGameClick}>
+                    Start Game
                   </button>
-              </div>
+                </div>
 
-            )
-          }
+              )
+            }
 
-          {
-            !props.localPlayerIsHost && (
-              <small>
-                waiting for P1 to start the game
-              </small>
+            {
+              !props.localPlayerIsHost && (
+                <small>
+                  waiting for P1 to start the game
+                </small>
 
-            )
-          }
-        </div>
+              )
+            }
+          </div>
 
-      )
+        )
       }
     </div >
 

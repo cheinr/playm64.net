@@ -2,10 +2,11 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import GamePadDisplayComponent from '../components/GamePadDisplayComponent';
-import { RootState } from '../redux/reducers';
+import { RootState, UI_STATE } from '../redux/reducers';
 
 
 const mapStateToProps = (state: RootState) => ({
+  uiState: state.uiState
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -16,5 +17,5 @@ const connector = connect(
   mapDispatchToProps
 );
 
-export type GamePadDisplayProps = { playerName: string, playerId: string };
+export type GamePadDisplayProps = { playerName: string, playerId: string, uiState: UI_STATE };
 export default connector(GamePadDisplayComponent);
