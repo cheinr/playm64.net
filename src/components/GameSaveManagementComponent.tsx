@@ -1,7 +1,37 @@
 import Modal from 'react-modal';
-import { putSaveFile } from 'mupen64plus-web';
+import { putSaveFile, getAllSaveFiles } from 'mupen64plus-web';
 import React, { ReactNode, RefObject } from 'react';
 import { GameSaveManagementComponentProps } from '../containers/GameSaveManagementContainer';
+
+
+// These are from https://stackoverflow.com/questions/25354313/saving-a-uint8array-to-a-binary-file
+const downloadURL = (data: any, fileName: any) => {
+  const a = document.createElement('a')
+  a.href = data
+  a.download = fileName
+  document.body.appendChild(a)
+  a.style.display = 'none'
+  a.click()
+  a.remove()
+}
+
+const downloadFile = (fileEntry: any) => {
+
+  const fileName = fileEntry.fileKey.replace("/mupen64plus/saves/", "");
+
+  console.log(fileEntry);
+  const saveFileBlob = new Blob([fileEntry.contents], {
+    type: "application/octet-stream"
+  });
+
+  const url = window.URL.createObjectURL(saveFileBlob);
+
+  console.log("foo");
+  downloadURL(url, fileName);
+
+  setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+}
+
 
 const customStyles = {
   content: {
@@ -15,10 +45,13 @@ const customStyles = {
 };
 
 interface GameSaveManagementComponentState {
-  modalIsOpen: boolean,
+  fileImportModalIsOpen: boolean,
   filesToImport: File[],
   importSuccessMessage: String,
-  importFailureMessage: String
+  importFailureMessage: String,
+
+  fileExportModalIsOpen: boolean,
+  fileEntriesToExport: any[];
 }
 
 class GameSaveManagementComponent extends React.Component<{}, GameSaveManagementComponentState> {
@@ -28,30 +61,54 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
   public constructor(props: GameSaveManagementComponentProps) {
     super(props);
     this.state = {
-      modalIsOpen: false,
+      fileImportModalIsOpen: false,
       filesToImport: [],
       importSuccessMessage: '',
-      importFailureMessage: ''
+      importFailureMessage: '',
+
+      fileExportModalIsOpen: false,
+      fileEntriesToExport: []
     };
   }
 
-  public openImportSaveModal() {
+  private openImportSaveModal() {
     this.setState(Object.assign({}, this.state, {
-      modalIsOpen: true
+      fileImportModalIsOpen: true
     }));
   }
 
-  public closeImportSaveModal() {
+  private closeImportSaveModal() {
 
     this.setState(Object.assign({}, this.state, {
-      modalIsOpen: false,
+      fileImportModalIsOpen: false,
       filesToImport: [],
       importSuccessMessage: '',
       importFailureMessage: ''
     }));
   }
 
+  private openExportSaveModal() {
+
+    this.setState({
+      fileExportModalIsOpen: true
+    });
+
+    getAllSaveFiles().then((saveFileEntries) => {
+      this.setState({
+        fileEntriesToExport: saveFileEntries
+      });
+    });
+  }
+
+  private closeExportSaveModal() {
+
+    this.setState({
+      fileExportModalIsOpen: false
+    });
+  }
+
   public render(): ReactNode {
+
 
     const handleFiles = (event: any) => {
 
@@ -97,11 +154,20 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
       });
     };
 
+    const filesToExportTableRows = this.state.fileEntriesToExport.map((fileEntry) => {
+      return (
+        <tr key={"fileRow-" + fileEntry.fileKey.replaceAll("/")}>
+          <td> {fileEntry.fileKey} </td>
+          <td><button onClick={() => downloadFile(fileEntry)}>download</button></td>
+        </tr >
+      );
+    });
+
     return (
       <div>
 
         <Modal
-          isOpen={this.state.modalIsOpen}
+          isOpen={this.state.fileImportModalIsOpen}
           contentLabel="Example Modal"
           style={customStyles}
           onRequestClose={() => this.closeImportSaveModal()}
@@ -147,11 +213,38 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
 
         </Modal>
 
+
+
+        <Modal
+          isOpen={this.state.fileExportModalIsOpen}
+          contentLabel="Example Modal"
+          style={customStyles}
+          onRequestClose={() => this.closeExportSaveModal()}
+        >
+
+          <div className="align-right">
+            <button onClick={() => this.closeExportSaveModal()}>Close</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Save File</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {filesToExportTableRows}
+            </tbody>
+          </table>
+        </Modal>
+
+
         <div>
           <small>Manage Saves</small>
         </div>
         <button onClick={() => this.openImportSaveModal()}>Import Saves</button>
-        <button>Export Saves</button>
+        <button onClick={() => this.openExportSaveModal()}>Export Saves</button>
       </div >
     );
   }
