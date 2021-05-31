@@ -47,3 +47,19 @@
     border: 4px dashed;
     padding: 150px;
 }
+
+.align-center {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+
+.align-right {
+    margin: auto;
+    text-align: right;
+}
+
+.align-left {
+    margin: auto;
+    text-align: left;
+}

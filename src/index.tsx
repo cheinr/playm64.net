@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
 import thunk from 'redux-thunk';
 import './index.css';
 import App from './App';
@@ -34,6 +35,8 @@ store.subscribe(() => {
 
 
 matchmakerService.setUiStore(store);
+
+Modal.setAppElement('#root');
 
 ReactDOM.render(
   <React.StrictMode>

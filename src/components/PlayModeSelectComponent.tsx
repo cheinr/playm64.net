@@ -132,6 +132,7 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
           <div className={`connection-state-message ${props.connectionStateMessage.isError ? 'connection-state-error' : ''}`}>
             <small>{props.connectionStateMessage.message}</small>
           </div>
+          <hr />
         </div>
       }
     </div >

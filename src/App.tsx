@@ -7,6 +7,7 @@ import RomUploadContainer from './containers/RomUploadContainer';
 import PlayModeSelectContainer from './containers/PlayModeSelectContainer';
 import GameOverviewContainer from './containers/GameOverviewContainer';
 import GameRoomPlayerInfoContainer from './containers/GameRoomPlayerInfoContainer';
+import GameSaveManagementContainer from './containers/GameSaveManagementContainer';
 import Mupen64PlusEmuContainer from './containers/Mupen64PlusEmuContainer';
 
 import { RootState, UI_STATE } from './redux/reducers';
@@ -36,7 +37,7 @@ function App(props: AppProps) {
       <header className="App-header">
 
         {(props.uiState === UI_STATE.PENDING_ROM_LOAD)
-          && < RomUploadContainer />}
+          && <RomUploadContainer />}
 
         {(props.uiState === UI_STATE.PENDING_MODE_SELECT
           || props.uiState === UI_STATE.PENDING_GAME_JOIN)
@@ -60,6 +61,8 @@ function App(props: AppProps) {
           || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
           && <GameRoomPlayerInfoContainer />}
 
+        {(props.uiState === UI_STATE.PENDING_MODE_SELECT)
+          && <GameSaveManagementContainer />}
       </header>
     </div >
   );
