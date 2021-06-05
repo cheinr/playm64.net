@@ -63,3 +63,22 @@
     margin: auto;
     text-align: left;
 }
+
+
+.game-controls {
+    margin: 50px;
+}
+
+.control-display-table {
+    border-collapse: separate;
+    border-spacing: 80px 0;
+    font-size: 80%;
+}
+
+.control-display-table td {
+    font-size: 60%;
+    text-align: center;
+    word-wrap: break-work;
+    overflow-wrap: break-word;
+}
+

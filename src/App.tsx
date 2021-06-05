@@ -5,6 +5,7 @@ import { Dispatch } from 'redux';
 
 import RomUploadContainer from './containers/RomUploadContainer';
 import PlayModeSelectContainer from './containers/PlayModeSelectContainer';
+import GameControlsDisplayContainer from './containers/GameControlsDisplayContainer';
 import GameOverviewContainer from './containers/GameOverviewContainer';
 import GameRoomPlayerInfoContainer from './containers/GameRoomPlayerInfoContainer';
 import GameSaveManagementContainer from './containers/GameSaveManagementContainer';
@@ -63,6 +64,11 @@ function App(props: AppProps) {
 
         {(props.uiState === UI_STATE.PENDING_MODE_SELECT)
           && <GameSaveManagementContainer />}
+
+        {(props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
+          && <GameControlsDisplayContainer />}
       </header>
     </div >
   );
