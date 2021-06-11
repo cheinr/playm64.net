@@ -93,7 +93,7 @@
   "scripts": {
     "clean": "rm -rf public/dist",
     "mkdirs": "mkdir -p public/dist",
-    "copy-dependencies": "cp -r ./node_modules/mupen64plus-web/bin/web/index.data ./node_modules/mupen64plus-web/bin/web/index.wasm ./node_modules/mupen64plus-web/bin/web/plugins ./node_modules/mupen64plus-web/bin/web/data ./public/dist",
+    "copy-dependencies": "cp -r ./node_modules/mupen64plus-web/bin/web/index* ./node_modules/mupen64plus-web/bin/web/plugins ./node_modules/mupen64plus-web/bin/web/data ./public/dist",
     "start": "npm run mkdirs && npm run copy-dependencies && HOST=localhost node scripts/start.js",
     "build": "npm run mkdirs && npm run copy-dependencies && node scripts/build.js",
     "test": "node scripts/test.js"

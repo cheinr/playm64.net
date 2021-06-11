@@ -1,6 +1,7 @@
 import {
   SET_ALIAS,
   SET_ALIAS_INPUT,
+  SET_DISPLAY_WELCOME_MODAL,
   SET_SELECTED_ROM_DATA,
   SET_UI_STATE,
   SET_GAME_ROOM_ID,
@@ -30,6 +31,7 @@ const initialState = {
   alias: '',
   aliasInput: '',
   displayHostNewGameMenu: false,
+  displayWelcomeModal: true,
   hostRegionOptions: null,
   hostingRegion: 'us-west-2',
   uiState: UI_STATE.PENDING_ROM_LOAD,
@@ -62,6 +64,11 @@ export default function appReducer(state: any, action: any) {
     case SET_CONNECTION_STATE_MESSAGE:
       return Object.assign({}, state, {
         connectionStateMessage: action.connectionStateMessage
+      });
+
+    case SET_DISPLAY_WELCOME_MODAL:
+      return Object.assign({}, state, {
+        displayWelcomeModal: action.displayWelcomeModal
       });
 
     case SET_HOST_REGION_OPTIONS:

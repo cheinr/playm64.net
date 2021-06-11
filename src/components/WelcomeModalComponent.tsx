@@ -1,0 +1,67 @@
+import Modal from 'react-modal';
+import { WelcomeModalProps } from '../containers/WelcomeModalContainer';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)'
+  }
+};
+
+
+const WelcomeModalComponent = (props: WelcomeModalProps) => {
+
+  let disableWelcomeModal = false;
+
+  const toggleDisplayPreferences = () => {
+    disableWelcomeModal = disableWelcomeModal ? false : true;
+  };
+
+  return (
+    <div>
+
+      <Modal
+        isOpen={props.shouldDisplayModal}
+        contentLabel="Welcome Modal"
+        style={customStyles}
+        onRequestClose={() => props.dismissModal(false)}
+      >
+
+        <h1>Welcome to playm64.net!</h1>
+
+        <p>
+          This is an experimental project to port the mupen64plus
+          emulator (<a href="https://mupen64plus.org/">link</a>) to the browser, complete with netplay support.
+        </p>
+        <p>
+
+          Expect to find many issues, ranging from graphical glitches, to games crashing completely, and
+          anything in between. Check out the project fork on github
+          (<a href='https://github.com/cheinr/mupen64plus-web-netplay'>link</a>), and if you're
+    interested in a more stable emulation experience check out the <a href="https://m64p.github.io/">m64p emulator</a> (no affiliation with playm64.net).
+
+        </p>
+        <p>
+          Users are required to provide their own ROMs to emulate -- playm64.net does not distribute ROMs.
+        </p>
+
+
+        <div className="align-center">
+          <input type="checkbox" onChange={() => toggleDisplayPreferences()} /> Don't display this again
+        </div>
+        <div className="align-center">
+          <button onClick={() => props.dismissModal(disableWelcomeModal)}>Dismiss</button>
+        </div>
+
+      </Modal>
+
+    </div>
+  );
+};
+
+export default WelcomeModalComponent;
+

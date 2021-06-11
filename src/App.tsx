@@ -10,15 +10,19 @@ import GameOverviewContainer from './containers/GameOverviewContainer';
 import GameRoomPlayerInfoContainer from './containers/GameRoomPlayerInfoContainer';
 import GameSaveManagementContainer from './containers/GameSaveManagementContainer';
 import Mupen64PlusEmuContainer from './containers/Mupen64PlusEmuContainer';
-
+import WelcomeModalContainer from './containers/WelcomeModalContainer';
 import { RootState, UI_STATE } from './redux/reducers';
+import { setDisplayWelcomeModal } from './redux/actions';
 
 const mapStateToProps = (state: RootState) => ({
   uiState: state.uiState
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-
+  displayWelcomeMessage: () => {
+    delete localStorage.disableWelcomeModal;
+    dispatch(setDisplayWelcomeModal(true));
+  }
 });
 
 const connector = connect(
@@ -36,6 +40,8 @@ function App(props: AppProps) {
     <div className="App">
       <i className="fa fa-upload" aria-hidden="true" />
       <header className="App-header">
+
+        <WelcomeModalContainer />
 
         {(props.uiState === UI_STATE.PENDING_ROM_LOAD)
           && <RomUploadContainer />}
@@ -69,6 +75,10 @@ function App(props: AppProps) {
           || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
           || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
           && <GameControlsDisplayContainer />}
+
+        <div>
+          <small><a href="#" onClick={() => props.displayWelcomeMessage()}>Welcome Message</a></small>
+        </div>
       </header>
     </div >
   );

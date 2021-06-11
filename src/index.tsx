@@ -9,7 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import { createStore, applyMiddleware, Store } from 'redux';
 import { Provider } from 'react-redux';
 import appReducer from './redux/reducers';
-import { setAlias } from './redux/actions';
+import { setAlias, setDisplayWelcomeModal } from './redux/actions';
 
 import MatchmakerService from './service/MatchmakerClient';
 
@@ -24,6 +24,9 @@ const store: Store = createStore(appReducer, applyMiddleware(
 const maybePersistedAlias = localStorage.getItem('playerAlias');
 const alias = maybePersistedAlias ? maybePersistedAlias : '';
 store.dispatch(setAlias(alias));
+
+const disableWelcomeMessage = localStorage.getItem('disableWelcomeModal') ? true : false;
+store.dispatch(setDisplayWelcomeModal(!disableWelcomeMessage));
 
 store.subscribe(() => {
   const alias = store.getState().alias;
