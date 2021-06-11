@@ -77,7 +77,7 @@ function App(props: AppProps) {
           && <GameControlsDisplayContainer />}
 
         <div>
-          <small><a href="#" onClick={() => props.displayWelcomeMessage()}>Welcome Message</a></small>
+          <div className="welcome-message-link"><a href="#" onClick={() => props.displayWelcomeMessage()}>welcome message</a></div>
         </div>
       </header>
     </div >

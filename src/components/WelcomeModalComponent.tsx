@@ -1,17 +1,6 @@
 import Modal from 'react-modal';
 import { WelcomeModalProps } from '../containers/WelcomeModalContainer';
 
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
-};
-
 
 const WelcomeModalComponent = (props: WelcomeModalProps) => {
 
@@ -27,7 +16,8 @@ const WelcomeModalComponent = (props: WelcomeModalProps) => {
       <Modal
         isOpen={props.shouldDisplayModal}
         contentLabel="Welcome Modal"
-        style={customStyles}
+        className="Modal"
+        overlayClassName="ModalOverlay"
         onRequestClose={() => props.dismissModal(false)}
       >
 
@@ -40,7 +30,7 @@ const WelcomeModalComponent = (props: WelcomeModalProps) => {
         <p>
 
           Expect to find many issues, ranging from graphical glitches, to games crashing completely, and
-          anything in between. Check out the project fork on github
+          anything in between. For the best experience, try to use the latest Firefox or Chrome-based browser available. Check out the project fork on github
           (<a href='https://github.com/cheinr/mupen64plus-web-netplay'>link</a>), and if you're
     interested in a more stable emulation experience check out the <a href="https://m64p.github.io/">m64p emulator</a> (no affiliation with playm64.net).
 

@@ -32,18 +32,6 @@ const downloadFile = (fileEntry: any) => {
   setTimeout(() => window.URL.revokeObjectURL(url), 1000);
 }
 
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
-};
-
 interface GameSaveManagementComponentState {
   fileImportModalIsOpen: boolean,
   filesToImport: File[],
@@ -169,7 +157,8 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
         <Modal
           isOpen={this.state.fileImportModalIsOpen}
           contentLabel="Example Modal"
-          style={customStyles}
+          className="Modal"
+          overlayClassName="ModalOverlay"
           onRequestClose={() => this.closeImportSaveModal()}
         >
           <div className="align-right">
@@ -213,12 +202,11 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
 
         </Modal>
 
-
-
         <Modal
           isOpen={this.state.fileExportModalIsOpen}
           contentLabel="Example Modal"
-          style={customStyles}
+          className="Modal"
+          overlayClassName="ModalOverlay"
           onRequestClose={() => this.closeExportSaveModal()}
         >
 
