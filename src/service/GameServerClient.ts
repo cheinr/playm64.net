@@ -1,7 +1,7 @@
 import pako from 'pako';
 
 import stats from '../Stats';
-import { setUiState, setPing } from "../redux/actions";
+import { setUiState, setPing, setEmulatorErrorMessage } from "../redux/actions";
 import { UI_STATE } from "../redux/reducers";
 
 import createMupen64PlusWeb from 'mupen64plus-web';
@@ -246,6 +246,10 @@ class GameServerClient {
             }
 
             return prefix + path;
+          },
+          setErrorStatus: (errorMessage: string) => {
+            console.log("errorMessage: %s", errorMessage);
+            this.uiStore.dispatch(setEmulatorErrorMessage(errorMessage));
           }
         });
         break;

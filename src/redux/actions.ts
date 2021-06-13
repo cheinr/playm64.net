@@ -19,6 +19,7 @@ export const SET_ALIAS = 'SET_ALIAS';
 export const SET_ALIAS_INPUT = 'SET_ALIAS_INPUT';
 export const SET_CONNECTION_STATE_MESSAGE = 'SET_CONNECTION_STATE_MESSAGE';
 export const SET_DISPLAY_WELCOME_MODAL = 'SET_DISPLAY_WELCOME_MODAL';
+export const SET_EMULATOR_ERROR_MESSAGE = 'SET_EMULATOR_ERROR_MESSAGE';
 export const SET_HOSTING_REGION = 'SET_HOSTING_REGION';
 export const SET_SELECTED_ROM_DATA = 'SET_SELECTED_ROM_DATA';
 export const SET_UI_STATE = 'SET_UI_STATE';
@@ -55,6 +56,10 @@ export function setConnectionStateMessage(message: string, isError: boolean) {
       isError
     }
   };
+}
+
+export function setEmulatorErrorMessage(message: string) {
+  return { type: SET_EMULATOR_ERROR_MESSAGE, message };
 }
 
 export function setDisplayWelcomeModal(displayWelcomeModal: boolean) {
@@ -206,6 +211,10 @@ export function startLocalGame() {
           }
 
           return prefix + path;
+        },
+        setErrorStatus: (errorMessage: string) => {
+          console.log("errorMessage: %s", errorMessage);
+          dispatch(setEmulatorErrorMessage(errorMessage));
         }
       });
     });

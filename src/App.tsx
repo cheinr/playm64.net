@@ -3,6 +3,7 @@ import './App.css';
 import { connect, ConnectedProps } from 'react-redux';
 import { Dispatch } from 'redux';
 
+import ErrorMessageContainer from './containers/ErrorMessageContainer';
 import RomUploadContainer from './containers/RomUploadContainer';
 import PlayModeSelectContainer from './containers/PlayModeSelectContainer';
 import GameControlsDisplayContainer from './containers/GameControlsDisplayContainer';
@@ -62,6 +63,10 @@ function App(props: AppProps) {
           || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
           && <Mupen64PlusEmuContainer />}
 
+        {(props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
+          && <ErrorMessageContainer />}
 
         {(props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
           || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
