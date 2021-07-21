@@ -1,3 +1,4 @@
+import { KeyboardEvent } from 'react';
 import { PlayModeSelectProps } from '../containers/PlayModeSelectContainer';
 import { UI_STATE } from '../redux/reducers';
 
@@ -12,6 +13,12 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
           { o.regionName} &nbsp; ({capacityPercent}% capacity available)
         </option >);
     });
+  }
+
+  const onJoinCodeInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      props.joinGame(props.joinGameRoomInput);
+    }
   }
 
   return (
@@ -105,6 +112,7 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
               <input name="joinCodeInput" disabled={props.alias == ''}
                 value={props.joinGameRoomInput}
                 onChange={props.onJoinGameRoomInputChange}
+                onKeyDown={onJoinCodeInputKeyDown}
                 placeholder="Enter a join code...">
               </input>
 
