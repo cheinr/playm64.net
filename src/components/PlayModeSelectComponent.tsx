@@ -85,7 +85,7 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
               <div>
                 <button name="createGameButton" onClick={() => props.createGameRoom()}
-                  disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !regionOptions}>
+                  disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !regionOptions}>
                   Create Game Room
                 </button>
 
@@ -109,7 +109,7 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
             <div>
 
-              <input name="joinCodeInput" disabled={props.alias == ''}
+              <input name="joinCodeInput" disabled={props.alias === ''}
                 value={props.joinGameRoomInput}
                 onChange={props.onJoinGameRoomInputChange}
                 onKeyDown={onJoinCodeInputKeyDown}
@@ -117,7 +117,7 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
               </input>
 
               <button name="joinGameButton" onClick={() => props.joinGame(props.joinGameRoomInput)}
-                disabled={props.alias == '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}>
+                disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)}>
                 Join Game
               </button>
 

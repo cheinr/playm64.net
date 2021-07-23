@@ -1,8 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTv } from '@fortawesome/free-solid-svg-icons';
-
 import { GameRoomOverviewProps } from '../containers/GameOverviewContainer';
-import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
 
 const GameOverviewComponent = (props: GameRoomOverviewProps) => {
   return (

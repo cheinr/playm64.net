@@ -49,7 +49,7 @@ class CompressedBinaryRTCChannelWrapper implements BinaryRTCDataChannel {
   private _handleMessage(event: MessageEvent): void {
 
     if (!(event.data instanceof ArrayBuffer)) {
-      throw "CompressedRTCDataChannel is only compatible with binary data";
+      throw new Error("CompressedRTCDataChannel is only compatible with binary data");
     }
 
     const data: ArrayBuffer = event.data;

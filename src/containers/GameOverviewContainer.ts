@@ -1,6 +1,6 @@
 import { setJoinGameRoomInput, requestGameStart } from '../redux/actions';
 import { connect, ConnectedProps } from 'react-redux';
-import { Dispatch, Action } from 'redux';
+import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import GameRoomOverviewComponent from '../components/GameOverviewComponent';

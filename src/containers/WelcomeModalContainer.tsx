@@ -1,11 +1,10 @@
 import { setDisplayWelcomeModal } from '../redux/actions';
 
 import { connect, ConnectedProps } from 'react-redux';
-import { Dispatch, Action } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { Dispatch } from 'redux';
 
 import WelcomeModalComponent from '../components/WelcomeModalComponent';
-import { RootState, UI_STATE } from '../redux/reducers';
+import { RootState } from '../redux/reducers';
 
 const mapStateToProps = (state: RootState) => ({
   shouldDisplayModal: state.displayWelcomeModal

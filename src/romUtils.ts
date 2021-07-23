@@ -36,7 +36,7 @@ export function getRomShortName(romData: ArrayBuffer): string {
       outDataView.setUint32(i * 4, inDataView.getUint32(i * 4, true));
     }
   } else {
-    throw "Invalid ROM";
+    throw new Error("Invalid ROM");
   }
 
   const bigEndianBytes = new Uint8Array(bigEndianData);

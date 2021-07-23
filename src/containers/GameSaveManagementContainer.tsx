@@ -1,7 +1,6 @@
 import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { UI_STATE } from '../redux/reducers';
 
 import GameSaveManagementComponent from '../components/GameSaveManagementComponent';
 import { RootState } from '../redux/reducers';

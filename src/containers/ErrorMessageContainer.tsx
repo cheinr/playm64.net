@@ -2,7 +2,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import ErrorMessageComponent from '../components/ErrorMessageComponent';
-import { RootState, UI_STATE } from '../redux/reducers';
+import { RootState } from '../redux/reducers';
 
 
 const mapStateToProps = (state: RootState) => ({

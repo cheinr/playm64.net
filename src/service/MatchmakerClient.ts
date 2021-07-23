@@ -156,7 +156,6 @@ class MatchmakerClient {
         break;
 
       case 'game-join-request-rejected': {
-        const gameRoomId = message.payload.gameRoomId;
         const reason = message.payload.reason;
 
         this.gameConnectRejectionListeners.forEach((cb) => {
@@ -254,7 +253,7 @@ class MatchmakerClient {
       console.log("Matchmaker RequestCount increased: ", this.requestCount);
 
       if (!this.socket) {
-        throw "No socket for sending wrtc-ice-candidates is available!";
+        throw new Error("No socket for sending wrtc-ice-candidates is available!");
       }
 
       this.socket.send(JSON.stringify({
@@ -287,7 +286,7 @@ class MatchmakerClient {
     return new Promise<GameRoomInfo>((resolve, reject) => {
       this._connectAsync().then(() => {
         if (this.socket === null) {
-          throw 'createGame: this.websocket must be created';
+          throw new Error('createGame: this.websocket must be created');
         }
 
         this.socket.send(JSON.stringify({
@@ -329,7 +328,7 @@ class MatchmakerClient {
   async joinGame(alias: string, gameId: string, romSimpleName: string): Promise<GameServerClient> {
 
     if (this.rtcConnection) {
-      throw 'Attempted to join multiple games at once';
+      throw new Error('Attempted to join multiple games at once');
     }
 
     this.uiStore?.dispatch(setConnectionStateMessage(`Attempting to join game room '${gameId}'`, false));
@@ -345,7 +344,7 @@ class MatchmakerClient {
 
       const onError = (err: any) => {
         this.uiStore?.dispatch(setConnectionStateMessage(
-          `Failed to join game: ${gameId}.${err} `, true));
+          `Failed to join game: ${gameId}. ${err} `, true));
 
         reject();
       }
@@ -357,7 +356,7 @@ class MatchmakerClient {
     this._connectAsync().then(() => {
 
       if (this.socket === undefined) {
-        throw 'StartRTCConnection: this.websocket must be created';
+        throw new Error('StartRTCConnection: this.websocket must be created');
       }
 
       const iceServers: RTCIceServer[] = [{ urls: ['stun:stun.l.google.com:19302'] }];
@@ -403,18 +402,11 @@ class MatchmakerClient {
         }
       };
 
-
-      setTimeout(() => {
-        console.log(serverRTCConnection);
-        console.log(serverRTCConnection.connectionState);
-      }, 4000);
-
       serverRTCConnection.onicecandidate = (event) => {
         if (!this.socket) {
-          throw "Lost connection to matchmaking service";
+          throw new Error("Lost connection to matchmaking service");
         }
 
-        console.log(event);
         if (event.candidate && event.candidate.candidate) {
 
 
@@ -484,7 +476,7 @@ class MatchmakerClient {
       || !this.rtcUnreliableChannel
       || !this.rtcRoomControlChannel) {
 
-      throw "invalid state: expected all channels to at least be present";
+      throw new Error("invalid state: expected all channels to at least be present");
     }
 
     return this.rtcReliableChannel.readyState === 'open'
@@ -500,7 +492,7 @@ class MatchmakerClient {
         || !this.rtcUnreliableChannel
         || !this.rtcRoomControlChannel) {
 
-        throw "invalid state: expected all channels to at least be present";
+        throw new Error("invalid state: expected all channels to at least be present");
       }
 
 
@@ -547,11 +539,11 @@ class MatchmakerClient {
 
     if (!rtcReliableChannel || rtcReliableChannel.readyState !== 'open'
       || !rtcUnreliableChannel || rtcUnreliableChannel.readyState !== 'open') {
-      throw 'FATAL: _onGameServerClientConnected called before data channels are ready';
+      throw new Error('FATAL: _onGameServerClientConnected called before data channels are ready');
     }
 
     if (!this.uiStore) {
-      throw 'FATAL: uiStore should be set before any connection are being made';
+      throw new Error('FATAL: uiStore should be set before any connection are being made');
     }
 
     const gameServerClient = new GameServerClient(gameRoomId,
@@ -581,7 +573,7 @@ class MatchmakerClient {
 
   _sendJoinRequest(gameId: string, alias: string, romSimpleName: string, desc: any) {
     if (!this.socket) {
-      throw "Tried to join game before we were connected to the matchmaker";
+      throw new Error("Tried to join game before we were connected to the matchmaker");
     }
 
     this.requestCount++;

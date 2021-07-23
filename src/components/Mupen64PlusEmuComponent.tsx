@@ -1,8 +1,6 @@
-import createMupen64PlusWeb from 'mupen64plus-web';
-import React, { ReactNode, Ref, RefObject } from 'react';
+import React, { ReactNode, RefObject } from 'react';
 
 import stats from '../Stats';
-import { Mupen64PlusEmuProps } from '../containers/Mupen64PlusEmuContainer';
 
 
 class Mupen64PlusEmuComponent extends React.Component {

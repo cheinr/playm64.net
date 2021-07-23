@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
       });
     } else {
 
-      throw "TODO - tell the wily user to only select one rom at a time";
+      throw new Error("TODO - tell the wily user to only select one rom at a time");
     }
   }
 });
