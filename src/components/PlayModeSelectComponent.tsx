@@ -2,6 +2,8 @@ import { KeyboardEvent } from 'react';
 import { PlayModeSelectProps } from '../containers/PlayModeSelectContainer';
 import { UI_STATE } from '../redux/reducers';
 
+import LinkButton from './common/LinkButton';
+
 const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
   let regionOptions = null;
@@ -61,7 +63,9 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
           <div>
             <small>
-              player alias: {props.alias} <a href='#' onClick={props.onPlayerAliasEditClick}> edit</a>
+              player alias: {props.alias}
+              <LinkButton onClick={props.onPlayerAliasEditClick} >edit</LinkButton>
+
             </small>
           </div>
 
@@ -95,8 +99,8 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
                   {
                     props.uiState === UI_STATE.PENDING_MODE_SELECT
-                      ? <a href="#" onClick={() => props.toggleHostingMenu()} >join an existing game</a>
-                      : <a href="#" style={{ pointerEvents: 'none' }}>join an existing game</a>
+                      ? <LinkButton onClick={() => props.toggleHostingMenu()} >join an existing game</LinkButton>
+                      : <LinkButton onClick={() => props.toggleHostingMenu()} disabled={true}>join an exiting game</LinkButton>
                   }
                 </small>
               </div>
@@ -126,8 +130,8 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
                   {
                     props.uiState === UI_STATE.PENDING_MODE_SELECT
-                      ? <a href="#" onClick={() => props.toggleHostingMenu()} >host a new game</a>
-                      : <a href="#" style={{ pointerEvents: 'none' }}>host a new game</a>
+                      ? <LinkButton onClick={() => props.toggleHostingMenu()} >host a new game</LinkButton>
+                      : <LinkButton onClick={() => props.toggleHostingMenu()} disabled={true}>host a new game</LinkButton>
                   }
                 </small>
               </div>

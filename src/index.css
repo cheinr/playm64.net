@@ -13,6 +13,7 @@ code {
 }
 
 a:link {
+    
     color: #3399ff;
     background-color: transparent;
     text-decoration: underline;
@@ -22,6 +23,18 @@ a:visited {
     color: #9966ff;
     background-color: transparent;
     text-decoration: underline;
+}
+
+/* From https://stackoverflow.com/questions/1367409/how-to-make-button-look-like-a-link */
+.link-button {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  /*optional*/
+  font-size: 1em;
+  color: #3399ff;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .connection-state-message {

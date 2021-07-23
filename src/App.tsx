@@ -15,6 +15,8 @@ import WelcomeModalContainer from './containers/WelcomeModalContainer';
 import { RootState, UI_STATE } from './redux/reducers';
 import { setDisplayWelcomeModal } from './redux/actions';
 
+import LinkButton from './components/common/LinkButton';
+
 const mapStateToProps = (state: RootState) => ({
   uiState: state.uiState
 });
@@ -36,7 +38,6 @@ export default connector(App);
 
 function App(props: AppProps) {
 
-  console.log("props: %o", props.uiState);
   return (
     <div className="App">
       <i className="fa fa-upload" aria-hidden="true" />
@@ -82,7 +83,7 @@ function App(props: AppProps) {
           && <GameControlsDisplayContainer />}
 
         <div>
-          <div className="welcome-message-link"><a href="#" onClick={() => props.displayWelcomeMessage()}>welcome message</a></div>
+          <div className="welcome-message-link"><LinkButton onClick={() => props.displayWelcomeMessage()}>welcome message</LinkButton></div>
         </div>
       </header>
     </div >
