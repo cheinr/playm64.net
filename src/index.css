@@ -12,6 +12,18 @@ code {
     monospace;
 }
 
+a:link {
+    color: #3399ff;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #9966ff;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
 .connection-state-message {
     font-size: 16px;
     color: green;
@@ -20,3 +32,4 @@ code {
 .connection-state-error {
     color: red;
 }
+
