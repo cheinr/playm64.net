@@ -13,7 +13,11 @@ import { setAlias, setDisplayWelcomeModal } from './redux/actions';
 
 import MatchmakerService from './service/MatchmakerClient';
 
-const matchmakerService = new MatchmakerService("wss://agd73oj5c9.execute-api.us-west-2.amazonaws.com/beta");
+let matchmakerURL = (process.env.NODE_ENV === "production")
+  ? "wss://ahcv76zlb4.execute-api.us-west-2.amazonaws.com/prod"
+  : "wss://agd73oj5c9.execute-api.us-west-2.amazonaws.com/beta";
+
+const matchmakerService = new MatchmakerService(matchmakerURL);
 
 const store: Store = createStore(appReducer, applyMiddleware(
   thunk.withExtraArgument({
