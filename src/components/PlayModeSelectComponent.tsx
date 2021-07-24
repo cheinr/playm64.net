@@ -63,7 +63,7 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
           <div>
             <small>
-              player alias: {props.alias}
+              player alias: {props.alias} &nbsp;
               <LinkButton onClick={props.onPlayerAliasEditClick} >edit</LinkButton>
 
             </small>
