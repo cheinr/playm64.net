@@ -31,7 +31,7 @@ const WelcomeModalComponent = (props: WelcomeModalProps) => {
 
           Expect to find many issues, ranging from graphical glitches, to games crashing completely, and
           anything in between. For the best experience, try to use the latest Firefox or Chrome-based browser available. Check out the project fork on github
-          (<a href='https://github.com/cheinr/mupen64plus-web-netplay'>link</a>), and if you're
+          (<a href='https://github.com/cheinr/mupen64plus-web'>link</a>), and if you're
     interested in a more stable emulation experience check out the <a href="https://m64p.github.io/">m64p emulator</a> (no affiliation with playm64.net).
 
         </p>
@@ -42,7 +42,7 @@ const WelcomeModalComponent = (props: WelcomeModalProps) => {
 
         <div className="align-center">
           <input type="checkbox" onChange={() => toggleDisplayPreferences()} /> Don't display this again
-        </div>
+    </div>
         <div className="align-center">
           <button onClick={() => props.dismissModal(disableWelcomeModal)}>Dismiss</button>
         </div>
