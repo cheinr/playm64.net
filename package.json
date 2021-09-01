@@ -54,7 +54,7 @@
     "jest-resolve": "26.6.0",
     "jest-watch-typeahead": "0.6.1",
     "mini-css-extract-plugin": "0.11.3",
-    "mupen64plus-web": "0.0.3",
+    "mupen64plus-web": "0.0.5",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pako": "^2.0.3",
     "pnp-webpack-plugin": "1.6.4",
