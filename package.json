@@ -54,7 +54,7 @@
     "jest-resolve": "26.6.0",
     "jest-watch-typeahead": "0.6.1",
     "mini-css-extract-plugin": "0.11.3",
-    "mupen64plus-web": "0.0.5",
+    "mupen64plus-web": "0.0.7",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pako": "^2.0.3",
     "pnp-webpack-plugin": "1.6.4",
@@ -93,7 +93,7 @@
   "scripts": {
     "clean": "rm -rf public/dist",
     "mkdirs": "mkdir -p public/dist",
-    "copy-dependencies": "cp -r ./node_modules/mupen64plus-web/bin/web/index* ./node_modules/mupen64plus-web/bin/web/plugins ./node_modules/mupen64plus-web/bin/web/data ./public/dist",
+    "copy-dependencies": "cp -r ./node_modules/mupen64plus-web/bin/web/index* ./public/dist",
     "start": "npm run mkdirs && npm run copy-dependencies && HOST=localhost node scripts/start.js",
     "build": "npm run mkdirs && npm run copy-dependencies && node scripts/build.js",
     "test": "node scripts/test.js"
