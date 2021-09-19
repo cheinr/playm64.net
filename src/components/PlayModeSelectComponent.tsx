@@ -1,8 +1,10 @@
 import { KeyboardEvent } from 'react';
 import { PlayModeSelectProps } from '../containers/PlayModeSelectContainer';
+import InputOptionsContainer from '../containers/InputOptionsContainer';
 import { UI_STATE } from '../redux/reducers';
 
 import LinkButton from './common/LinkButton';
+
 
 const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
 
@@ -27,7 +29,10 @@ const PlayModeSelectComponent = (props: PlayModeSelectProps) => {
     <div>
       Loaded: { props.romShortName}
       <hr />
+
       <div>
+        Input Device
+        <InputOptionsContainer />
       </div>
 
       <div>

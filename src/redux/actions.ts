@@ -17,6 +17,7 @@ type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 
 export const SET_ALIAS = 'SET_ALIAS';
 export const SET_ALIAS_INPUT = 'SET_ALIAS_INPUT';
+export const SET_CONNECTED_GAMEPAD = 'SET_CONNECTED_GAMEPAD';
 export const SET_CONNECTION_STATE_MESSAGE = 'SET_CONNECTION_STATE_MESSAGE';
 export const SET_DISPLAY_WELCOME_MODAL = 'SET_DISPLAY_WELCOME_MODAL';
 export const SET_EMULATOR_ERROR_MESSAGE = 'SET_EMULATOR_ERROR_MESSAGE';
@@ -31,6 +32,10 @@ export const SET_GAME_SERVER_CONNECTION = 'SET_GAME_SERVER_CONNECTION';
 export const SET_PING = 'SET_PING';
 export const START_GAME = 'START_GAME';
 export const TOGGLE_HOST_NEW_GAME_MENU = 'TOGGLE_HOST_NEW_GAME_MENU';
+
+export function setConnectedGamepad(maybeGamepad: any) {
+  return { type: SET_CONNECTED_GAMEPAD, connectedGamepad: maybeGamepad };
+}
 
 export function setHostRegionOptions(regionOptions: any) {
   return { type: SET_HOST_REGION_OPTIONS, regionOptions };

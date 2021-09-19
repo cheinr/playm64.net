@@ -10,6 +10,7 @@ import {
   SET_ROOM_PLAYER_INFO,
   SET_GAME_SERVER_CONNECTION,
   SET_PING,
+  SET_CONNECTED_GAMEPAD,
   SET_CONNECTION_STATE_MESSAGE,
   TOGGLE_HOST_NEW_GAME_MENU,
   SET_HOSTING_REGION,
@@ -31,6 +32,7 @@ export enum UI_STATE {
 const initialState = {
   alias: '',
   aliasInput: '',
+  connectedGamepad: null,
   displayHostNewGameMenu: false,
   displayWelcomeModal: true,
   emulatorErrorMessage: '',
@@ -61,6 +63,11 @@ export default function appReducer(state: any, action: any) {
         uiState: UI_STATE.PENDING_MODE_SELECT,
         selectedRomData: action.data,
         selectedRomShortName: getRomShortName(action.data)
+      });
+
+    case SET_CONNECTED_GAMEPAD:
+      return Object.assign({}, state, {
+        connectedGamepad: action.connectedGamepad
       });
 
     case SET_CONNECTION_STATE_MESSAGE:

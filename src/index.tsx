@@ -9,7 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import { createStore, applyMiddleware, Store } from 'redux';
 import { Provider } from 'react-redux';
 import appReducer from './redux/reducers';
-import { setAlias, setDisplayWelcomeModal } from './redux/actions';
+import { setAlias, setConnectedGamepad, setDisplayWelcomeModal } from './redux/actions';
 
 import MatchmakerService from './service/MatchmakerClient';
 
@@ -37,6 +37,25 @@ store.subscribe(() => {
 
   if (alias !== localStorage.getItem('playerAlias')) {
     localStorage.setItem('playerAlias', alias);
+  }
+});
+
+
+
+
+window.addEventListener("gamepadconnected", function(e: any) {
+  console.log(e);
+
+  if (!store.getState().connectedGamepad) {
+    store.dispatch(setConnectedGamepad(e.gamepad));
+  }
+});
+
+window.addEventListener("gamepaddisconnected", function(e: any) {
+
+  const currentConnectedJoystickIndex = store.getState().connectedGamepad?.index;
+  if (e.gamepad.index === currentConnectedJoystickIndex) {
+    store.dispatch(setConnectedGamepad(null));
   }
 });
 

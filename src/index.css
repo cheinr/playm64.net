@@ -37,6 +37,11 @@ a:visited {
   cursor: pointer;
 }
 
+.input-device {
+    font-size: 16px;
+    color: green;
+}
+
 .connection-state-message {
     font-size: 16px;
     color: green;
