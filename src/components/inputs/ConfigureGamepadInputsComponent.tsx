@@ -117,6 +117,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'A Button',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -124,6 +125,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'B Button',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -131,6 +133,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'Start',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -138,6 +141,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'Z Trigger',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -145,6 +149,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'L Trigger',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -152,6 +157,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'R Trigger',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -159,6 +165,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'X Axis',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -166,6 +173,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'Y Axis',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -173,6 +181,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'DPad U',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -180,6 +189,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'DPad D',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -187,6 +197,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'DPad L',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -194,6 +205,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'DPad R',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 1,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -201,6 +213,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'C Button U',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 2,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -208,6 +221,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'C Button D',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 2,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -215,6 +229,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'C Button L',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 2,
       inputRef: useRef<HTMLInputElement>(null)
     },
     {
@@ -222,6 +237,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       label: 'C Button R',
       value: useState(''),
       isPressed: useState(false),
+      maxMappings: 2,
       inputRef: useRef<HTMLInputElement>(null)
     }
   ];
@@ -304,7 +320,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
 
       if (inputTarget) {
         console.log("inputTarget: %o", inputTarget);
-        const inputDefinitions = inputTarget.value[0].split(' ');
+        const inputMappings = inputTarget.value[0].split(' ').filter((inputMapping) => inputMapping !== '');
 
         let effectiveInputDefinition = inputDefinition;
         if (inputTarget.key.includes("Axis") && inputDefinition.includes('axis')) {
@@ -312,12 +328,13 @@ const ConfigureGamepadInputsComponent = (props: any) => {
           effectiveInputDefinition = `axis(${axisNumber}-,${axisNumber}+)`
         }
 
-        if (!allInputDefinitions.includes(effectiveInputDefinition)) {
-          inputDefinitions.push(effectiveInputDefinition);
+        if (!allInputDefinitions.includes(effectiveInputDefinition)
+          && inputMappings.length < inputTarget.maxMappings) {
+          inputMappings.push(effectiveInputDefinition);
         }
 
-        const setInputDefinitions = inputTarget.value[1];
-        setInputDefinitions(inputDefinitions
+        const setInputMapping = inputTarget.value[1];
+        setInputMapping(inputMappings
           .filter((def) => def !== '')
           .join(' '));
       }
