@@ -1,4 +1,5 @@
 import React, { ReactNode, RefObject } from 'react';
+import { Button } from 'react-bootstrap';
 
 import stats from '../Stats';
 
@@ -48,8 +49,18 @@ class Mupen64PlusEmuComponent extends React.Component {
         <canvas ref={this.canvasRef} className="emscripten" id="canvas" onContextMenu={(event) => event.preventDefault()}></canvas>
 
         <div>
-          <button onClick={makeFullScreen}>Fullscreen</button>
-          <button onClick={toggleStats}>Toggle Stats</button>
+          <Button variant="secondary"
+            onClick={makeFullScreen}
+            size="sm"
+            className="mx-1">
+            Fullscreen
+          </Button>
+          <Button variant="secondary"
+            onClick={toggleStats}
+            size="sm"
+            className="mx-1">
+            Toggle Stats
+          </Button>
         </div>
       </div >
     );

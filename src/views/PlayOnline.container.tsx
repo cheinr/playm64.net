@@ -3,8 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import PlayModeSelectComponent from '../components/PlayModeSelectComponent';
-import { RootState } from '../redux/reducers';
+import PlayOnline from './PlayOnline';
 import {
   setAlias,
   setAliasInput,
@@ -12,15 +11,21 @@ import {
   toggleHostNewGameMenu,
   startLocalGame,
   setHostingRegion,
-  requestHostingRegionOptionsIfNotLoaded
+  requestHostingRegionOptionsIfNotLoaded,
+  setSelectedROMData
 } from '../redux/actions';
 import MatchmakerClient from '../service/MatchmakerClient';
+import { RootState } from '../redux/reducers';
 
 
 type MyExtraArg = { matchmakerService: MatchmakerClient };
 type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 
-const mapStateToProps = (state: RootState) => ({
+interface OwnProps {
+  isHostingInitially?: boolean;
+}
+
+const mapStateToProps = (state: RootState, ownProps: OwnProps) => ({
   alias: state.alias,
   aliasInput: state.aliasInput,
   romShortName: state.selectedRomShortName,
@@ -29,7 +34,9 @@ const mapStateToProps = (state: RootState) => ({
   connectionStateMessage: state.connectionStateMessage,
   showHostingMenu: state.displayHostNewGameMenu,
   hostRegionOptions: state.hostRegionOptions,
-  hostingRegion: state.hostingRegion
+  hostingRegion: state.hostingRegion,
+
+  isHostingInitially: ownProps.isHostingInitially ?? false
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
@@ -63,11 +70,15 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
     dispatch(setAlias(''));
   },
   toggleHostingMenu: () => {
+    console.log("toggleHostingMenu");
     dispatch(toggleHostNewGameMenu());
     dispatch(requestHostingRegionOptionsIfNotLoaded());
   },
   onHostingRegionSelectChange: (event: ChangeEvent<HTMLSelectElement>) => {
     dispatch(setHostingRegion(event.target.value));
+  },
+  setSelectedROMData: (romData: ArrayBuffer) => {
+    dispatch(setSelectedROMData(romData));
   }
 });
 
@@ -76,5 +87,5 @@ const connector = connect(
   mapDispatchToProps
 );
 
-export type PlayModeSelectProps = ConnectedProps<typeof connector>;
-export default connector(PlayModeSelectComponent);
+export type PlayOnlineProps = ConnectedProps<typeof connector>;
+export default connector(PlayOnline);

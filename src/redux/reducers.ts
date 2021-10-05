@@ -1,6 +1,5 @@
 import {
   SET_ALIAS,
-  SET_ALIAS_INPUT,
   SET_DISPLAY_WELCOME_MODAL,
   SET_EMULATOR_ERROR_MESSAGE,
   SET_SELECTED_ROM_DATA,
@@ -17,7 +16,7 @@ import {
   SET_HOST_REGION_OPTIONS
 } from './actions';
 
-import { getRomShortName } from '../romUtils';
+import { getRomShortName, md5Sum, getRomCfgEntry } from '../romUtils';
 
 export enum UI_STATE {
   PENDING_ROM_LOAD = 0,
@@ -58,6 +57,12 @@ export default function appReducer(state: any, action: any) {
 
   switch (action.type) {
     case SET_SELECTED_ROM_DATA:
+
+      const md5 = md5Sum(action.data);
+      console.log(md5);
+      getRomCfgEntry(md5).then((cfg) => {
+        console.log(cfg);
+      });
 
       return Object.assign({}, state, {
         uiState: UI_STATE.PENDING_MODE_SELECT,
@@ -119,12 +124,6 @@ export default function appReducer(state: any, action: any) {
       return Object.assign({}, state, {
         alias: action.alias
       });
-
-    case SET_ALIAS_INPUT:
-      return Object.assign({}, state, {
-        aliasInput: action.alias
-      });
-
 
     case SET_GAME_SERVER_CONNECTION:
       return Object.assign({}, state, {

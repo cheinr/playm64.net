@@ -1,0 +1,45 @@
+import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+
+import Home from './Home';
+import {
+  setAlias,
+  setAliasInput,
+  createGameRoom, joinGameRoom, setJoinGameRoomInput,
+  toggleHostNewGameMenu,
+  startLocalGame,
+  setHostingRegion,
+  requestHostingRegionOptionsIfNotLoaded
+} from '../redux/actions';
+import MatchmakerClient from '../service/MatchmakerClient';
+import { RootState } from '../redux/reducers';
+
+
+type MyExtraArg = { matchmakerService: MatchmakerClient };
+type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
+
+interface OwnProps {
+  isHostingInitially?: boolean;
+}
+
+const mapStateToProps = (state: RootState, ownProps: OwnProps) => ({
+  showHostingMenu: state.displayHostNewGameMenu,
+});
+
+const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
+  toggleHostingMenu: () => {
+    console.log("toggleHostingMenu");
+    dispatch(toggleHostNewGameMenu());
+    dispatch(requestHostingRegionOptionsIfNotLoaded());
+  }
+});
+
+const connector = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
+
+export type PlayOnlineProps = ConnectedProps<typeof connector>;
+export default connector(Home);

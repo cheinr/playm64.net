@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import thunk from 'redux-thunk';
 import './index.css';
+import './bootstrap.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

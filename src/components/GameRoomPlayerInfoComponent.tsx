@@ -1,3 +1,5 @@
+import { Button } from 'react-bootstrap';
+
 import { GameRoomPlayerInfoProps } from '../containers/GameRoomPlayerInfoContainer';
 import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
 import { UI_STATE } from '../redux/reducers';
@@ -48,9 +50,9 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
             {
               props.localPlayerIsHost && (
                 <div>
-                  <button name="startGameButton" onClick={props.onStartGameClick}>
+                  <Button variant="success" name="startGameButton" onClick={props.onStartGameClick}>
                     Start Game
-                  </button>
+                  </Button>
                 </div>
 
               )

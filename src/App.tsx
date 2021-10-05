@@ -2,20 +2,17 @@ import './App.css';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { Dispatch } from 'redux';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
-import ErrorMessageContainer from './containers/ErrorMessageContainer';
-import RomUploadContainer from './containers/RomUploadContainer';
-import PlayModeSelectContainer from './containers/PlayModeSelectContainer';
-import GameControlsDisplayContainer from './containers/GameControlsDisplayContainer';
-import GameOverviewContainer from './containers/GameOverviewContainer';
-import GameRoomPlayerInfoContainer from './containers/GameRoomPlayerInfoContainer';
-import GameSaveManagementContainer from './containers/GameSaveManagementContainer';
-import Mupen64PlusEmuContainer from './containers/Mupen64PlusEmuContainer';
-import WelcomeModalContainer from './containers/WelcomeModalContainer';
-import { RootState, UI_STATE } from './redux/reducers';
+import Home from './views/Home.container';
+import PlayLocally from './views/PlayLocally';
+import PlayOnline from './views/PlayOnline.container';
+import { RootState } from './redux/reducers';
 import { setDisplayWelcomeModal } from './redux/actions';
-
-import LinkButton from './components/common/LinkButton';
 
 const mapStateToProps = (state: RootState) => ({
   uiState: state.uiState
@@ -39,54 +36,45 @@ export default connector(App);
 function App(props: AppProps) {
 
   return (
-    <div className="App">
-      <i className="fa fa-upload" aria-hidden="true" />
-      <header className="App-header">
+    <Router>
+      <div className="app container h-100">
+        <div />
+        <div className="row align-items-center justify-content-center h-100">
 
-        <WelcomeModalContainer />
+          <div className="col" />
+          <div className="col">
 
-        {(props.uiState === UI_STATE.PENDING_ROM_LOAD)
-          && <RomUploadContainer />}
-
-        {(props.uiState === UI_STATE.PENDING_MODE_SELECT
-          || props.uiState === UI_STATE.PENDING_GAME_JOIN)
-          && <PlayModeSelectContainer />}
-
-        {(props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
-          || props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
-          && <GameOverviewContainer />}
+            <div className="text-center" >
+              <img src="/title.png" />
+            </div>
 
 
-        {(props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
-          && <Mupen64PlusEmuContainer />}
+            <Switch>
 
-        {(props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
-          && <ErrorMessageContainer />}
+              <Route path="/play-locally">
+                <PlayLocally />
+              </Route>
 
-        {(props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
-          && <GameRoomPlayerInfoContainer />}
+              <Route path="/play-onlinehos">
+                <PlayOnline />
+              </Route>
 
-        {(props.uiState === UI_STATE.PENDING_MODE_SELECT)
-          && <GameSaveManagementContainer />}
+              <Route path="/play-online">
+                <PlayOnline />
+              </Route>
 
-        {(props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
-          || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION)
-          && <GameControlsDisplayContainer />}
 
-        <div>
-          <div className="welcome-message-link"><LinkButton onClick={() => props.displayWelcomeMessage()}>welcome message</LinkButton></div>
+              <Route path="/">
+                <Home />
+              </Route>
+
+            </Switch>
+          </div>
+          <div className="col" />
         </div>
-      </header>
-    </div >
+
+      </div>
+    </Router >
   );
 }
 

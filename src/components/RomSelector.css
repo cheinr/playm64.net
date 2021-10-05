@@ -1,0 +1,24 @@
+.rom-table-wrapper {
+  max-height: 25em;
+  overflow: auto;
+  display: inline-block;
+  width: 100%;
+}
+
+.rom-table-cell {
+    width: 100%;
+    display: inline-block;
+}
+
+td.selected {
+    background-color: #257AFD;
+    text-decoration: underline;
+}
+
+.overlay-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -1rem;
+  margin-left: -1rem;
+}
