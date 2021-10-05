@@ -8,9 +8,9 @@ import {
   Route,
 } from "react-router-dom";
 
-import Home from './views/Home.container';
-import PlayLocally from './views/PlayLocally';
-import PlayOnline from './views/PlayOnline.container';
+import Home from './views/home/containers/HomeContainer';
+import PlayLocally from './views/play-locally/components/PlayLocally';
+import PlayOnline from './views/play-online/containers/PlayOnlineContainer';
 import { RootState } from './redux/reducers';
 import { setDisplayWelcomeModal } from './redux/actions';
 

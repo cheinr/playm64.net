@@ -4,12 +4,12 @@ import { Modal, InputGroup, FormControl, Button } from 'react-bootstrap';
 import { createRef, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-import LinkButton from '../components/common/LinkButton';
+import LinkButton from '../../../components/common/LinkButton';
 
 import {
   setAlias,
-} from '../redux/actions';
-import { RootState } from '../redux/reducers';
+} from '../../../redux/actions';
+import { RootState } from '../../../redux/reducers';
 import { Dispatch } from 'redux';
 import { isFunction } from 'util';
 

@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGamepad } from '@fortawesome/free-solid-svg-icons';
 
 import { GamePadDisplayProps } from '../containers/GamePadDisplayContainer';
-import { UI_STATE } from '../redux/reducers';
+import { UI_STATE } from '../../../redux/reducers';
 
 const GamePadDisplayComponent = (props: GamePadDisplayProps) => {
 

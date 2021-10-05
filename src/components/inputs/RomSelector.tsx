@@ -1,13 +1,10 @@
-import "./RomSelector.css";
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { Button, Table, Spinner } from 'react-bootstrap';
+import { Button, Spinner, Table } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
-
-import { persistROM, listPersistedROMs, loadROM } from '../romUtils';
+import { listPersistedROMs, loadROM, persistROM } from '../../romUtils';
+import "./RomSelector.css";
 
 interface RomSelectorProps {
   onROMSelect(romName: string, romData: ArrayBuffer): void;

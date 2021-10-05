@@ -1,4 +1,4 @@
-import { ErrorMessageProps } from '../containers/ErrorMessageContainer';
+import { ErrorMessageProps } from '../../containers/inputs/ErrorMessageContainer';
 
 const ErrorMessageComponent = (props: ErrorMessageProps) => {
   return (

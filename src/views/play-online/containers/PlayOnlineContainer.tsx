@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import PlayOnline from './PlayOnline';
+import PlayOnline from '../components/PlayOnline';
 import {
   setAlias,
   setAliasInput,
@@ -13,9 +13,9 @@ import {
   setHostingRegion,
   requestHostingRegionOptionsIfNotLoaded,
   setSelectedROMData
-} from '../redux/actions';
-import MatchmakerClient from '../service/MatchmakerClient';
-import { RootState } from '../redux/reducers';
+} from '../../../redux/actions';
+import MatchmakerClient from '../../../service/MatchmakerClient';
+import { RootState } from '../../../redux/reducers';
 
 
 type MyExtraArg = { matchmakerService: MatchmakerClient };

@@ -1,24 +1,20 @@
-import './PlayLocally.css';
 import createMupen64PlusWeb from 'mupen64plus-web';
 import { Button } from 'react-bootstrap';
 import {
   Link
 } from "react-router-dom";
 
-import stats from '../Stats';
-import { loadROM } from '../romUtils';
-import RomSelector from '../components/RomSelector';
-import Mupen64PlusEmuComponent from '../components/Mupen64PlusEmuComponent';
+import stats from '../../../Stats';
+import { loadROM } from '../../../romUtils';
+import RomSelector from '../../../components/inputs/RomSelector';
+import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
 
 import { useEffect, useState } from 'react';
 
 export default function PlayLocally() {
 
-  //          <RomUploadContainer />
-
   const [selectedROMName, setSelectedROMName] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isStarted, setIsStarted] = useState(false);
 
   useEffect(() => {
 

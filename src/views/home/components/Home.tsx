@@ -1,7 +1,7 @@
 import { Link, useHistory } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 
-import { HomeProps } from './Home.container';
+import { HomeProps } from '../containers/HomeContainer';
 
 export default function Home(props: HomeProps) {
 

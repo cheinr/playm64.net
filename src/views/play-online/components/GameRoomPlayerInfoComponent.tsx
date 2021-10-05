@@ -1,8 +1,8 @@
 import { Button } from 'react-bootstrap';
 
-import { GameRoomPlayerInfoProps } from '../containers/GameRoomPlayerInfoContainer';
+import { GameRoomPlayerInfoProps } from '../GameRoomPlayerInfoContainer';
 import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
-import { UI_STATE } from '../redux/reducers';
+import { UI_STATE } from '../../../redux/reducers';
 
 const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
 

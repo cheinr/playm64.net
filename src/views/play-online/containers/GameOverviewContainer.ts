@@ -1,11 +1,11 @@
-import { setJoinGameRoomInput, requestGameStart } from '../redux/actions';
+import { setJoinGameRoomInput, requestGameStart } from '../../../redux/actions';
 import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import GameRoomOverviewComponent from '../components/GameOverviewComponent';
-import { RootState, UI_STATE } from '../redux/reducers';
-import MatchmakerClient from '../service/MatchmakerClient';
+import { RootState, UI_STATE } from '../../../redux/reducers';
+import MatchmakerClient from '../../../service/MatchmakerClient';
 
 
 type MyExtraArg = { matchmakerService: MatchmakerClient };

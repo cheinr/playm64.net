@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import GamePadDisplayComponent from '../components/GamePadDisplayComponent';
-import { RootState, UI_STATE } from '../redux/reducers';
+import { RootState, UI_STATE } from '../../../redux/reducers';
 
 
 const mapStateToProps = (state: RootState) => ({

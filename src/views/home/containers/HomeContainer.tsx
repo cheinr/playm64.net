@@ -2,13 +2,13 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import Home from './Home';
+import Home from '../components/Home';
 import {
   toggleHostNewGameMenu,
   requestHostingRegionOptionsIfNotLoaded
-} from '../redux/actions';
-import MatchmakerClient from '../service/MatchmakerClient';
-import { RootState } from '../redux/reducers';
+} from '../../../redux/actions';
+import MatchmakerClient from '../../../service/MatchmakerClient';
+import { RootState } from '../../../redux/reducers';
 
 
 type MyExtraArg = { matchmakerService: MatchmakerClient };

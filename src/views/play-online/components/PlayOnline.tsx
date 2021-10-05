@@ -4,18 +4,18 @@ import {
   Link
 } from "react-router-dom";
 
-import { PlayOnlineProps } from './PlayOnline.container';
-import InputOptionsContainer from '../containers/InputOptionsContainer';
-import { UI_STATE } from '../redux/reducers';
-import LinkButton from '../components/common/LinkButton';
-import RomSelector from '../components/RomSelector';
-import EditableAlias from '../components/EditablePlayerAliasComponent';
+import { PlayOnlineProps } from '../containers/PlayOnlineContainer';
+import InputOptionsContainer from '../../../containers/InputOptionsContainer';
+import { UI_STATE } from '../../../redux/reducers';
+import LinkButton from '../../../components/common/LinkButton';
+import RomSelector from '../../../components/inputs/RomSelector';
+import EditableAlias from './EditablePlayerAliasComponent';
 
-import ErrorMessageContainer from '../containers/ErrorMessageContainer';
-import GameControlsDisplayContainer from '../containers/GameControlsDisplayContainer';
+import ErrorMessageContainer from '../../../containers/inputs/ErrorMessageContainer';
+import GameControlsDisplayContainer from '../../../containers/GameControlsDisplayContainer';
 import GameOverviewContainer from '../containers/GameOverviewContainer';
-import GameRoomPlayerInfoContainer from '../containers/GameRoomPlayerInfoContainer';
-import Mupen64PlusEmuContainer from '../containers/Mupen64PlusEmuContainer';
+import GameRoomPlayerInfoContainer from '../GameRoomPlayerInfoContainer';
+import Mupen64PlusEmuContainer from '../../../containers/Mupen64PlusEmuContainer';
 
 
 
