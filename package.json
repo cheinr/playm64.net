@@ -59,7 +59,7 @@
     "jest-watch-typeahead": "0.6.1",
     "md5": "^2.3.0",
     "mini-css-extract-plugin": "0.11.3",
-    "mupen64plus-web": "../fresh-mupen64plus-web-netplay/mupen64plus-web",
+    "mupen64plus-web": "0.1.2",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pako": "^2.0.3",
     "pnp-webpack-plugin": "1.6.4",
@@ -107,7 +107,6 @@
     "test": "node scripts/test.js",
     "lint": "node_modules/eslint/bin/eslint.js 'src/**'",
     "lint-fix": "node_modules/eslint/bin/eslint.js --fix 'src/**'"
-
   },
   "eslintConfig": {
     "extends": [

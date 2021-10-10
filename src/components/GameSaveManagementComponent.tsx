@@ -26,7 +26,6 @@ const downloadFile = (fileEntry: any) => {
 
   const url = window.URL.createObjectURL(saveFileBlob);
 
-  console.log('foo');
   downloadURL(url, fileName);
 
   setTimeout(() => window.URL.revokeObjectURL(url), 1000);
