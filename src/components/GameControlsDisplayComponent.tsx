@@ -1,3 +1,4 @@
+import { Table } from 'react-bootstrap';
 import { GameControlsDisplayProps } from '../containers/GameControlsDisplayContainer';
 
 const GameOverviewComponent = (props: GameControlsDisplayProps) => {
@@ -5,7 +6,7 @@ const GameOverviewComponent = (props: GameControlsDisplayProps) => {
     <div>
       <div className="game-controls">
         Game Controls
-        <table className="control-display-table">
+        <Table size="sm">
           <thead>
             <tr>
               <th>N64 Control</th>
@@ -38,13 +39,13 @@ const GameOverviewComponent = (props: GameControlsDisplayProps) => {
               <td>IJKL</td>
             </tr>
           </tbody>
-        </table>
+        </Table>
       </div>
 
 
       <div className="game-controls">
         Emulator Controls
-        <table className="control-display-table">
+        <Table size="sm">
           <thead>
             <tr>
               <th>Key</th>
@@ -89,7 +90,7 @@ const GameOverviewComponent = (props: GameControlsDisplayProps) => {
               <td>Increase / Decrease Volume</td>
             </tr>
           </tbody>
-        </table>
+        </Table>
       </div>
     </div>
   );

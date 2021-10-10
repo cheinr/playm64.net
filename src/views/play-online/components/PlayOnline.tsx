@@ -1,22 +1,19 @@
-import { KeyboardEvent, useEffect, useState } from 'react';
-import { Button, Card, InputGroup, Dropdown, Form, FormControl } from 'react-bootstrap';
+import { KeyboardEvent, useState } from 'react';
+import { Button, Card, Form, FormControl, InputGroup } from 'react-bootstrap';
 import {
   Link
 } from "react-router-dom";
-
-import { PlayOnlineProps } from '../containers/PlayOnlineContainer';
-import InputOptionsContainer from '../../../containers/InputOptionsContainer';
-import { UI_STATE } from '../../../redux/reducers';
 import LinkButton from '../../../components/common/LinkButton';
 import RomSelector from '../../../components/inputs/RomSelector';
-import EditableAlias from './EditablePlayerAliasComponent';
-
-import ErrorMessageContainer from '../../../containers/inputs/ErrorMessageContainer';
 import GameControlsDisplayContainer from '../../../containers/GameControlsDisplayContainer';
-import GameOverviewContainer from '../containers/GameOverviewContainer';
-import GameRoomPlayerInfoContainer from '../GameRoomPlayerInfoContainer';
+import InputOptionsContainer from '../../../containers/InputOptionsContainer';
+import ErrorMessageContainer from '../../../containers/inputs/ErrorMessageContainer';
 import Mupen64PlusEmuContainer from '../../../containers/Mupen64PlusEmuContainer';
-
+import { UI_STATE } from '../../../redux/reducers';
+import GameOverviewContainer from '../containers/GameOverviewContainer';
+import GameRoomPlayerInfoContainer from '../containers/GameRoomPlayerInfoContainer';
+import { PlayOnlineProps } from '../containers/PlayOnlineContainer';
+import EditableAlias from './EditablePlayerAliasComponent';
 
 
 export default function PlayOnline(props: PlayOnlineProps) {

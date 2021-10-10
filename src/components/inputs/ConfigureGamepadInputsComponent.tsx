@@ -1,3 +1,4 @@
+import { Table, Button, FormControl } from 'react-bootstrap';
 import { findAutoInputConfig, writeAutoInputConfig } from 'mupen64plus-web';
 import { useEffect, useRef, useState } from 'react';
 
@@ -467,7 +468,9 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       <tr key={inputMapping.key}>
         <td style={labelStyle}>{inputMapping.label}</td>
         <td>
-          <input type="text"
+          <FormControl
+            type="text"
+            size="sm"
             value={inputMapping.value[0]}
             ref={inputMapping.inputRef}
             onChange={() => { }}
@@ -485,8 +488,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
 
   return (
     <div>
-      <h1>Configure Inputs</h1>
-      <table>
+      <Table size="sm">
         <thead>
           <tr>
             <th>Input</th>
@@ -496,10 +498,10 @@ const ConfigureGamepadInputsComponent = (props: any) => {
         <tbody>
           {inputRows}
         </tbody>
-      </table>
+      </Table>
 
-      <div>
-        <button onClick={saveConfiguration}>Save Configuration</button>
+      <div className="py-2">
+        <Button onClick={saveConfiguration}>Save Configuration</Button>
       </div>
 
       <p style={{ color: 'green' }}>{configWriteSuccessMessage}</p>

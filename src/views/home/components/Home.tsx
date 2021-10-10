@@ -1,7 +1,9 @@
-import { Link, useHistory } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-
+import { Link, useHistory } from 'react-router-dom';
+import LinkButton from '../../../components/common/LinkButton';
+import WelcomeMessageModal from '../../../containers/WelcomeModalContainer';
 import { HomeProps } from '../containers/HomeContainer';
+
 
 export default function Home(props: HomeProps) {
 
@@ -23,7 +25,8 @@ export default function Home(props: HomeProps) {
   return (
     <div>
 
-      <div className="my-5 text-center">
+      <div className="row my-5 text-center">
+
         <div>
           <span>
 
@@ -57,6 +60,13 @@ export default function Home(props: HomeProps) {
             </Link>
           </span>
 
+          <WelcomeMessageModal />
+        </div>
+
+        <div className="pt-5">
+          <LinkButton onClick={() => props.displayWelcomeMessage()}>
+            welcome message
+          </LinkButton>
         </div>
       </div>
     </div >

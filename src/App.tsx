@@ -44,7 +44,7 @@ function App(props: AppProps) {
           <div className="col" />
           <div className="col">
 
-            <div className="text-center" >
+            <div className="text-center py-4" >
               <img src="/title.png" />
             </div>
 

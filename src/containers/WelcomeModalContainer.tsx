@@ -12,7 +12,6 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dismissModal: (disableWelcomeModal: boolean) => {
-    console.log("Disable welcome modal: %o", disableWelcomeModal);
 
     if (disableWelcomeModal) {
       localStorage.setItem('disableWelcomeModal', 'true');

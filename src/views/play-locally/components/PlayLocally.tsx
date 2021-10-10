@@ -1,15 +1,15 @@
 import createMupen64PlusWeb from 'mupen64plus-web';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import {
   Link
 } from "react-router-dom";
-
-import stats from '../../../Stats';
-import { loadROM } from '../../../romUtils';
 import RomSelector from '../../../components/inputs/RomSelector';
 import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
+import GameControlsDisplay from '../../../containers/GameControlsDisplayContainer';
+import { loadROM } from '../../../romUtils';
+import stats from '../../../Stats';
 
-import { useEffect, useState } from 'react';
 
 export default function PlayLocally() {
 
@@ -65,6 +65,8 @@ export default function PlayLocally() {
 
         <div className="text-center">
           <Mupen64PlusEmuComponent />
+
+          <GameControlsDisplay />
         </div>
       </div>
     );

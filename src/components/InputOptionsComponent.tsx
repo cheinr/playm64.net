@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faKeyboard, faGamepad } from '@fortawesome/free-solid-svg-icons';
-import Modal from 'react-modal';
+import { Modal } from 'react-bootstrap';
 
 import ConfigureGamepadInputsComponent from './inputs/ConfigureGamepadInputsComponent';
 import LinkButton from '../components/common/LinkButton';
@@ -16,13 +16,16 @@ const InputOptionsComponent = (props: InputOptionsProps) => {
       <div>
 
         <Modal
-          isOpen={isModalOpen}
-          contentLabel="Configure Input Device"
-          className="Modal"
-          overlayClassName="ModalOverlay"
-          onRequestClose={() => setIsModalOpen(false)}>
+          show={isModalOpen}
+          onHide={() => setIsModalOpen(false)} centered>
 
-          <ConfigureGamepadInputsComponent gamepadName={props.connectedGamepad.id} />
+          <Modal.Header closeButton>
+            <Modal.Title>Configure Inputs</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <ConfigureGamepadInputsComponent gamepadName={props.connectedGamepad.id} />
+          </Modal.Body>
         </Modal >
 
         <FontAwesomeIcon icon={faGamepad} size="2x" />
