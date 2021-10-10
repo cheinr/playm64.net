@@ -161,7 +161,7 @@ const RomSelector = function(props: RomSelectorProps) {
                 <div {...getRootProps()} className="romDropZone text-center">
                   <FontAwesomeIcon icon={faUpload} size="4x" className="text-center" />
                   <input {...getInputProps()} />
-                  <p>Click or drag to load a ROMs to play</p>
+                  <p>Click or drag to load ROMs to play</p>
                 </div>
               </section>
             )}
