@@ -134,6 +134,36 @@ export function listPersistedROMs(): Promise<Array<string>> {
   });
 }
 
+export function deleteROM(romName: String): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const connection = indexedDB.open('roms');
+
+    connection.onupgradeneeded = onUpgradeNeeded;
+
+    connection.onerror = function(event) {
+      console.error("Error while updating IDBFS store: %o", event);
+      reject(event);
+    }
+
+    connection.onsuccess = (e: any) => {
+      const db = e.target.result;
+      const transaction = db.transaction('ROMS', 'readwrite');
+      const store = transaction.objectStore('ROMS');
+
+      const request = store.delete(romName);
+
+      request.onerror = function(event: any) {
+        console.error("Error while querying keys from IDBFS: %o", event);
+        reject();
+      }
+
+      request.onsuccess = function(event: any) {
+        resolve();
+      }
+    };
+  });
+}
+
 
 let m64pIni: any = null;
 export async function getMupen64PlusIni(): Promise<any> {

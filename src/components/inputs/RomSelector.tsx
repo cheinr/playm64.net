@@ -1,9 +1,9 @@
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { Button, Spinner, Table } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
-import { listPersistedROMs, loadROM, persistROM } from '../../romUtils';
+import { listPersistedROMs, loadROM, persistROM, deleteROM } from '../../romUtils';
 import "./RomSelector.css";
 
 interface RomSelectorProps {
@@ -24,6 +24,7 @@ const RomSelector = function(props: RomSelectorProps) {
     });
   }, []);
 
+
   const rows = romNames.map((romName, index) => {
 
     let className = 'rom-table-cell';
@@ -31,7 +32,7 @@ const RomSelector = function(props: RomSelectorProps) {
       className += ' selected';
     }
 
-    const onClick = () => {
+    const onSelectROM = () => {
 
       loadROM(romName).then((romData: ArrayBuffer) => {
         setSelectedROM(romName);
@@ -39,12 +40,28 @@ const RomSelector = function(props: RomSelectorProps) {
       });
     }
 
+    const onDeleteROM = (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+
+      setIsProcessingNewROMs(true);
+
+      deleteROM(romName).then(() => {
+        listPersistedROMs().then((roms) => {
+          setRomNames(roms.sort());
+          setIsProcessingNewROMs(false);
+        });
+      });
+    }
+
     return (
       <tr key={"rom-" + index} className="rom-table-cell">
-        <td className={className} onClick={onClick}>
+        <td className={className} onClick={onSelectROM}>
           {romName}
+          <span className="float-end">
+            <Button variant="danger" size="sm" onClick={onDeleteROM}>X</Button>
+          </span>
         </td>
-      </tr>
+      </tr >
     );
   });
 
