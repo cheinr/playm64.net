@@ -1,11 +1,11 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKeyboard, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { Modal } from 'react-bootstrap';
 
 import ConfigureGamepadInputsComponent from './inputs/ConfigureGamepadInputsComponent';
 import LinkButton from '../components/common/LinkButton';
 import { InputOptionsProps } from '../containers/InputOptionsContainer';
-import { useState } from 'react'
+import { useState } from 'react';
 
 const InputOptionsComponent = (props: InputOptionsProps) => {
 
@@ -33,7 +33,7 @@ const InputOptionsComponent = (props: InputOptionsProps) => {
           <small>
             {props.connectedGamepad.id}
             <div>
-              <LinkButton onClick={() => { setIsModalOpen(true) }}>configure</LinkButton>
+              <LinkButton onClick={() => { setIsModalOpen(true); }}>configure</LinkButton>
             </div>
           </small>
         </div>

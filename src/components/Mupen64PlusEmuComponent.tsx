@@ -8,7 +8,7 @@ class Mupen64PlusEmuComponent extends React.Component {
 
   private canvasRef: RefObject<HTMLCanvasElement> = React.createRef();
   private statsRef: RefObject<HTMLDivElement> = React.createRef();
-  private displayStats: boolean = false;
+  private displayStats = false;
 
 
   public componentDidMount() {
@@ -28,19 +28,21 @@ class Mupen64PlusEmuComponent extends React.Component {
 
 
     const makeFullScreen = () => {
-      this.canvasRef.current?.requestFullscreen();
-    }
+      this.canvasRef.current?.requestFullscreen().catch((err) => {
+        console.error('Error while requesting full screen: ', err);
+      });
+    };
 
     const toggleStats = () => {
 
       this.displayStats = this.displayStats ? false : true;
       if (this.displayStats) {
 
-        this.statsRef.current!.style.display = "";
+        this.statsRef.current!.style.display = '';
       } else {
-        this.statsRef.current!.style.display = "none";
+        this.statsRef.current!.style.display = 'none';
       }
-    }
+    };
 
 
     return (
@@ -66,6 +68,6 @@ class Mupen64PlusEmuComponent extends React.Component {
     );
   }
 
-};
+}
 
 export default Mupen64PlusEmuComponent;

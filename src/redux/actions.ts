@@ -1,13 +1,13 @@
-import { Action, Dispatch } from "redux";
-import { ThunkDispatch } from "redux-thunk";
+import { Action, Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import createMupen64PlusWeb from 'mupen64plus-web';
 
 import stats from '../Stats';
-import GameServerClient from "../service/GameServerClient";
-import MatchmakerClient from "../service/MatchmakerClient";
+import GameServerClient from '../service/GameServerClient';
+import MatchmakerClient from '../service/MatchmakerClient';
 
 import MatchmakerService, { GameRoomInfo } from '../service/MatchmakerClient';
-import { RootState, UI_STATE } from "./reducers";
+import { RootState, UI_STATE } from './reducers';
 
 
 // TODO move somewhere common
@@ -51,7 +51,7 @@ export function requestHostingRegionOptionsIfNotLoaded() {
     if (!getState().hostRegionOptions) {
       matchmakerService.requestHostingRegionOptions();
     }
-  }
+  };
 }
 
 export function setConnectionStateMessage(message: string, isError: boolean) {
@@ -88,9 +88,9 @@ export function requestGameStart() {
     if (gameServerConnection) {
       gameServerConnection.requestGameStart();
     } else {
-      console.error("requestGameStart called but no gameServerClient is present");
+      console.error('requestGameStart called but no gameServerClient is present');
     }
-  }
+  };
 }
 
 export function toggleHostNewGameMenu() {
@@ -104,14 +104,14 @@ export function createGameRoom() {
     const romSimpleName = state.selectedRomShortName;
     const region = state.hostingRegion;
 
-    console.log("Creating game room for region: '%s'", region);
+    console.log('Creating game room for region: \'%s\'', region);
 
     dispatch(setUiState(UI_STATE.PENDING_GAME_JOIN));
 
     // creating game room
     matchmakerService.createGameRoom(romSimpleName, region).then((gameRoomInfo: GameRoomInfo) => {
 
-      console.log("Created game room: %o", gameRoomInfo);
+      console.log('Created game room: %o', gameRoomInfo);
 
       //establishing connection
 
@@ -138,15 +138,15 @@ export function joinGameRoom(gameRoomId: string) {
     //establishing connection
     matchmakerService.joinGame(alias, gameRoomId, romSimpleName).then((gameServerClient: GameServerClient) => {
 
-      console.log("Finished joining game room: %o", gameServerClient);
+      console.log('Finished joining game room: %o', gameServerClient);
 
       dispatch(setUiState(UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION));
       dispatch(setGameServerConnection(gameServerClient));
 
       gameServerClient.onDisconnect(() => {
         dispatch(setUiState(UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION));
-        alert("Lost connection to the game room, you will not be able to rejoin."
-          + " Please refresh the page to start a new session.");
+        alert('Lost connection to the game room, you will not be able to rejoin.'
+          + ' Please refresh the page to start a new session.');
       });
 
       gameServerClient.onRoomPlayerInfoUpdate((roomPlayerInfo: any) => {
@@ -206,22 +206,22 @@ export function startLocalGame() {
         },
         locateFile: (path: string, prefix: string) => {
 
-          console.log("path: %o", path);
-          console.log("env: %o", process.env.PUBLIC_URL);
+          console.log('path: %o', path);
+          console.log('env: %o', process.env.PUBLIC_URL);
 
           const publicURL = process.env.PUBLIC_URL;
 
           if (path.endsWith('.wasm') || path.endsWith('.data')) {
-            return publicURL + "/dist/" + path;
+            return publicURL + '/dist/' + path;
           }
 
           return prefix + path;
         },
         setErrorStatus: (errorMessage: string) => {
-          console.log("errorMessage: %s", errorMessage);
+          console.log('errorMessage: %s', errorMessage);
           dispatch(setEmulatorErrorMessage(errorMessage));
         }
       });
     });
-  }
+  };
 }

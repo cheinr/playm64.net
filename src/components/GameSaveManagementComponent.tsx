@@ -6,43 +6,43 @@ import { GameSaveManagementComponentProps } from '../containers/GameSaveManageme
 
 // These are from https://stackoverflow.com/questions/25354313/saving-a-uint8array-to-a-binary-file
 const downloadURL = (data: any, fileName: any) => {
-  const a = document.createElement('a')
-  a.href = data
-  a.download = fileName
-  document.body.appendChild(a)
-  a.style.display = 'none'
-  a.click()
-  a.remove()
-}
+  const a = document.createElement('a');
+  a.href = data;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.style.display = 'none';
+  a.click();
+  a.remove();
+};
 
 const downloadFile = (fileEntry: any) => {
 
-  const fileName = fileEntry.fileKey.replace("/mupen64plus/saves/", "");
+  const fileName = fileEntry.fileKey.replace('/mupen64plus/saves/', '');
 
   console.log(fileEntry);
   const saveFileBlob = new Blob([fileEntry.contents], {
-    type: "application/octet-stream"
+    type: 'application/octet-stream'
   });
 
   const url = window.URL.createObjectURL(saveFileBlob);
 
-  console.log("foo");
+  console.log('foo');
   downloadURL(url, fileName);
 
   setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-}
+};
 
 interface GameSaveManagementComponentState {
   fileImportModalIsOpen: boolean,
   filesToImport: File[],
-  importSuccessMessage: String,
-  importFailureMessage: String,
+  importSuccessMessage: string,
+  importFailureMessage: string,
 
   fileExportModalIsOpen: boolean,
   fileEntriesToExport: any[];
 }
 
-class GameSaveManagementComponent extends React.Component<{}, GameSaveManagementComponentState> {
+class GameSaveManagementComponent extends React.Component<any, GameSaveManagementComponentState> {
 
   private inputRef: RefObject<HTMLInputElement> = React.createRef();
 
@@ -85,6 +85,8 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
       this.setState({
         fileEntriesToExport: saveFileEntries
       });
+    }).catch((err) => {
+      console.error('Error loading save files from persistant storage: ', err);
     });
   }
 
@@ -105,16 +107,16 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
 
       this.setState(Object.assign({}, this.state, {
         filesToImport: files,
-        importSuccessMessage: "",
-        importFailureMessage: ""
+        importSuccessMessage: '',
+        importFailureMessage: ''
       }));
-    }
+    };
 
     const importRoms = () => {
 
       this.setState({
-        importSuccessMessage: "",
-        importFailureMessage: ""
+        importSuccessMessage: '',
+        importFailureMessage: ''
       });
 
       console.log('files: %o', this.state.filesToImport);
@@ -124,16 +126,16 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
       Object.values(this.state.filesToImport).forEach((file) => {
         const fileName = file.name;
 
-        putSaveFilePromises.push(file.arrayBuffer().then((data) => {
+        putSaveFilePromises.push(file.arrayBuffer().then(async (data) => {
           return putSaveFile(fileName, data);
         }));
       });
 
       Promise.all(putSaveFilePromises).then(() => {
-        console.log("Finished importing the selected savefiles!");
+        console.log('Finished importing the selected savefiles!');
         this.setState({
           filesToImport: [],
-          importSuccessMessage: "Finished importing the selected savefiles!"
+          importSuccessMessage: 'Finished importing the selected savefiles!'
         });
       }).catch((err) => {
         this.setState({
@@ -144,7 +146,7 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
 
     const filesToExportTableRows = this.state.fileEntriesToExport.map((fileEntry) => {
       return (
-        <tr key={"fileRow-" + fileEntry.fileKey.replaceAll("/")}>
+        <tr key={'fileRow-' + fileEntry.fileKey.replaceAll('/')}>
           <td> {fileEntry.fileKey} </td>
           <td><button onClick={() => downloadFile(fileEntry)}>download</button></td>
         </tr >
@@ -237,7 +239,7 @@ class GameSaveManagementComponent extends React.Component<{}, GameSaveManagement
     );
   }
 
-};
+}
 
 
 export default GameSaveManagementComponent;

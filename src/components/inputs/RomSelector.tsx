@@ -4,7 +4,7 @@ import { MouseEvent, useEffect, useState } from 'react';
 import { Button, Spinner, Table } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import { listPersistedROMs, loadROM, persistROM, deleteROM } from '../../romUtils';
-import "./RomSelector.css";
+import './RomSelector.css';
 
 interface RomSelectorProps {
   onROMSelect(romName: string, romData: ArrayBuffer): void;
@@ -16,11 +16,15 @@ const RomSelector = function(props: RomSelectorProps) {
   const [selectedROM, setSelectedROM] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessingNewROMs, setIsProcessingNewROMs] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     listPersistedROMs().then((roms) => {
       setIsLoading(false);
       setRomNames(roms.sort());
+    }).catch((err) => {
+      console.error('Error while listing persisted ROMs: ', err);
+      setErrorMessage(`Unable to load ROMs: ${err}`);
     });
   }, []);
 
@@ -34,27 +38,36 @@ const RomSelector = function(props: RomSelectorProps) {
 
     const onSelectROM = () => {
 
+      setErrorMessage('');
+
       loadROM(romName).then((romData: ArrayBuffer) => {
         setSelectedROM(romName);
         props.onROMSelect(romName, romData);
+      }).catch((err) => {
+        console.error('Error while loading ROM [%s]: ', romName, err);
+        setErrorMessage(`Error while loading ROM [${romName}]: ${err}`);
       });
-    }
+    };
 
     const onDeleteROM = (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
 
+      setErrorMessage('');
       setIsProcessingNewROMs(true);
 
-      deleteROM(romName).then(() => {
-        listPersistedROMs().then((roms) => {
+      deleteROM(romName).then(async () => {
+        return listPersistedROMs().then((roms) => {
           setRomNames(roms.sort());
           setIsProcessingNewROMs(false);
         });
+      }).catch((err) => {
+        console.error('Error while deleting ROM [%s]: ', romName, err);
+        setErrorMessage(`Error while deleting ROM [${romName}]: ${err}`);
       });
-    }
+    };
 
     return (
-      <tr key={"rom-" + index} className="rom-table-cell">
+      <tr key={'rom-' + index} className="rom-table-cell">
         <td className={className} onClick={onSelectROM}>
           {romName}
           <span className="float-end">
@@ -67,19 +80,25 @@ const RomSelector = function(props: RomSelectorProps) {
 
   const onFileChange = (files: any) => {
 
+    setErrorMessage('');
     setIsProcessingNewROMs(true);
 
     const persistROMPromises = files.map((file: any) => {
-      return file.arrayBuffer().then((fileBuffer: ArrayBuffer) => {
-        return persistROM(fileBuffer);
+      return file.arrayBuffer().then(async (fileBuffer: ArrayBuffer) => {
+        return persistROM(fileBuffer).catch((err) => {
+          console.error('Error while persisting ROM [%s]: ', file.name, err);
+          setErrorMessage(`Exception while loading file [${file.name}]: ${err}`);
+        });
       });
     });
 
-    Promise.all(persistROMPromises).then(() => {
-      listPersistedROMs().then((roms) => {
+    Promise.allSettled(persistROMPromises).then(async () => {
+      return listPersistedROMs().then((roms) => {
         setRomNames(roms.sort());
         setIsProcessingNewROMs(false);
       });
+    }).catch((err) => {
+      console.error('Exception while loading new ROMs: %o', err);
     });
   };
 
@@ -127,25 +146,34 @@ const RomSelector = function(props: RomSelectorProps) {
             </section>
           )}
         </Dropzone>
+        <div className="text-danger">
+          {errorMessage}
+        </div>
       </div >
     );
   } else {
     return (
-      <div id="romUploadContainer">
-        <Dropzone onDrop={onFileChange}>
-          {({ getRootProps, getInputProps }) => (
-            <section>
-              <div {...getRootProps()} className="romDropZone text-center">
-                <FontAwesomeIcon icon={faUpload} size="4x" className="text-center" />
-                <input {...getInputProps()} />
-                <p>Click or drag to load a ROMs to play</p>
-              </div>
-            </section>
-          )}
-        </Dropzone>
+      <div>
+        <div id="romUploadContainer">
+          <Dropzone onDrop={onFileChange}>
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <div {...getRootProps()} className="romDropZone text-center">
+                  <FontAwesomeIcon icon={faUpload} size="4x" className="text-center" />
+                  <input {...getInputProps()} />
+                  <p>Click or drag to load a ROMs to play</p>
+                </div>
+              </section>
+            )}
+          </Dropzone>
+        </div>
+
+        <div className="text-danger">
+          {errorMessage}
+        </div>
       </div>
     );
   }
-}
+};
 
 export default RomSelector;

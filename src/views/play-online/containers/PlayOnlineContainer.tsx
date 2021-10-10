@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
     dispatch(joinGameRoom(gameRoomId));
   },
   onJoinGameRoomInputChange: (event: ChangeEvent<HTMLInputElement>) => {
-    const joinCode = event.target.value.replace(/[^a-zA-Z]/, "").toUpperCase();
+    const joinCode = event.target.value.replace(/[^a-zA-Z]/, '').toUpperCase();
 
     dispatch(setJoinGameRoomInput(joinCode));
   },

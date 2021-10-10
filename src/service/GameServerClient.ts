@@ -1,8 +1,8 @@
 import pako from 'pako';
 
 import stats from '../Stats';
-import { setUiState, setPing, setEmulatorErrorMessage } from "../redux/actions";
-import { UI_STATE } from "../redux/reducers";
+import { setUiState, setPing, setEmulatorErrorMessage } from '../redux/actions';
+import { UI_STATE } from '../redux/reducers';
 
 import createMupen64PlusWeb from 'mupen64plus-web';
 
@@ -34,22 +34,22 @@ class CompressedBinaryRTCChannelWrapper implements BinaryRTCDataChannel {
 
     this.delegate.onclose = (event: Event) => {
       if (this.onclose) this.onclose(event);
-    }
+    };
 
     this.delegate.onerror = (event: RTCErrorEvent) => {
       if (this.onerror) this.onerror(event);
-    }
+    };
 
     this.delegate.onopen = (event: Event) => {
       if (this.onopen) this.onopen(event);
-    }
+    };
   }
 
 
   private _handleMessage(event: MessageEvent): void {
 
     if (!(event.data instanceof ArrayBuffer)) {
-      throw new Error("CompressedRTCDataChannel is only compatible with binary data");
+      throw new Error('CompressedRTCDataChannel is only compatible with binary data');
     }
 
     const data: ArrayBuffer = event.data;
@@ -187,7 +187,7 @@ class GameServerClient {
 
   private handleRoomControlMessage(event: any): void {
 
-    console.log("Received Room Control message: %o", event);
+    console.log('Received Room Control message: %o', event);
 
     const message = JSON.parse(event.data);
 
@@ -236,26 +236,26 @@ class GameServerClient {
           },
           locateFile: (path: string, prefix: string) => {
 
-            console.log("path: %o", path);
-            console.log("env: %o", process.env.PUBLIC_URL);
+            console.log('path: %o', path);
+            console.log('env: %o', process.env.PUBLIC_URL);
 
             const publicURL = process.env.PUBLIC_URL;
 
             if (path.endsWith('.wasm') || path.endsWith('.data')) {
-              return publicURL + "/dist/" + path;
+              return publicURL + '/dist/' + path;
             }
 
             return prefix + path;
           },
           setErrorStatus: (errorMessage: string) => {
-            console.log("errorMessage: %s", errorMessage);
+            console.log('errorMessage: %s', errorMessage);
             this.uiStore.dispatch(setEmulatorErrorMessage(errorMessage));
           }
         });
         break;
 
       default:
-        console.error("Unrecognized room control message: %o", message);
+        console.error('Unrecognized room control message: %o', message);
         break;
 
     }

@@ -6,7 +6,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import Home from './views/home/containers/HomeContainer';
 import PlayLocally from './views/play-locally/components/PlayLocally';

@@ -16,12 +16,12 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
     return (<GamePadDisplayContainer playerId={`P${index + 1}`} playerName={playerName} key={`GamePadDisplayContainer-${index}`} />);
   });
 
-  let pingColor = "red";
+  let pingColor = 'red';
   if (props.ping < 120) {
-    pingColor = "yellow";
+    pingColor = 'yellow';
   }
   if (props.ping < 60) {
-    pingColor = "green";
+    pingColor = 'green';
   }
 
   return (

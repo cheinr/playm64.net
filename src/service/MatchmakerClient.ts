@@ -17,10 +17,10 @@ export interface GameRoomInfo {
 class MatchmakerClient {
 
   connectionPromise: Promise<void> | null = null;
-  connectionRetryDelayMillis: number = 1000;
+  connectionRetryDelayMillis = 1000;
   socketEndpoint: string;
   socket: WebSocket | null = null;
-  token: String | undefined;
+  token: string | undefined;
 
   gameListListeners: Function[] = [];
   gameConnectionListeners: Function[] = [];
@@ -39,13 +39,13 @@ class MatchmakerClient {
   private uiStore?: Store;
 
   activeGameServerClient?: GameServerClient;
-  requestCount: number = 0;
+  requestCount = 0;
 
   private remoteDescriptionSet = false;
   private pendingIceCandidates: RTCIceCandidate[] = [];
 
   private iceCandidatesPendingSend: { gameId: string, candidate: RTCIceCandidate }[] = [];
-  private wrtcAnswerReceived: boolean = false;
+  private wrtcAnswerReceived = false;
 
   constructor(matchmakingServiceEndpoint: string) {
 
@@ -81,7 +81,7 @@ class MatchmakerClient {
           this.connectionRetryDelayMillis = 1000;
 
           this.requestCount++;
-          console.log("Matchmaker RequestCount increased: ", this.requestCount);
+          console.log('Matchmaker RequestCount increased: ', this.requestCount);
 
           this.socket.send(JSON.stringify({
             action: 'sendmessage',
@@ -101,7 +101,9 @@ class MatchmakerClient {
             console.log('Connection to matchmaker closed unexpectedly. Retrying in %s milliseconds', this.connectionRetryDelayMillis);
             setTimeout(() => {
               this.connectionPromise = null;
-              this._connectAsync().then(() => resolve());
+              this._connectAsync()
+                .then(() => resolve())
+                .catch((err) => reject(err));
             }, this.connectionRetryDelayMillis);
 
             this.connectionRetryDelayMillis *= 2;
@@ -134,7 +136,7 @@ class MatchmakerClient {
   _handleMessage(message: any) {
 
     this.requestCount++;
-    console.log("Matchmaker RequestCount increased: ", this.requestCount);
+    console.log('Matchmaker RequestCount increased: ', this.requestCount);
 
     switch (message.type) {
 
@@ -146,12 +148,12 @@ class MatchmakerClient {
 
         const gameRoomInfo = {
           gameRoomId: message.payload.gameRoomId
-        }
+        };
 
         if (this.onGameRoomCreateResponse) {
           this.onGameRoomCreateResponse(gameRoomInfo);
         } else {
-          console.error("Received GameRoomCreateResponse we don't know how to handle!");
+          console.error('Received GameRoomCreateResponse we don\'t know how to handle!');
         }
         break;
 
@@ -218,12 +220,14 @@ class MatchmakerClient {
                 }).catch(this._errorHandler('AddIceCandidate'));
 
               });
+            }).catch((err) => {
+              console.error('Exception while setting remote description: %o', err);
             });
         }
         break;
 
       case 'unexpected-exception':
-        console.log("Received unexpected exception message: %o", message);
+        console.log('Received unexpected exception message: %o', message);
 
         if (this.onUnexpectedExceptionMessage)
           this.onUnexpectedExceptionMessage(message.payload.exceptionMessage);
@@ -250,10 +254,10 @@ class MatchmakerClient {
 
     candidatesByGameId.forEach((candidates, gameId) => {
       this.requestCount++;
-      console.log("Matchmaker RequestCount increased: ", this.requestCount);
+      console.log('Matchmaker RequestCount increased: ', this.requestCount);
 
       if (!this.socket) {
-        throw new Error("No socket for sending wrtc-ice-candidates is available!");
+        throw new Error('No socket for sending wrtc-ice-candidates is available!');
       }
 
       this.socket.send(JSON.stringify({
@@ -304,7 +308,7 @@ class MatchmakerClient {
           this.onUnexpectedExceptionMessage = null;
           this.uiStore?.dispatch(setConnectionStateMessage(
             'Timed out waiting for a new game room to be created. Please refresh the page and try again', true));
-          reject("Timed out waiting for game server creation");
+          reject('Timed out waiting for game server creation');
         }, 90000);
 
         this.onGameRoomCreateResponse = (gameRoomInfo: GameRoomInfo) => {
@@ -313,13 +317,15 @@ class MatchmakerClient {
 
           this.uiStore?.dispatch(setConnectionStateMessage(`Created game room '${gameRoomInfo.gameRoomId}'`, false));
           resolve(gameRoomInfo);
-        }
+        };
 
         this.onUnexpectedExceptionMessage = (exceptionMessage: string) => {
           clearTimeout(createTimeout);
           reject(`Unexpected exception while creating game room: ${exceptionMessage} `);
-        }
+        };
 
+      }).catch((err) => {
+        reject(err);
       });
     });
 
@@ -340,14 +346,14 @@ class MatchmakerClient {
           `Successfully joined game room ${gameId} `, false));
 
         resolve(gameServerClient);
-      }
+      };
 
       const onError = (err: any) => {
         this.uiStore?.dispatch(setConnectionStateMessage(
           `Failed to join game: ${gameId}. ${err} `, true));
 
         reject();
-      }
+      };
 
       this.gameConnectionListeners.push(onConnect);
       this.gameConnectRejectionListeners.push(onError);
@@ -385,7 +391,7 @@ class MatchmakerClient {
           this.rtcUnreliableChannel.binaryType = 'arraybuffer';
 
         } else {
-          console.error("Invalid channel created: %s", channel.label);
+          console.error('Invalid channel created: %s', channel.label);
         }
 
         if (this.rtcReliableChannel
@@ -404,7 +410,7 @@ class MatchmakerClient {
 
       serverRTCConnection.onicecandidate = (event) => {
         if (!this.socket) {
-          throw new Error("Lost connection to matchmaking service");
+          throw new Error('Lost connection to matchmaking service');
         }
 
         if (event.candidate && event.candidate.candidate) {
@@ -413,7 +419,7 @@ class MatchmakerClient {
           // We wait for this to ensure the server is ready for ice candidates
           if (this.wrtcAnswerReceived) {
             this.requestCount++;
-            console.log("Matchmaker RequestCount increased: ", this.requestCount);
+            console.log('Matchmaker RequestCount increased: ', this.requestCount);
 
             this.socket.send(JSON.stringify({
               action: 'sendmessage',
@@ -439,10 +445,14 @@ class MatchmakerClient {
 
       console.log('creating local description');
       serverRTCConnection.createOffer((desc) => {
-        serverRTCConnection.setLocalDescription(desc);
+        serverRTCConnection.setLocalDescription(desc).catch((err) => {
+          console.error('Exception while setting localDescription for serverRTCConnection: %o', err);
+        });
 
         this._sendJoinRequest(gameId, alias, romSimpleName, desc);
-      }, this._errorHandler('PeerConnection.CreateOffer'));
+      }, this._errorHandler('PeerConnection.CreateOffer')).catch((err) => {
+        console.error('Exception while creating offer for serverRTCConnection: %o', err);
+      });
 
       serverRTCConnection.oniceconnectionstatechange = () => {
         console.log('connection state has changed %s', serverRTCConnection.iceConnectionState);
@@ -466,6 +476,8 @@ class MatchmakerClient {
         }
       };
       this.rtcConnection = serverRTCConnection;
+    }).catch((err) => {
+      this._errorHandler(err);
     });
 
     return gameJoinConnectionPromise;
@@ -476,7 +488,7 @@ class MatchmakerClient {
       || !this.rtcUnreliableChannel
       || !this.rtcRoomControlChannel) {
 
-      throw new Error("invalid state: expected all channels to at least be present");
+      throw new Error('invalid state: expected all channels to at least be present');
     }
 
     return this.rtcReliableChannel.readyState === 'open'
@@ -484,7 +496,7 @@ class MatchmakerClient {
       && this.rtcRoomControlChannel.readyState === 'open';
   }
 
-  private _waitForChannelsToBeReady(): Promise<void> {
+  private async _waitForChannelsToBeReady(): Promise<void> {
 
     return new Promise<void>((resolve, reject) => {
 
@@ -492,7 +504,7 @@ class MatchmakerClient {
         || !this.rtcUnreliableChannel
         || !this.rtcRoomControlChannel) {
 
-        throw new Error("invalid state: expected all channels to at least be present");
+        throw new Error('invalid state: expected all channels to at least be present');
       }
 
 
@@ -522,7 +534,7 @@ class MatchmakerClient {
 
       const onChannelClose = () => {
         reject('A channel closed while we were waiting for them to become ready');
-      }
+      };
 
       this.rtcReliableChannel.onclose = onChannelClose;
       this.rtcUnreliableChannel.onclose = onChannelClose;
@@ -573,11 +585,11 @@ class MatchmakerClient {
 
   _sendJoinRequest(gameId: string, alias: string, romSimpleName: string, desc: any) {
     if (!this.socket) {
-      throw new Error("Tried to join game before we were connected to the matchmaker");
+      throw new Error('Tried to join game before we were connected to the matchmaker');
     }
 
     this.requestCount++;
-    console.log("Matchmaker RequestCount increased: ", this.requestCount);
+    console.log('Matchmaker RequestCount increased: ', this.requestCount);
 
     this.socket.send(JSON.stringify({
       action: 'sendmessage',
@@ -604,6 +616,8 @@ class MatchmakerClient {
           type: 'request-hosting-region-options'
         }
       }));
+    }).catch((err) => {
+      console.log('Exception while requesting hosting region options: %o', err);
     });
   }
 }

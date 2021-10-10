@@ -104,7 +104,10 @@
     "copy-dependencies": "cp -r ./node_modules/mupen64plus-web/bin/web/index* ./node_modules/mupen64plus-web/bin/web/mupen64plus.json ./public/dist",
     "start": "npm run mkdirs && npm run copy-dependencies && HOST=localhost node scripts/start.js",
     "build": "npm run mkdirs && npm run copy-dependencies && node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "lint": "node_modules/eslint/bin/eslint.js 'src/**'",
+    "lint-fix": "node_modules/eslint/bin/eslint.js --fix 'src/**'"
+
   },
   "eslintConfig": {
     "extends": [

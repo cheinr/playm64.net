@@ -3,25 +3,25 @@ import SparkMD5 from 'spark-md5';
 import axios from 'axios';
 
 const onUpgradeNeeded = function(event: any) {
-  var db = event.target.result;
+  const db = event.target.result;
 
   if (!db.objectStoreNames.contains('ROMS')) {
-    console.log("Creating object store!");
+    console.log('Creating object store!');
     const objectStore = db.createObjectStore('ROMS');
     objectStore.createIndex('md5Sum', 'md5Sum', { unique: false, multiEntry: false });
   }
-}
+};
 
-export function loadROM(romGoodName: string): Promise<ArrayBuffer> {
+export async function loadROM(romGoodName: string): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {
     const connection = indexedDB.open('roms');
 
     connection.onupgradeneeded = onUpgradeNeeded;
 
     connection.onerror = function(event) {
-      console.error("Error while updating IDBFS store: %o", event);
+      console.error('Error while updating IDBFS store: %o', event);
       reject(event);
-    }
+    };
 
     connection.onsuccess = (e: any) => {
       const db = e.target.result;
@@ -31,9 +31,9 @@ export function loadROM(romGoodName: string): Promise<ArrayBuffer> {
       const request = store.get(romGoodName);
 
       request.onerror = function(event: any) {
-        console.error("Error while querying keys from IDBFS: %o", event);
+        console.error('Error while querying keys from IDBFS: %o', event);
         reject();
-      }
+      };
 
       request.onsuccess = function(event: any) {
 
@@ -42,32 +42,39 @@ export function loadROM(romGoodName: string): Promise<ArrayBuffer> {
           : null;
 
         resolve(contents);
-      }
+      };
     };
   });
 
 }
 
-export function persistROM(romData: ArrayBuffer): Promise<void> {
+export async function persistROM(romData: ArrayBuffer): Promise<void> {
   return new Promise((resolve, reject) => {
     const connection = indexedDB.open('roms');
 
     connection.onupgradeneeded = onUpgradeNeeded;
 
     connection.onerror = function(event) {
-      console.error("Error while updating IDBFS store: %o", event);
+      console.error('Error while updating IDBFS store: %o', event);
       reject(event);
-    }
+    };
 
     connection.onsuccess = (e: any) => {
       const db = e.target.result;
-      const md5 = md5Sum(romData);
+
+      let md5: string;
+      try {
+        md5 = md5Sum(romData);
+      } catch (err) {
+        reject(err);
+        return;
+      }
 
       getRomCfgEntry(md5).then((cfg) => {
 
         const romGoodName = cfg
           ? cfg.GoodName
-          : getRomShortName(romData) + " (Unknown ROM)";
+          : getRomShortName(romData) + ' (Unknown ROM)';
 
         const toSave = {
           romGoodName,
@@ -81,28 +88,30 @@ export function persistROM(romData: ArrayBuffer): Promise<void> {
 
         const request = store.put(toSave, romGoodName);
         request.onerror = function(event: any) {
-          console.error("Error while loading file %s from IDBFS: %o", romGoodName, event);
+          console.error('Error while loading file %s from IDBFS: %o', romGoodName, event);
           reject();
-        }
+        };
 
         request.onsuccess = function() {
           resolve();
-        }
+        };
+      }).catch((err) => {
+        reject(`Exception while getting rom Cfg entry: ${err}`);
       });
     };
   });
 }
 
-export function listPersistedROMs(): Promise<Array<string>> {
+export async function listPersistedROMs(): Promise<Array<string>> {
   return new Promise((resolve, reject) => {
     const connection = indexedDB.open('roms');
 
     connection.onupgradeneeded = onUpgradeNeeded;
 
     connection.onerror = function(event) {
-      console.error("Error while updating IDBFS store: %o", event);
+      console.error('Error while updating IDBFS store: %o', event);
       reject(event);
-    }
+    };
 
     connection.onsuccess = (e: any) => {
       const db = e.target.result;
@@ -112,29 +121,29 @@ export function listPersistedROMs(): Promise<Array<string>> {
       const request = store.getAllKeys();
 
       request.onerror = function(event: any) {
-        console.error("Error while querying keys from IDBFS: %o", event);
+        console.error('Error while querying keys from IDBFS: %o', event);
         reject();
-      }
+      };
 
       request.onsuccess = function(event: any) {
 
         const keys = event.target.result;
         resolve(keys);
-      }
+      };
     };
   });
 }
 
-export function deleteROM(romName: String): Promise<void> {
+export async function deleteROM(romName: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const connection = indexedDB.open('roms');
 
     connection.onupgradeneeded = onUpgradeNeeded;
 
     connection.onerror = function(event) {
-      console.error("Error while updating IDBFS store: %o", event);
+      console.error('Error while updating IDBFS store: %o', event);
       reject(event);
-    }
+    };
 
     connection.onsuccess = (e: any) => {
       const db = e.target.result;
@@ -144,13 +153,13 @@ export function deleteROM(romName: String): Promise<void> {
       const request = store.delete(romName);
 
       request.onerror = function(event: any) {
-        console.error("Error while querying keys from IDBFS: %o", event);
+        console.error('Error while querying keys from IDBFS: %o', event);
         reject();
-      }
+      };
 
       request.onsuccess = function(event: any) {
         resolve();
-      }
+      };
     };
   });
 }
@@ -189,9 +198,9 @@ export function md5Sum(romData: ArrayBuffer): string {
 
   let z64RomData;
 
-  if (romHeaderHex === "80371240") { // big endian (.z64)
+  if (romHeaderHex === '80371240') { // big endian (.z64)
     z64RomData = romData;
-  } else if (romHeaderHex === "37804012") { // byte swapped (.v64)
+  } else if (romHeaderHex === '37804012') { // byte swapped (.v64)
 
     z64RomData = new ArrayBuffer(romData.byteLength);
 
@@ -203,7 +212,7 @@ export function md5Sum(romData: ArrayBuffer): string {
       outDataView.setUint16(i, inDataView.getUint16(i, true));
     }
 
-  } else if (romHeaderHex === "40123780") { // little endian (.n64)
+  } else if (romHeaderHex === '40123780') { // little endian (.n64)
 
     z64RomData = new ArrayBuffer(romData.byteLength);
 
@@ -218,7 +227,7 @@ export function md5Sum(romData: ArrayBuffer): string {
     }
 
   } else {
-    throw new Error("Invalid ROM");
+    throw new Error('Invalid ROM');
   }
 
 
@@ -236,10 +245,10 @@ export function getRomShortName(romData: ArrayBuffer): string {
   let bigEndianData: ArrayBuffer = new ArrayBuffer(16);
 
   // See http://n64dev.org/romformats.html
-  if (romHeaderHex === "80371240") { // big endian
+  if (romHeaderHex === '80371240') { // big endian
     bigEndianData = shortNameData;
 
-  } else if (romHeaderHex === "37804012") { // byte swapped
+  } else if (romHeaderHex === '37804012') { // byte swapped
 
     const inDataView = new DataView(shortNameData.buffer);
     const outDataView = new DataView(bigEndianData);
@@ -249,7 +258,7 @@ export function getRomShortName(romData: ArrayBuffer): string {
       outDataView.setUint16(i * 2, inDataView.getUint16(i * 2, true));
     }
 
-  } else if (romHeaderHex === "40123780") { // little endian
+  } else if (romHeaderHex === '40123780') { // little endian
 
     const inDataView = new DataView(shortNameData.buffer);
     const outDataView = new DataView(bigEndianData);
@@ -259,7 +268,7 @@ export function getRomShortName(romData: ArrayBuffer): string {
       outDataView.setUint32(i * 4, inDataView.getUint32(i * 4, true));
     }
   } else {
-    throw new Error("Invalid ROM");
+    throw new Error('Invalid ROM');
   }
 
   const bigEndianBytes = new Uint8Array(bigEndianData);
@@ -269,7 +278,7 @@ export function getRomShortName(romData: ArrayBuffer): string {
     shortName += String.fromCharCode(bigEndianBytes[i]);
   }
 
-  console.log("after load: %o", getRomHeaderFirstWord(romData).toString(16));
+  console.log('after load: %o', getRomHeaderFirstWord(romData).toString(16));
 
   return shortName;
 }

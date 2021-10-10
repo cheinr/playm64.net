@@ -14,9 +14,9 @@ import { setAlias, setConnectedGamepad, setDisplayWelcomeModal } from './redux/a
 
 import MatchmakerService from './service/MatchmakerClient';
 
-let matchmakerURL = (process.env.NODE_ENV === "production")
-  ? "wss://ahcv76zlb4.execute-api.us-west-2.amazonaws.com/prod"
-  : "wss://agd73oj5c9.execute-api.us-west-2.amazonaws.com/beta";
+const matchmakerURL = (process.env.NODE_ENV === 'production')
+  ? 'wss://ahcv76zlb4.execute-api.us-west-2.amazonaws.com/prod'
+  : 'wss://agd73oj5c9.execute-api.us-west-2.amazonaws.com/beta';
 
 const matchmakerService = new MatchmakerService(matchmakerURL);
 
@@ -44,7 +44,7 @@ store.subscribe(() => {
 
 
 
-window.addEventListener("gamepadconnected", function(e: any) {
+window.addEventListener('gamepadconnected', function(e: any) {
   console.log(e);
 
   if (!store.getState().connectedGamepad) {
@@ -52,7 +52,7 @@ window.addEventListener("gamepadconnected", function(e: any) {
   }
 });
 
-window.addEventListener("gamepaddisconnected", function(e: any) {
+window.addEventListener('gamepaddisconnected', function(e: any) {
 
   const currentConnectedJoystickIndex = store.getState().connectedGamepad?.index;
   if (e.gamepad.index === currentConnectedJoystickIndex) {

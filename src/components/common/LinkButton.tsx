@@ -1,4 +1,4 @@
-import { MouseEvent } from "react";
+import { MouseEvent } from 'react';
 
 interface LinkButtonProps {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;

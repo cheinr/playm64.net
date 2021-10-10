@@ -20,7 +20,7 @@ export default function Home(props: HomeProps) {
     }
 
     history.push('/play-online');
-  }
+  };
 
   return (
     <div>

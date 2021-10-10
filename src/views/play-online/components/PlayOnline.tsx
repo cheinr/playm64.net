@@ -2,7 +2,7 @@ import { KeyboardEvent, useState } from 'react';
 import { Button, Card, Form, FormControl, InputGroup } from 'react-bootstrap';
 import {
   Link
-} from "react-router-dom";
+} from 'react-router-dom';
 import LinkButton from '../../../components/common/LinkButton';
 import RomSelector from '../../../components/inputs/RomSelector';
 import GameControlsDisplayContainer from '../../../containers/GameControlsDisplayContainer';
@@ -32,15 +32,15 @@ export default function PlayOnline(props: PlayOnlineProps) {
   }
 
   const onJoinCodeInputKeyDown = (e: KeyboardEvent<any>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       props.joinGame(props.joinGameRoomInput);
     }
-  }
+  };
 
   const onROMSelect = (romName: string, romData: ArrayBuffer) => {
     props.setSelectedROMData(romData);
     setRomSelected(true);
-  }
+  };
 
   if (props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
     || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
@@ -160,7 +160,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
 
                 <div className="text-center">
                   <small>or - &nbsp;
-                    <LinkButton onClick={() => { props.toggleHostingMenu() }}>
+                    <LinkButton onClick={() => { props.toggleHostingMenu(); }}>
                       host a new game
                     </LinkButton>
                   </small>

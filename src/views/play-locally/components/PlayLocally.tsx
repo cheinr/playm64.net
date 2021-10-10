@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import {
   Link
-} from "react-router-dom";
+} from 'react-router-dom';
 import RomSelector from '../../../components/inputs/RomSelector';
 import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
 import GameControlsDisplay from '../../../containers/GameControlsDisplayContainer';
@@ -32,24 +32,26 @@ export default function PlayLocally() {
             },
             locateFile: (path: string, prefix: string) => {
 
-              console.log("path: %o", path);
-              console.log("env: %o", process.env.PUBLIC_URL);
+              console.log('path: %o', path);
+              console.log('env: %o', process.env.PUBLIC_URL);
 
               const publicURL = process.env.PUBLIC_URL;
 
               if (path.endsWith('.wasm') || path.endsWith('.data')) {
-                return publicURL + "/dist/" + path;
+                return publicURL + '/dist/' + path;
               }
 
               return prefix + path;
             },
             setErrorStatus: (errorMessage: string) => {
-              console.log("errorMessage: %s", errorMessage);
+              console.log('errorMessage: %s', errorMessage);
               // TODO dispatch(setEmulatorErrorMessage(errorMessage));
             }
           });
 
         });
+      }).catch((err) => {
+        console.error('Exception during emulator initialization: %o', err);
       });
     }
   }, [selectedROMName, isPlaying]);
@@ -87,7 +89,7 @@ export default function PlayLocally() {
 
           <Button variant="success"
             size="lg"
-            disabled={selectedROMName === ""}
+            disabled={selectedROMName === ''}
             onClick={() => setIsPlaying(true)}>
             Play Locally
           </Button>

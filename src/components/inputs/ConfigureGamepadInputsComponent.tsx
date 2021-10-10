@@ -247,7 +247,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
 
     gamepadPoller.startPolling();
     findAutoInputConfig(props.gamepadName.slice(0, 63)).then((result: any) => {
-      console.log("Found autoInputConfig: ", result);
+      console.log('Found autoInputConfig: ', result);
 
       if (result) {
         inputMappings.forEach((inputMapping) => {
@@ -259,14 +259,14 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       }
 
     }).catch((err: any) => {
-      console.error("Error while attempting to find InputAutoCfg Entry for controller [%s]: ", props.gamepadName.slice(0, 63), err);
+      console.error('Error while attempting to find InputAutoCfg Entry for controller [%s]: ', props.gamepadName.slice(0, 63), err);
     }).finally(() => {
       setIsLoading(false);
     });
 
     return () => {
       gamepadPoller.stopPolling();
-    }
+    };
   }, [props.gamepadName]);
 
   gamepadPoller.setInputListener(null);
@@ -286,16 +286,16 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       return Object.assign({}, acc, newValue);
     });
 
-    config['plugged'] = "True";
-    config['plugin'] = "2";
-    config['mouse'] = "False";
+    config['plugged'] = 'True';
+    config['plugin'] = '2';
+    config['mouse'] = 'False';
 
     writeAutoInputConfig(props.gamepadName.slice(0, 63), config).then(() => {
-      setConfigWriteSuccessMessage("Config successfully saved!");
+      setConfigWriteSuccessMessage('Config successfully saved!');
     }).catch((err) => {
-      setConfigWriteFailureMessage("Error while saving config: " + err);
+      setConfigWriteFailureMessage('Error while saving config: ' + err);
     });
-  }
+  };
 
   if (focusedInputMapping[0]) {
 
@@ -307,7 +307,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
     // hax
     if (nextCursorIndex !== -1) {
       setTimeout(
-        () => { inputTarget?.inputRef.current?.setSelectionRange(nextCursorIndex, nextCursorIndex) },
+        () => { inputTarget?.inputRef.current?.setSelectionRange(nextCursorIndex, nextCursorIndex); },
         0);
 
       setNextCursorIndex(-1);
@@ -320,13 +320,13 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       });
 
       if (inputTarget) {
-        console.log("inputTarget: %o", inputTarget);
+        console.log('inputTarget: %o', inputTarget);
         const inputMappings = inputTarget.value[0].split(' ').filter((inputMapping) => inputMapping !== '');
 
         let effectiveInputDefinition = inputDefinition;
-        if (inputTarget.key.includes("Axis") && inputDefinition.includes('axis')) {
+        if (inputTarget.key.includes('Axis') && inputDefinition.includes('axis')) {
           const axisNumber = inputDefinition[5];
-          effectiveInputDefinition = `axis(${axisNumber}-,${axisNumber}+)`
+          effectiveInputDefinition = `axis(${axisNumber}-,${axisNumber}+)`;
         }
 
         if (!allInputDefinitions.includes(effectiveInputDefinition)
@@ -364,15 +364,15 @@ const ConfigureGamepadInputsComponent = (props: any) => {
 
     const onFocus = () => {
       focusedInputMapping[1](inputMapping.key);
-    }
+    };
 
     const onBlur = () => {
       focusedInputMapping[1]('');
-    }
+    };
 
     const onKeyDown = (event: any) => {
 
-      if (event.key === "Backspace") {
+      if (event.key === 'Backspace') {
         const selectionStart = event.target.selectionStart;
 
         if (selectionStart === 0) {
@@ -408,7 +408,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
         setInputDefinitions(currentInputDefinitions.join(' '));
       }
 
-      if (event.key === "Delete") {
+      if (event.key === 'Delete') {
         const selectionStart = event.target.selectionStart;
         const currentValue = inputMapping.value[0];
 
@@ -446,9 +446,9 @@ const ConfigureGamepadInputsComponent = (props: any) => {
         setInputDefinitions(currentInputDefinitions.join(' '));
       }
 
-      if (event.key === "Enter") {
+      if (event.key === 'Enter') {
         const focusedInputMappingIndex = inputMappings.findIndex((inputMapping) => {
-          return inputMapping.key === focusedInputMapping[0]
+          return inputMapping.key === focusedInputMapping[0];
         });
 
         if (focusedInputMappingIndex !== -1) {
@@ -459,11 +459,11 @@ const ConfigureGamepadInputsComponent = (props: any) => {
           }
         }
       }
-    }
+    };
 
     const placeholderText = focusedInputMapping[0] === inputMapping.key ? 'Press an input...' : '';
     const labelStyle = inputMapping.isPressed[0]
-      ? { 'backgroundColor': "green" } : {};
+      ? { 'backgroundColor': 'green' } : {};
     return (
       <tr key={inputMapping.key}>
         <td style={labelStyle}>{inputMapping.label}</td>
@@ -473,7 +473,6 @@ const ConfigureGamepadInputsComponent = (props: any) => {
             size="sm"
             value={inputMapping.value[0]}
             ref={inputMapping.inputRef}
-            onChange={() => { }}
             onFocus={onFocus}
             onBlur={onBlur}
             onKeyDown={onKeyDown}
@@ -482,7 +481,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
           />
         </td>
       </tr >
-    )
+    );
   });
 
 
@@ -509,6 +508,6 @@ const ConfigureGamepadInputsComponent = (props: any) => {
 
     </div>
   );
-}
+};
 
 export default ConfigureGamepadInputsComponent;

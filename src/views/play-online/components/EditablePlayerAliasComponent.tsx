@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { Modal, InputGroup, FormControl, Button } from 'react-bootstrap';
 import { createRef, KeyboardEvent, useEffect, useRef, useState } from 'react';
@@ -56,25 +56,25 @@ function EditablePlayerAlias(props: EditablePlayerAliasProps) {
       props.setAlias(aliasInput);
       setShowModal(false);
     }
-  }
+  };
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       updateAlias();
     }
-  }
+  };
 
   const tryHide = () => {
     if (props.alias) {
       setShowModal(false);
     }
-  }
+  };
 
   return (
     <div>
 
       <Modal show={showModal}
-        onHide={() => { tryHide() }}
+        onHide={() => { tryHide(); }}
         aria-labelledby="contained-modal-title-vcenter"
         centered>
 
@@ -94,7 +94,7 @@ function EditablePlayerAlias(props: EditablePlayerAliasProps) {
               maxLength={10}
               placeholder="Enter your alias...">
             </FormControl>
-            <Button name="setAliasButton" onClick={() => { updateAlias() }}
+            <Button name="setAliasButton" onClick={() => { updateAlias(); }}
               disabled={!aliasInput}>
               Confirm
             </Button>
@@ -110,7 +110,7 @@ function EditablePlayerAlias(props: EditablePlayerAliasProps) {
             {props.alias}
 
             <div>
-              <LinkButton onClick={() => { setShowModal(true) }}>edit</LinkButton>
+              <LinkButton onClick={() => { setShowModal(true); }}>edit</LinkButton>
             </div>
           </small>
         </div>
