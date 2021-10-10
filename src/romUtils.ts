@@ -63,9 +63,6 @@ export function persistROM(romData: ArrayBuffer): Promise<void> {
       const db = e.target.result;
       const md5 = md5Sum(romData);
 
-      //const md5 = 
-      console.log("md5: " + md5);
-
       getRomCfgEntry(md5).then((cfg) => {
 
         const romGoodName = cfg
@@ -88,13 +85,7 @@ export function persistROM(romData: ArrayBuffer): Promise<void> {
           reject();
         }
 
-        request.onsuccess = function(event: any) {
-          //console.log(event); <- this bit cost me a weekend
-
-          const contents = event.target.result
-            ? event.target.result.contents
-            : null;
-
+        request.onsuccess = function() {
           resolve();
         }
       });
@@ -198,13 +189,9 @@ export function md5Sum(romData: ArrayBuffer): string {
 
   let z64RomData;
 
-  console.log("romheaderHex: %s", romHeaderHex);
-
   if (romHeaderHex === "80371240") { // big endian (.z64)
     z64RomData = romData;
   } else if (romHeaderHex === "37804012") { // byte swapped (.v64)
-
-    console.log(".v64");
 
     z64RomData = new ArrayBuffer(romData.byteLength);
 
@@ -217,8 +204,6 @@ export function md5Sum(romData: ArrayBuffer): string {
     }
 
   } else if (romHeaderHex === "40123780") { // little endian (.n64)
-
-    console.log(".n64");
 
     z64RomData = new ArrayBuffer(romData.byteLength);
 

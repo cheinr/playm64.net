@@ -31,8 +31,6 @@ export default function PlayOnline(props: PlayOnlineProps) {
     });
   }
 
-  console.log(regionOptions);
-
   const onJoinCodeInputKeyDown = (e: KeyboardEvent<any>) => {
     if (e.key === "Enter") {
       props.joinGame(props.joinGameRoomInput);
@@ -40,7 +38,6 @@ export default function PlayOnline(props: PlayOnlineProps) {
   }
 
   const onROMSelect = (romName: string, romData: ArrayBuffer) => {
-    console.log(romName);
     props.setSelectedROMData(romData);
     setRomSelected(true);
   }

@@ -57,13 +57,6 @@ export default function appReducer(state: any, action: any) {
 
   switch (action.type) {
     case SET_SELECTED_ROM_DATA:
-
-      const md5 = md5Sum(action.data);
-      console.log(md5);
-      getRomCfgEntry(md5).then((cfg) => {
-        console.log(cfg);
-      });
-
       return Object.assign({}, state, {
         uiState: UI_STATE.PENDING_MODE_SELECT,
         selectedRomData: action.data,

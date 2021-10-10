@@ -70,7 +70,6 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
     dispatch(setAlias(''));
   },
   toggleHostingMenu: () => {
-    console.log("toggleHostingMenu");
     dispatch(toggleHostNewGameMenu());
     dispatch(requestHostingRegionOptionsIfNotLoaded());
   },

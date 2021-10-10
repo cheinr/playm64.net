@@ -49,7 +49,6 @@ export function requestHostingRegionOptionsIfNotLoaded() {
   return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
 
     if (!getState().hostRegionOptions) {
-      console.log("requesting hosting options");
       matchmakerService.requestHostingRegionOptions();
     }
   }
@@ -135,8 +134,6 @@ export function joinGameRoom(gameRoomId: string) {
     const state = getState();
     const alias = state.alias;
     const romSimpleName = state.selectedRomShortName;
-
-    console.log("alias: %s, gameRoomId: %s, romSimpleName: %s", alias, gameRoomId, romSimpleName);
 
     //establishing connection
     matchmakerService.joinGame(alias, gameRoomId, romSimpleName).then((gameServerClient: GameServerClient) => {

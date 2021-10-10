@@ -88,9 +88,6 @@ const RomSelector = function(props: RomSelectorProps) {
 
     const displaySpinner = isProcessingNewROMs || isLoading;
 
-
-    console.log(displaySpinner);
-
     return (
       <div>
 

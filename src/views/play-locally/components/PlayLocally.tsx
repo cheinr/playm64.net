@@ -19,9 +19,7 @@ export default function PlayLocally() {
   useEffect(() => {
 
     if (isPlaying) {
-      console.log(selectedROMName);
       loadROM(selectedROMName).then((romData: ArrayBuffer) => {
-        console.log("romData: %o", romData);
         setTimeout(() => {
           createMupen64PlusWeb({
             canvas: document.getElementById('canvas'),
