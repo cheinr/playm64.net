@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { Modal, InputGroup, FormControl, Button } from 'react-bootstrap';
-import { createRef, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { createRef, KeyboardEvent, useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import LinkButton from '../../../components/common/LinkButton';
@@ -11,7 +11,6 @@ import {
 } from '../../../redux/actions';
 import { RootState } from '../../../redux/reducers';
 import { Dispatch } from 'redux';
-import { isFunction } from 'util';
 
 const mapStateToProps = (state: RootState) => ({
   alias: state.alias,
@@ -36,13 +35,17 @@ export default connector(EditablePlayerAlias);
 function EditablePlayerAlias(props: EditablePlayerAliasProps) {
 
   const [aliasInput, setAliasInput] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<boolean | null>(null);
 
   const inputRef = createRef<HTMLInputElement>();
 
   useEffect(() => {
-    if (!props.alias) {
-      setShowModal(true);
+    if (showModal === null) {
+      if (!props.alias) {
+        setShowModal(true);
+      } else {
+        setShowModal(false);
+      }
     }
 
     if (showModal && inputRef && inputRef.current) {
@@ -53,8 +56,8 @@ function EditablePlayerAlias(props: EditablePlayerAliasProps) {
 
   const updateAlias = () => {
     if (aliasInput) {
-      props.setAlias(aliasInput);
       setShowModal(false);
+      props.setAlias(aliasInput);
     }
   };
 
@@ -78,7 +81,7 @@ function EditablePlayerAlias(props: EditablePlayerAliasProps) {
         aria-labelledby="contained-modal-title-vcenter"
         centered>
 
-        <Modal.Header closeButton>
+        <Modal.Header closeButton={!!props.alias}>
           <Modal.Title>What should people call you?</Modal.Title>
         </Modal.Header>
 

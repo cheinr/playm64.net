@@ -1,6 +1,6 @@
 import createMupen64PlusWeb from 'mupen64plus-web';
 import { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import {
   Link
 } from 'react-router-dom';
@@ -86,13 +86,30 @@ export default function PlayLocally() {
           <RomSelector onROMSelect={(romName) => setSelectedROMName(romName)} />
         </div>
         <div className="text-center">
-
-          <Button variant="success"
-            size="lg"
-            disabled={selectedROMName === ''}
-            onClick={() => setIsPlaying(true)}>
-            Play Locally
+          {selectedROMName !== ''
+            ? <Button variant="success"
+              size="lg"
+              disabled={selectedROMName === ''}
+              onClick={() => setIsPlaying(true)}>
+              Play Locally
           </Button>
+
+            : <OverlayTrigger placement='right'
+              overlay={<Tooltip show={false}>You must select a ROM to play first!</Tooltip>}>
+
+              <span className="d-inline-block">
+
+                <Button variant="success"
+                  size="lg"
+                  disabled={selectedROMName === ''}
+                  onClick={() => setIsPlaying(true)}
+                  style={{ pointerEvents: 'none' }}>
+                  Play Locally
+                </Button>
+              </span>
+            </OverlayTrigger>
+          }
+
         </div>
       </div >
     );

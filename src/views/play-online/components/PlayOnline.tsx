@@ -1,5 +1,5 @@
 import { KeyboardEvent, useState } from 'react';
-import { Button, Card, Form, FormControl, InputGroup } from 'react-bootstrap';
+import { Button, Card, Form, FormControl, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   Link
 } from 'react-router-dom';
@@ -118,13 +118,29 @@ export default function PlayOnline(props: PlayOnlineProps) {
                 </div>
 
                 <div>
-                  <Button variant="success"
-                    name="createGameButton"
-                    onClick={() => props.createGameRoom()}
-                    disabled={props.alias === '' || !regionOptions || !romSelected}>
-                    Create Game Room
-                  </Button>
 
+                  {romSelected
+                    ? <Button variant="success"
+                      name="createGameButton"
+                      onClick={() => props.createGameRoom()}
+                      disabled={props.alias === '' || !regionOptions || !romSelected}>
+                      Create Game Room
+                  </Button>
+                    : <OverlayTrigger placement='right'
+                      overlay={<Tooltip show={false}>You must select a ROM to play before hosting a game</Tooltip>}>
+
+                      <span className="d-inline-block">
+
+                        <Button variant="success"
+                          name="createGameButton"
+                          onClick={() => props.createGameRoom()}
+                          disabled={props.alias === '' || !regionOptions || !romSelected}>
+                          Create Game Room
+                          style={{ pointerEvents: 'none' }}
+                        </Button>
+                      </span>
+                    </OverlayTrigger>
+                  }
                 </div>
                 <div>
                   <small>or - &nbsp;
@@ -148,13 +164,32 @@ export default function PlayOnline(props: PlayOnlineProps) {
                       onKeyDown={onJoinCodeInputKeyDown}
                       placeholder="Enter a join code...">
                     </FormControl>
-                    <Button
-                      variant="success"
-                      name="joinGameButton"
-                      onClick={() => props.joinGame(props.joinGameRoomInput)}
-                      disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !romSelected}>
-                      Join Game
+
+                    {romSelected
+                      ? <Button
+                        variant="success"
+                        name="joinGameButton"
+                        onClick={() => props.joinGame(props.joinGameRoomInput)}
+                        disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !romSelected}
+                        style={{ pointerEvents: 'none' }}>
+
+                        Join Game
                     </Button>
+                      : <OverlayTrigger placement='right'
+                        overlay={<Tooltip show={false}>You must select a ROM to play before joining a game</Tooltip>}>
+
+                        <span className="d-inline-block">
+                          <Button
+                            variant="success"
+                            name="joinGameButton"
+                            onClick={() => props.joinGame(props.joinGameRoomInput)}
+                            disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !romSelected}
+                            style={{ pointerEvents: 'none' }}>
+                            Join Game
+                        </Button>
+                        </span>
+                      </OverlayTrigger>
+                    }
                   </InputGroup>
                 </div>
 

@@ -8,6 +8,7 @@
 .rom-table-cell {
     width: 100%;
     display: inline-block;
+    cursor: pointer;
 }
 
 td.selected {
