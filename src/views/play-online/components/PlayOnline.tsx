@@ -134,10 +134,11 @@ export default function PlayOnline(props: PlayOnlineProps) {
                         <Button variant="success"
                           name="createGameButton"
                           onClick={() => props.createGameRoom()}
-                          disabled={props.alias === '' || !regionOptions || !romSelected}>
+                          disabled={props.alias === '' || !regionOptions || !romSelected}
+                          style={{ pointerEvents: 'none' }}>
                           Create Game Room
-                          style={{ pointerEvents: 'none' }}
-                        </Button>
+
+                      </Button>
                       </span>
                     </OverlayTrigger>
                   }
