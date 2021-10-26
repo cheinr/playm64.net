@@ -339,19 +339,28 @@ class MatchmakerClient {
 
     this.uiStore?.dispatch(setConnectionStateMessage(`Attempting to join game room '${gameId}'`, false));
 
+
     const gameJoinConnectionPromise = new Promise<GameServerClient>((resolve, reject) => {
+
+      this.onUnexpectedExceptionMessage = (exceptionMessage: string) => {
+        this.uiStore?.dispatch(setConnectionStateMessage('Unexpected exception while creating game room. Please try again',
+          true));
+
+        reject(`Unexpected exception while creating game room: ${exceptionMessage} `);
+      };
 
       const onConnect = (gameServerClient: GameServerClient) => {
         this.uiStore?.dispatch(setConnectionStateMessage(
           `Successfully joined game room ${gameId} `, false));
 
+        this.onUnexpectedExceptionMessage = null;
         resolve(gameServerClient);
       };
 
       const onError = (err: any) => {
         this.uiStore?.dispatch(setConnectionStateMessage(
           `Failed to join game: ${gameId}. ${err} `, true));
-
+        this.onUnexpectedExceptionMessage = null;
         reject();
       };
 
