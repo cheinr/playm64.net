@@ -166,16 +166,16 @@ export default function PlayOnline(props: PlayOnlineProps) {
                       placeholder="Enter a join code...">
                     </FormControl>
 
+
                     {romSelected
                       ? <Button
                         variant="success"
                         name="joinGameButton"
                         onClick={() => props.joinGame(props.joinGameRoomInput)}
-                        disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !romSelected}
-                        style={{ pointerEvents: 'none' }}>
+                        disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !romSelected}>
 
                         Join Game
-                    </Button>
+                      </Button>
                       : <OverlayTrigger placement='right'
                         overlay={<Tooltip show={false}>You must select a ROM to play before joining a game</Tooltip>}>
 
