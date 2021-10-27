@@ -33,13 +33,19 @@ export default function PlayOnline(props: PlayOnlineProps) {
 
   const onJoinCodeInputKeyDown = (e: KeyboardEvent<any>) => {
     if (e.key === 'Enter') {
-      props.joinGame(props.joinGameRoomInput);
+      joinGame();
     }
   };
 
   const onROMSelect = (romName: string, romData: ArrayBuffer) => {
     props.setSelectedROMData(romData);
     setRomSelected(true);
+  };
+
+  const joinGame = () => {
+    if (props.joinGameRoomInput && props.alias && romSelected) {
+      props.joinGame(props.joinGameRoomInput);
+    }
   };
 
   if (props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
@@ -172,7 +178,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
                       ? <Button
                         variant="success"
                         name="joinGameButton"
-                        onClick={() => props.joinGame(props.joinGameRoomInput)}
+                        onClick={joinGame}
                         disabled={
                           props.alias === ''
                           || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)
@@ -188,8 +194,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
                           <Button
                             variant="success"
                             name="joinGameButton"
-                            onClick={() => props.joinGame(props.joinGameRoomInput)}
-                            disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !romSelected}
+                            disabled
                             style={{ pointerEvents: 'none' }}>
                             Join Game
                         </Button>
