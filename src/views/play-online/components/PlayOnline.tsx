@@ -158,7 +158,8 @@ export default function PlayOnline(props: PlayOnlineProps) {
               <div className="row justify-content-center py-2">
                 <div className="col-8">
                   <InputGroup className="">
-                    <FormControl name="joinCodeInput" disabled={props.alias === ''}
+                    <FormControl name="joinCodeInput"
+                      disabled={props.alias === ''}
                       className="text-center"
                       value={props.joinGameRoomInput}
                       onChange={props.onJoinGameRoomInputChange}
@@ -172,7 +173,11 @@ export default function PlayOnline(props: PlayOnlineProps) {
                         variant="success"
                         name="joinGameButton"
                         onClick={() => props.joinGame(props.joinGameRoomInput)}
-                        disabled={props.alias === '' || !(props.uiState === UI_STATE.PENDING_MODE_SELECT) || !romSelected}>
+                        disabled={
+                          props.alias === ''
+                          || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)
+                          || !romSelected
+                          || !props.joinGameRoomInput}>
 
                         Join Game
                       </Button>
