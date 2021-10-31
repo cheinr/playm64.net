@@ -278,6 +278,9 @@ export function getRomShortName(romData: ArrayBuffer): string {
     shortName += String.fromCharCode(bigEndianBytes[i]);
   }
 
+  // Hack because null unicode characters don't seem to play well with the game server
+  shortName = shortName.replaceAll('\u0000', '');
+
   console.log('after load: %o', getRomHeaderFirstWord(romData).toString(16));
 
   return shortName;
