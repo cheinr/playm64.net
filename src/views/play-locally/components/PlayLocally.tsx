@@ -1,15 +1,15 @@
 import createMupen64PlusWeb from 'mupen64plus-web';
 import { useEffect, useState } from 'react';
-import { Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Button, Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   Link
 } from 'react-router-dom';
 import RomSelector from '../../../components/inputs/RomSelector';
 import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
 import GameControlsDisplay from '../../../containers/GameControlsDisplayContainer';
+import InputOptionsContainer from '../../../containers/InputOptionsContainer';
 import { loadROM } from '../../../romUtils';
 import stats from '../../../Stats';
-
 
 export default function PlayLocally() {
 
@@ -81,8 +81,19 @@ export default function PlayLocally() {
           </Link>
         </div>
 
-        <div className="row">
+        <div className="row py-4">
+          <div className="col text-center mh-100">
 
+            <Card className="h-100">
+              <div>
+                Input Device
+                <InputOptionsContainer />
+              </div>
+            </Card>
+          </div>
+        </div>
+
+        <div className="row">
           <RomSelector onROMSelect={(romName) => setSelectedROMName(romName)} />
         </div>
         <div className="text-center">
@@ -105,7 +116,7 @@ export default function PlayLocally() {
                   onClick={() => setIsPlaying(true)}
                   style={{ pointerEvents: 'none' }}>
                   Play Locally
-                </Button>
+              </Button>
               </span>
             </OverlayTrigger>
           }
