@@ -10,6 +10,12 @@ export interface GameRoomInfo {
   gameRoomId: string;
 }
 
+interface GameRoomParameters {
+  romSimpleName: string,
+  serverRegion: string
+}
+
+
 /*
  * Class to work with matchmaking service to negotiate connections with 
  * game-servers. Can only be used to connect to one game server at a time
@@ -29,6 +35,7 @@ class MatchmakerClient {
 
   private onGameRoomCreateResponse: Function | null = null;
   private onUnexpectedExceptionMessage: Function | null = null;
+  private onGetGameRoomParametersResponse: Function | null = null;
 
   // TODO - types
   private rtcConnection?: RTCPeerConnection;
@@ -144,6 +151,11 @@ class MatchmakerClient {
         this.uiStore?.dispatch(setHostRegionOptions(message.payload.hostingRegionOptions));
         break;
 
+      case 'game-room-parameters':
+        if (this.onGetGameRoomParametersResponse) {
+          this.onGetGameRoomParametersResponse(message.payload.gameRoomParameters);
+        }
+        break;
       case 'room-create-response':
 
         const gameRoomInfo = {
@@ -329,6 +341,50 @@ class MatchmakerClient {
       });
     });
 
+  }
+
+  async getGameRoomParameters(gameRoomId: string): Promise<GameRoomParameters> {
+
+    return new Promise<GameRoomParameters>((resolve, reject) => {
+      this._connectAsync().then(() => {
+        if (this.socket === null) {
+          throw new Error('createGame: this.websocket must be created');
+        }
+
+        this.socket.send(JSON.stringify({
+          action: 'sendmessage',
+          data: {
+            type: 'request-game-room-parameters',
+            payload: {
+              gameRoomId
+            }
+          }
+        }));
+
+        const createTimeout = setTimeout(() => {
+          this.onUnexpectedExceptionMessage = null;
+          this.uiStore?.dispatch(setConnectionStateMessage(
+            'Timed out while fetching game room info. Please try again', true));
+          reject('Timed out fetching game room info');
+        }, 90000);
+
+        this.onGetGameRoomParametersResponse = (gameRoomParameters: GameRoomParameters) => {
+          this.onUnexpectedExceptionMessage = null;
+          clearTimeout(createTimeout);
+
+          this.uiStore?.dispatch(setConnectionStateMessage(`Fetched game room info for ${gameRoomId}`, false));
+          resolve(gameRoomParameters);
+        };
+
+        this.onUnexpectedExceptionMessage = (exceptionMessage: string) => {
+          clearTimeout(createTimeout);
+          reject(`Unexpected exception while fetching creating game room: ${exceptionMessage}`);
+        };
+
+      }).catch((err) => {
+        reject(err);
+      });
+    });
   }
 
   async joinGame(alias: string, gameId: string, romSimpleName: string): Promise<GameServerClient> {
