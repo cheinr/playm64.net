@@ -2,19 +2,67 @@ import md5 from 'md5';
 import SparkMD5 from 'spark-md5';
 import axios from 'axios';
 
+
+const ROMS_DB_VERSION = 2;
+
 const onUpgradeNeeded = function(event: any) {
   const db = event.target.result;
+
+  if (event.oldVersion < event.newVersion) {
+    if (db.objectStoreNames.contains('ROMS')) {
+      db.deleteObjectStore('ROMS');
+    }
+  }
 
   if (!db.objectStoreNames.contains('ROMS')) {
     console.log('Creating object store!');
     const objectStore = db.createObjectStore('ROMS');
     objectStore.createIndex('md5Sum', 'md5Sum', { unique: false, multiEntry: false });
+    objectStore.createIndex('romShortName', 'romShortName', { unique: false, multiEntry: false });
   }
 };
 
+export async function loadROMBySimpleName(romShortName: string): Promise<ArrayBuffer> {
+
+  return new Promise((resolve, reject) => {
+    const connection = indexedDB.open('roms', ROMS_DB_VERSION);
+
+    connection.onupgradeneeded = onUpgradeNeeded;
+
+    connection.onerror = function(event) {
+      console.error('Error while updating IDBFS store: %o', event);
+      reject(event);
+    };
+
+    connection.onsuccess = (e: any) => {
+      const db = e.target.result;
+      const transaction = db.transaction('ROMS', 'readonly');
+      const store = transaction.objectStore('ROMS');
+
+      const request = store.index('romShortName').get(romShortName);
+
+      request.onerror = function(event: any) {
+        console.error('Error while querying keys from IDBFS: %o', event);
+        reject();
+      };
+
+      request.onsuccess = function(event: any) {
+
+        // If we have multiple entries with the same shortname
+        // indexedDB should just return the first one it finds
+        const contents = event.target.result
+          ? event.target.result.romData.buffer
+          : null;
+
+        resolve(contents);
+      };
+    };
+  });
+}
+
 export async function loadROM(romGoodName: string): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {
-    const connection = indexedDB.open('roms');
+    const connection = indexedDB.open('roms', ROMS_DB_VERSION);
 
     connection.onupgradeneeded = onUpgradeNeeded;
 
@@ -50,7 +98,7 @@ export async function loadROM(romGoodName: string): Promise<ArrayBuffer> {
 
 export async function persistROM(romData: ArrayBuffer): Promise<void> {
   return new Promise((resolve, reject) => {
-    const connection = indexedDB.open('roms');
+    const connection = indexedDB.open('roms', ROMS_DB_VERSION);
 
     connection.onupgradeneeded = onUpgradeNeeded;
 
@@ -76,12 +124,13 @@ export async function persistROM(romData: ArrayBuffer): Promise<void> {
           ? cfg.GoodName
           : getRomShortName(romData) + ' (Unknown ROM)';
 
+        const romShortName = getRomShortName(romData);
         const toSave = {
           romGoodName,
+          romShortName,
           romData: new Uint8Array(romData),
           md5Sum: md5
         };
-
 
         const transaction = db.transaction('ROMS', 'readwrite');
         const store = transaction.objectStore('ROMS');
@@ -104,7 +153,7 @@ export async function persistROM(romData: ArrayBuffer): Promise<void> {
 
 export async function listPersistedROMs(): Promise<Array<string>> {
   return new Promise((resolve, reject) => {
-    const connection = indexedDB.open('roms');
+    const connection = indexedDB.open('roms', ROMS_DB_VERSION);
 
     connection.onupgradeneeded = onUpgradeNeeded;
 
@@ -136,7 +185,7 @@ export async function listPersistedROMs(): Promise<Array<string>> {
 
 export async function deleteROM(romName: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const connection = indexedDB.open('roms');
+    const connection = indexedDB.open('roms', ROMS_DB_VERSION);
 
     connection.onupgradeneeded = onUpgradeNeeded;
 
