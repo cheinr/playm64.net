@@ -9,6 +9,7 @@ import MatchmakerClient from '../service/MatchmakerClient';
 import MatchmakerService, { GameRoomInfo } from '../service/MatchmakerClient';
 import { RootState, UI_STATE } from './reducers';
 
+import { loadROMByShortName } from '../romUtils';
 
 // TODO move somewhere common
 type MyExtraArg = { matchmakerService: MatchmakerClient };
@@ -125,7 +126,7 @@ export function createGameRoom() {
   };
 }
 
-export function joinGameRoom(gameRoomId: string) {
+export function joinGameRoom(gameRoomId: string, autoSelectROMEnabled?: boolean) {
   return (dispatch: Dispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
 
     dispatch(setGameRoomId(gameRoomId));
@@ -135,25 +136,52 @@ export function joinGameRoom(gameRoomId: string) {
     const alias = state.alias;
     const romSimpleName = state.selectedRomShortName;
 
-    //establishing connection
-    matchmakerService.joinGame(alias, gameRoomId, romSimpleName).then((gameServerClient: GameServerClient) => {
 
-      console.log('Finished joining game room: %o', gameServerClient);
+    // Base case is rom is already loaded and ready to go
+    let prepareROM: Promise<string> = new Promise((resolve) => resolve(romSimpleName));
 
-      dispatch(setUiState(UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION));
-      dispatch(setGameServerConnection(gameServerClient));
+    if (autoSelectROMEnabled) {
+      prepareROM = new Promise((resolve, reject) => {
+        matchmakerService.getGameRoomParameters(gameRoomId).then(async (parameters) => {
+          const romShortName = parameters.romSimpleName;
 
-      gameServerClient.onDisconnect(() => {
-        dispatch(setUiState(UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION));
-        alert('Lost connection to the game room, you will not be able to rejoin.'
-          + ' Please refresh the page to start a new session.');
+          return loadROMByShortName(romShortName).then((romData) => {
+
+            if (!romData) {
+              reject(`Unable to find ROM in library with shortName ${romShortName}. Please try manually loading this ROM and try again`);
+
+            } else {
+              dispatch(setSelectedROMData(romData));
+              resolve(romShortName);
+            }
+          });
+        }).catch((err) => {
+          reject(err);
+        });
       });
 
-      gameServerClient.onRoomPlayerInfoUpdate((roomPlayerInfo: any) => {
-        dispatch(setRoomPlayerInfo(roomPlayerInfo));
+    }
+
+    prepareROM.then(async (preparedROMName) => {
+      //establishing connection
+      return matchmakerService.joinGame(alias, gameRoomId, preparedROMName).then((gameServerClient: GameServerClient) => {
+
+        console.log('Finished joining game room: %o', gameServerClient);
+
+        dispatch(setUiState(UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION));
+        dispatch(setGameServerConnection(gameServerClient));
+
+        gameServerClient.onDisconnect(() => {
+          dispatch(setUiState(UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION));
+          alert('Lost connection to the game room, you will not be able to rejoin.'
+            + ' Please refresh the page to start a new session.');
+        });
+
+        gameServerClient.onRoomPlayerInfoUpdate((roomPlayerInfo: any) => {
+          dispatch(setRoomPlayerInfo(roomPlayerInfo));
+        });
       });
     }).catch((err) => {
-
       dispatch(setUiState(UI_STATE.PENDING_MODE_SELECT));
     });
   };

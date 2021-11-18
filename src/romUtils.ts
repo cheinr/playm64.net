@@ -22,7 +22,7 @@ const onUpgradeNeeded = function(event: any) {
   }
 };
 
-export async function loadROMBySimpleName(romShortName: string): Promise<ArrayBuffer> {
+export async function loadROMByShortName(romShortName: string): Promise<ArrayBuffer> {
 
   return new Promise((resolve, reject) => {
     const connection = indexedDB.open('roms', ROMS_DB_VERSION);
