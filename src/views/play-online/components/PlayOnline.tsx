@@ -1,4 +1,4 @@
-import { KeyboardEvent, useState } from 'react';
+import { KeyboardEvent, useEffect, useState } from 'react';
 import { Button, Card, Form, FormControl, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   Link
@@ -15,10 +15,29 @@ import GameRoomPlayerInfoContainer from '../containers/GameRoomPlayerInfoContain
 import { PlayOnlineProps } from '../containers/PlayOnlineContainer';
 import EditableAlias from './EditablePlayerAliasComponent';
 
+import { listPersistedROMs } from '../../../romUtils';
 
 export default function PlayOnline(props: PlayOnlineProps) {
 
   const [romSelected, setRomSelected] = useState(false);
+
+  const [libraryHasROMSLoaded, setLibraryHasROMSLoaded] = useState(false);
+
+  useEffect(() => {
+    listPersistedROMs().then((romKeys) => {
+      setLibraryHasROMSLoaded(romKeys.length > 0);
+
+      if (romKeys.length <= 0) {
+        props.setIsAutoSelectROMEnabled(false);
+      }
+    }).catch((err) => {
+      console.error('Unable to check for loaded ROMs: ', err);
+    });
+  });
+
+  const onLoadedROMsChange = (newROMNames: string[]) => {
+    setLibraryHasROMSLoaded(newROMNames.length > 0);
+  };
 
   let regionOptions = null;
   if (props.hostRegionOptions) {
@@ -37,14 +56,18 @@ export default function PlayOnline(props: PlayOnlineProps) {
     }
   };
 
+  const toggleAutoSelectROMEnabled = () => {
+    props.setIsAutoSelectROMEnabled(!props.isAutoSelectROMEnabled);
+  };
+
   const onROMSelect = (romName: string, romData: ArrayBuffer) => {
     props.setSelectedROMData(romData);
     setRomSelected(true);
   };
 
   const joinGame = () => {
-    if (props.joinGameRoomInput && props.alias && romSelected) {
-      props.joinGame(props.joinGameRoomInput);
+    if (props.joinGameRoomInput && props.alias && (romSelected || props.isAutoSelectROMEnabled)) {
+      props.joinGame(props.joinGameRoomInput, props.isAutoSelectROMEnabled);
     }
   };
 
@@ -103,7 +126,20 @@ export default function PlayOnline(props: PlayOnlineProps) {
 
           <div>
 
-            <RomSelector onROMSelect={onROMSelect} />
+            {!props.showHostingMenu && libraryHasROMSLoaded &&
+              <Form onClick={toggleAutoSelectROMEnabled}>
+                <div className="mb-3">
+                  <Form.Check type="checkbox" label="Auto select ROM from your library?"
+                    checked={props.isAutoSelectROMEnabled}
+                    onChange={() => {/* handled by Form Click handler */ }}
+                  />
+                </div>
+              </Form>
+            }
+
+            {!props.isAutoSelectROMEnabled &&
+              <RomSelector onROMSelect={onROMSelect} onLoadedROMsChange={onLoadedROMsChange} />
+            }
 
             { /* TODO - HostingFormComponent */
               props.showHostingMenu &&
@@ -173,20 +209,16 @@ export default function PlayOnline(props: PlayOnlineProps) {
                       placeholder="Enter a join code...">
                     </FormControl>
 
-
-                    {romSelected
+                    {(romSelected || props.isAutoSelectROMEnabled)
                       ? <Button
                         variant="success"
                         name="joinGameButton"
                         onClick={joinGame}
                         disabled={
-                          props.alias === ''
-                          || !(props.uiState === UI_STATE.PENDING_MODE_SELECT)
-                          || !romSelected
-                          || !props.joinGameRoomInput}>
+                          props.alias === '' || !props.joinGameRoomInput}>
 
                         Join Game
-                      </Button>
+                    </Button>
                       : <OverlayTrigger placement='right'
                         overlay={<Tooltip show={false}>You must select a ROM to play before joining a game</Tooltip>}>
 

@@ -23,6 +23,7 @@ export const SET_CONNECTION_STATE_MESSAGE = 'SET_CONNECTION_STATE_MESSAGE';
 export const SET_DISPLAY_WELCOME_MODAL = 'SET_DISPLAY_WELCOME_MODAL';
 export const SET_EMULATOR_ERROR_MESSAGE = 'SET_EMULATOR_ERROR_MESSAGE';
 export const SET_HOSTING_REGION = 'SET_HOSTING_REGION';
+export const SET_IS_AUTO_SELECT_ROM_ENABLED = 'SET_IS_AUTO_SELECT_ROM_ENABLED';
 export const SET_SELECTED_ROM_DATA = 'SET_SELECTED_ROM_DATA';
 export const SET_UI_STATE = 'SET_UI_STATE';
 export const SET_GAME_ROOM_ID = 'SET_GAME_ROOM_ID';
@@ -44,6 +45,10 @@ export function setHostRegionOptions(regionOptions: any) {
 
 export function setHostingRegion(region: string) {
   return { type: SET_HOSTING_REGION, region };
+}
+
+export function setIsAutoSelectROMEnabled(isAutoSelectROMEnabled: boolean) {
+  return { type: SET_IS_AUTO_SELECT_ROM_ENABLED, isAutoSelectROMEnabled };
 }
 
 export function requestHostingRegionOptionsIfNotLoaded() {
@@ -148,7 +153,8 @@ export function joinGameRoom(gameRoomId: string, autoSelectROMEnabled?: boolean)
           return loadROMByShortName(romShortName).then((romData) => {
 
             if (!romData) {
-              reject(`Unable to find ROM in library with shortName ${romShortName}. Please try manually loading this ROM and try again`);
+              dispatch(setIsAutoSelectROMEnabled(false));
+              reject(`Unable to find ROM in library with shortName "${romShortName}". Please try manually loading this ROM and try again.`);
 
             } else {
               dispatch(setSelectedROMData(romData));
@@ -182,6 +188,8 @@ export function joinGameRoom(gameRoomId: string, autoSelectROMEnabled?: boolean)
         });
       });
     }).catch((err) => {
+      console.error(err);
+      dispatch(setConnectionStateMessage(err, true));
       dispatch(setUiState(UI_STATE.PENDING_MODE_SELECT));
     });
   };

@@ -13,7 +13,8 @@ import {
   SET_CONNECTION_STATE_MESSAGE,
   TOGGLE_HOST_NEW_GAME_MENU,
   SET_HOSTING_REGION,
-  SET_HOST_REGION_OPTIONS
+  SET_HOST_REGION_OPTIONS,
+  SET_IS_AUTO_SELECT_ROM_ENABLED
 } from './actions';
 
 import { getRomShortName, md5Sum, getRomCfgEntry } from '../romUtils';
@@ -37,6 +38,7 @@ const initialState = {
   emulatorErrorMessage: '',
   hostRegionOptions: null,
   hostingRegion: 'us-west-2',
+  isAutoSelectROMEnabled: false,
   uiState: UI_STATE.PENDING_ROM_LOAD,
   selectedRomData: null,
   selectedRomShortName: null,
@@ -91,6 +93,11 @@ export default function appReducer(state: any, action: any) {
     case SET_HOSTING_REGION:
       return Object.assign({}, state, {
         hostingRegion: action.region
+      });
+
+    case SET_IS_AUTO_SELECT_ROM_ENABLED:
+      return Object.assign({}, state, {
+        isAutoSelectROMEnabled: action.isAutoSelectROMEnabled
       });
 
     case SET_UI_STATE:

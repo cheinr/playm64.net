@@ -7,6 +7,7 @@ import PlayOnline from '../components/PlayOnline';
 import {
   setAlias,
   setAliasInput,
+  setIsAutoSelectROMEnabled,
   createGameRoom, joinGameRoom, setJoinGameRoomInput,
   toggleHostNewGameMenu,
   startLocalGame,
@@ -28,6 +29,7 @@ interface OwnProps {
 const mapStateToProps = (state: RootState, ownProps: OwnProps) => ({
   alias: state.alias,
   aliasInput: state.aliasInput,
+  isAutoSelectROMEnabled: state.isAutoSelectROMEnabled,
   romShortName: state.selectedRomShortName,
   uiState: state.uiState,
   joinGameRoomInput: state.joinGameRoomInput,
@@ -36,7 +38,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => ({
   hostRegionOptions: state.hostRegionOptions,
   hostingRegion: state.hostingRegion,
 
-  isHostingInitially: ownProps.isHostingInitially ?? false
+  isHostingInitially: ownProps.isHostingInitially ?? false,
+
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
@@ -53,6 +56,11 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   },
   onAliasInputChange: (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setAliasInput(event.target.value));
+  },
+  setIsAutoSelectROMEnabled: (isEnabled: boolean) => {
+
+    localStorage.setItem('isAutoSelectROMEnabled', JSON.stringify(isEnabled));
+    dispatch(setIsAutoSelectROMEnabled(isEnabled));
   },
   startLocalGame: () => {
     dispatch(startLocalGame());

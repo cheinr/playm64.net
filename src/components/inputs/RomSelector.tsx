@@ -8,6 +8,7 @@ import './RomSelector.css';
 
 interface RomSelectorProps {
   onROMSelect(romName: string, romData: ArrayBuffer): void;
+  onLoadedROMsChange?: (loadedROMKeys: string[]) => void;
 }
 
 const RomSelector = function(props: RomSelectorProps) {
@@ -59,6 +60,9 @@ const RomSelector = function(props: RomSelectorProps) {
         return listPersistedROMs().then((roms) => {
           setRomNames(roms.sort());
           setIsProcessingNewROMs(false);
+          if (props.onLoadedROMsChange) {
+            props.onLoadedROMsChange(roms.sort());
+          }
         });
       }).catch((err) => {
         console.error('Error while deleting ROM [%s]: ', romName, err);
@@ -96,6 +100,9 @@ const RomSelector = function(props: RomSelectorProps) {
       return listPersistedROMs().then((roms) => {
         setRomNames(roms.sort());
         setIsProcessingNewROMs(false);
+        if (props.onLoadedROMsChange) {
+          props.onLoadedROMsChange(roms.sort());
+        }
       });
     }).catch((err) => {
       console.error('Exception while loading new ROMs: %o', err);
