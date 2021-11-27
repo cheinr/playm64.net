@@ -344,7 +344,6 @@ class MatchmakerClient {
   }
 
   async getGameRoomParameters(gameRoomId: string): Promise<GameRoomParameters> {
-    console.log('getGameRoomParameters');
     return new Promise<GameRoomParameters>((resolve, reject) => {
       this._connectAsync().then(() => {
         if (this.socket === null) {
@@ -370,7 +369,6 @@ class MatchmakerClient {
 
         this.onGetGameRoomParametersResponse = (gameRoomParameters: GameRoomParameters) => {
           this.onUnexpectedExceptionMessage = null;
-          console.log('clearing timeout: %o', createTimeout);
           clearTimeout(createTimeout);
 
           this.uiStore?.dispatch(setConnectionStateMessage(`Fetched game room info for ${gameRoomId}`, false));

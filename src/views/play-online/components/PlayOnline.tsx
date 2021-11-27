@@ -137,7 +137,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
               </Form>
             }
 
-            {!props.isAutoSelectROMEnabled &&
+            {(props.showHostingMenu || !props.isAutoSelectROMEnabled) &&
               <RomSelector onROMSelect={onROMSelect} onLoadedROMsChange={onLoadedROMsChange} />
             }
 
