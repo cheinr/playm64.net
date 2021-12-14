@@ -3,6 +3,7 @@ import { Dispatch } from 'redux';
 
 import PlayLocally from '../components/PlayLocally';
 import { RootState } from '../../../redux/reducers';
+import { setEmulatorConfigOverrides } from '../../../redux/actions';
 
 
 const mapStateToProps = (state: RootState) => ({
@@ -10,6 +11,9 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  setEmulatorConfigOverrides: (configOverrides: any) => {
+    dispatch(setEmulatorConfigOverrides(configOverrides));
+  }
 });
 
 const connector = connect(

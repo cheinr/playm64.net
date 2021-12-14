@@ -13,7 +13,8 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setEmulatorConfigOverrides: (emulatorConfigOverrides: any) => {
     dispatch(setEmulatorConfigOverrides(emulatorConfigOverrides));
-  }
+  },
+
 });
 
 const connector = connect(
@@ -21,7 +22,11 @@ const connector = connect(
   mapDispatchToProps
 );
 
-export type AdvancedEmulatorConfigOverridesProps = ConnectedProps<typeof connector>;
+type propsFromRedux = ConnectedProps<typeof connector>;
+export interface AdvancedEmulatorConfigOverridesProps extends propsFromRedux {
+  selectedROMGoodName: string
+}
+
 export default connector(AdvancedEmulatorConfigOverridesComponent);
 
 

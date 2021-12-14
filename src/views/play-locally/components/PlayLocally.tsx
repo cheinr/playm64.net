@@ -5,6 +5,7 @@ import {
   Link
 } from 'react-router-dom';
 import AdvancedEmulatorConfigOverridesContainer from '../../../containers/AdvancedEmulatorConfigOverridesContainer';
+import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/AdvancedEmulatorConfigOverridesComponent';
 import RomSelector from '../../../components/inputs/RomSelector';
 import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
 import GameControlsDisplay from '../../../containers/GameControlsDisplayContainer';
@@ -17,6 +18,20 @@ export default function PlayLocally(props: PlayLocallyProps) {
 
   const [selectedROMName, setSelectedROMName] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const doSetSelectedROMName = (newSelectedROMName: string) => {
+    if (newSelectedROMName !== selectedROMName) {
+
+      // TODO - Ideally we wouldn't be writing and reading to this from different components
+      const existingPersistedOverrides: any = JSON.parse(localStorage.getItem(M64_EMU_CONFIG_OVERRIDES_KEY) ?? '{}');
+
+      if (existingPersistedOverrides[newSelectedROMName]) {
+        props.setEmulatorConfigOverrides(existingPersistedOverrides[newSelectedROMName]);
+      }
+    }
+
+    setSelectedROMName(newSelectedROMName);
+  };
 
   const [
     shouldDisplayEmulatorConfigOverridesContainer,
@@ -86,6 +101,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
         <Modal
           show={shouldDisplayEmulatorConfigOverridesContainer}
           onHide={() => setShouldDisplayEmulatorConfigOverridesContainer(false)}
+          centered
         >
           <Modal.Header closeButton>
             <Modal.Title>
@@ -94,7 +110,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
           </Modal.Header>
 
           <Modal.Body>
-            <AdvancedEmulatorConfigOverridesContainer />
+            <AdvancedEmulatorConfigOverridesContainer selectedROMGoodName={selectedROMName} />
           </Modal.Body>
         </Modal>
 
@@ -118,14 +134,16 @@ export default function PlayLocally(props: PlayLocallyProps) {
         </div>
 
         <div className="row">
-          <RomSelector onROMSelect={(romName) => setSelectedROMName(romName)} />
+          <RomSelector onROMSelect={(romName) => doSetSelectedROMName(romName)} />
         </div>
 
-        <div className="text-center pb-3">
-          <Button onClick={() => setShouldDisplayEmulatorConfigOverridesContainer(true)}>
-            Set Emulator Config Overrides
-          </Button>
-        </div>
+        { selectedROMName !== '' &&
+          <div className="text-center pb-3">
+            <Button onClick={() => setShouldDisplayEmulatorConfigOverridesContainer(true)}>
+              Set Emulator Config Overrides
+            </Button>
+          </div>
+        }
 
 
         <div className="text-center">
