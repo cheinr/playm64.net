@@ -14,10 +14,11 @@ import {
   TOGGLE_HOST_NEW_GAME_MENU,
   SET_HOSTING_REGION,
   SET_HOST_REGION_OPTIONS,
-  SET_IS_AUTO_SELECT_ROM_ENABLED
+  SET_IS_AUTO_SELECT_ROM_ENABLED,
+  SET_EMULATOR_CONFIG_OVERRIDES
 } from './actions';
 
-import { getRomShortName, md5Sum, getRomCfgEntry } from '../romUtils';
+import { getRomShortName } from '../romUtils';
 
 export enum UI_STATE {
   PENDING_ROM_LOAD = 0,
@@ -36,6 +37,7 @@ const initialState = {
   displayHostNewGameMenu: false,
   displayWelcomeModal: true,
   emulatorErrorMessage: '',
+  emulatorConfigOverrides: {},
   hostRegionOptions: null,
   hostingRegion: 'us-west-2',
   isAutoSelectROMEnabled: false,
@@ -83,6 +85,12 @@ export default function appReducer(state: any, action: any) {
     case SET_EMULATOR_ERROR_MESSAGE:
       return Object.assign({}, state, {
         emulatorErrorMessage: action.message
+      });
+
+    case SET_EMULATOR_CONFIG_OVERRIDES:
+      console.log(action.emulatorConfigOverrides);
+      return Object.assign({}, state, {
+        emulatorConfigOverrides: action.emulatorConfigOverrides
       });
 
     case SET_HOST_REGION_OPTIONS:

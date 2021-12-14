@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 
 import Home from './views/home/containers/HomeContainer';
-import PlayLocally from './views/play-locally/components/PlayLocally';
+import PlayLocally from './views/play-locally/containers/PlayLocallyContainer';
 import PlayOnline from './views/play-online/containers/PlayOnlineContainer';
 import { RootState } from './redux/reducers';
 import { setDisplayWelcomeModal } from './redux/actions';

@@ -22,6 +22,7 @@ export const SET_CONNECTED_GAMEPAD = 'SET_CONNECTED_GAMEPAD';
 export const SET_CONNECTION_STATE_MESSAGE = 'SET_CONNECTION_STATE_MESSAGE';
 export const SET_DISPLAY_WELCOME_MODAL = 'SET_DISPLAY_WELCOME_MODAL';
 export const SET_EMULATOR_ERROR_MESSAGE = 'SET_EMULATOR_ERROR_MESSAGE';
+export const SET_EMULATOR_CONFIG_OVERRIDES = 'SET_EMULATOR_CONFIG_OVERRIDES';
 export const SET_HOSTING_REGION = 'SET_HOSTING_REGION';
 export const SET_IS_AUTO_SELECT_ROM_ENABLED = 'SET_IS_AUTO_SELECT_ROM_ENABLED';
 export const SET_SELECTED_ROM_DATA = 'SET_SELECTED_ROM_DATA';
@@ -71,6 +72,10 @@ export function setConnectionStateMessage(message: string, isError: boolean) {
 
 export function setEmulatorErrorMessage(message: string) {
   return { type: SET_EMULATOR_ERROR_MESSAGE, message };
+}
+
+export function setEmulatorConfigOverrides(emulatorConfigOverrides: any): any {
+  return { type: SET_EMULATOR_CONFIG_OVERRIDES, emulatorConfigOverrides };
 }
 
 export function setDisplayWelcomeModal(displayWelcomeModal: boolean) {
