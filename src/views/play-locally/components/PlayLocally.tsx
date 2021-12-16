@@ -4,8 +4,8 @@ import { Modal, Button, Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   Link
 } from 'react-router-dom';
-import AdvancedEmulatorConfigOverridesContainer from '../../../containers/AdvancedEmulatorConfigOverridesContainer';
-import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/AdvancedEmulatorConfigOverridesComponent';
+import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
+import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/intputs/AdvancedEmulatorConfigOverridesInputComponent';
 import RomSelector from '../../../components/inputs/RomSelector';
 import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
 import GameControlsDisplay from '../../../containers/GameControlsDisplayContainer';

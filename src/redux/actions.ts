@@ -236,6 +236,7 @@ export function startLocalGame() {
     const state = getState();
 
     setTimeout(() => {
+
       createMupen64PlusWeb({
         canvas: document.getElementById('canvas'),
         romData: state.selectedRomData,

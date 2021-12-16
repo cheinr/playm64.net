@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Dropdown, Form, Table } from 'react-bootstrap';
-import { AdvancedEmulatorConfigOverridesProps } from '../containers/AdvancedEmulatorConfigOverridesContainer';
+import { AdvancedEmulatorConfigOverridesProps } from '../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
 
 export const M64_EMU_CONFIG_OVERRIDES_KEY = 'm64EmuConfigOverrides';
 

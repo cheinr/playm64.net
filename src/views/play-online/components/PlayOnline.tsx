@@ -3,8 +3,8 @@ import { Modal, Button, Card, Form, FormControl, InputGroup, OverlayTrigger, Too
 import {
   Link
 } from 'react-router-dom';
-import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/AdvancedEmulatorConfigOverridesComponent';
-import AdvancedEmulatorConfigOverridesContainer from '../../../containers/AdvancedEmulatorConfigOverridesContainer';
+import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/intputs/AdvancedEmulatorConfigOverridesInputComponent';
+import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
 import LinkButton from '../../../components/common/LinkButton';
 import RomSelector from '../../../components/inputs/RomSelector';
 import GameControlsDisplayContainer from '../../../containers/GameControlsDisplayContainer';

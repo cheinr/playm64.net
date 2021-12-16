@@ -1,9 +1,9 @@
 import { connect, ConnectedProps } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import AdvancedEmulatorConfigOverridesComponent from '../components/AdvancedEmulatorConfigOverridesComponent';
-import { setEmulatorConfigOverrides } from '../redux/actions';
-import { RootState } from '../redux/reducers';
+import AdvancedEmulatorConfigOverridesComponent from '../../components/intputs/AdvancedEmulatorConfigOverridesInputComponent';
+import { setEmulatorConfigOverrides } from '../../redux/actions';
+import { RootState } from '../../redux/reducers';
 
 
 const mapStateToProps = (state: RootState) => ({
@@ -13,8 +13,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setEmulatorConfigOverrides: (emulatorConfigOverrides: any) => {
     dispatch(setEmulatorConfigOverrides(emulatorConfigOverrides));
-  },
-
+  }
 });
 
 const connector = connect(

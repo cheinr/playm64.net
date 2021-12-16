@@ -223,9 +223,9 @@ class GameServerClient {
         createMupen64PlusWeb({
           canvas: document.getElementById('canvas'),
           romData: uiState.selectedRomData,
-          romPath: '/roms/tmp_rom_path',
           beginStats: stats.begin,
           endStats: stats.end,
+          romConfigOptionOverrides: uiState.emulatorConfigOverrides,
           coreConfig: {
             emuMode: 0
           },
