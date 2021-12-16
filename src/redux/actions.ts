@@ -245,6 +245,7 @@ export function startLocalGame() {
         coreConfig: {
           emuMode: 0
         },
+        romConfigOptionOverrides: state.emulatorConfigOverrides,
         locateFile: (path: string, prefix: string) => {
 
           console.log('path: %o', path);

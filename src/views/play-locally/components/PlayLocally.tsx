@@ -48,7 +48,6 @@ export default function PlayLocally(props: PlayLocallyProps) {
             romData,
             beginStats: stats.begin,
             endStats: stats.end,
-            romPath: '/roms/tmp_rom_path',
             romConfigOptionOverrides: props.emulatorConfigOverrides,
             coreConfig: {
               emuMode: 0

@@ -1,8 +1,10 @@
 import { KeyboardEvent, useEffect, useState } from 'react';
-import { Button, Card, Form, FormControl, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Modal, Button, Card, Form, FormControl, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   Link
 } from 'react-router-dom';
+import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/AdvancedEmulatorConfigOverridesComponent';
+import AdvancedEmulatorConfigOverridesContainer from '../../../containers/AdvancedEmulatorConfigOverridesContainer';
 import LinkButton from '../../../components/common/LinkButton';
 import RomSelector from '../../../components/inputs/RomSelector';
 import GameControlsDisplayContainer from '../../../containers/GameControlsDisplayContainer';
@@ -20,8 +22,11 @@ import { listPersistedROMs } from '../../../romUtils';
 export default function PlayOnline(props: PlayOnlineProps) {
 
   const [romSelected, setRomSelected] = useState(false);
-
   const [libraryHasROMSLoaded, setLibraryHasROMSLoaded] = useState(false);
+  const [
+    shouldDisplayEmulatorConfigOverridesContainer,
+    setShouldDisplayEmulatorConfigOverridesContainer
+  ] = useState(false);
 
   useEffect(() => {
     listPersistedROMs().then((romKeys) => {
@@ -60,8 +65,20 @@ export default function PlayOnline(props: PlayOnlineProps) {
     props.setIsAutoSelectROMEnabled(!props.isAutoSelectROMEnabled);
   };
 
+  const [selectedROMName, setSelectedROMName] = useState('');
   const onROMSelect = (romName: string, romData: ArrayBuffer) => {
-    props.setSelectedROMData(romData);
+
+    if (selectedROMName !== romName) {
+      props.setSelectedROMData(romData);
+      setSelectedROMName(romName);
+
+      // TODO - Ideally we wouldn't be writing and reading to this from different components
+      const existingPersistedOverrides: any = JSON.parse(localStorage.getItem(M64_EMU_CONFIG_OVERRIDES_KEY) ?? '{}');
+
+      if (existingPersistedOverrides[romName]) {
+        props.setEmulatorConfigOverrides(existingPersistedOverrides[romName]);
+      }
+    }
     setRomSelected(true);
   };
 
@@ -97,6 +114,22 @@ export default function PlayOnline(props: PlayOnlineProps) {
     return (
       <div>
         <div>
+
+          <Modal
+            show={shouldDisplayEmulatorConfigOverridesContainer}
+            onHide={() => setShouldDisplayEmulatorConfigOverridesContainer(false)}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Advanced Emulator Config Overrides
+              </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <AdvancedEmulatorConfigOverridesContainer selectedROMGoodName={selectedROMName} />
+            </Modal.Body>
+          </Modal>
 
           <div className="text-center pt-4">
             <div>
@@ -140,6 +173,15 @@ export default function PlayOnline(props: PlayOnlineProps) {
             {(props.showHostingMenu || !props.isAutoSelectROMEnabled) &&
               <RomSelector onROMSelect={onROMSelect} onLoadedROMsChange={onLoadedROMsChange} />
             }
+
+            {romSelected &&
+              <div className="text-center pb-3">
+                <Button onClick={() => setShouldDisplayEmulatorConfigOverridesContainer(true)}>
+                  Set Emulator Config Overrides
+               </Button>
+              </div>
+            }
+
 
             { /* TODO - HostingFormComponent */
               props.showHostingMenu &&

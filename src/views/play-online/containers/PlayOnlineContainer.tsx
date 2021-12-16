@@ -7,6 +7,7 @@ import PlayOnline from '../components/PlayOnline';
 import {
   setAlias,
   setAliasInput,
+  setEmulatorConfigOverrides,
   setIsAutoSelectROMEnabled,
   createGameRoom, joinGameRoom, setJoinGameRoomInput,
   toggleHostNewGameMenu,
@@ -56,6 +57,9 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   },
   onAliasInputChange: (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setAliasInput(event.target.value));
+  },
+  setEmulatorConfigOverrides: (configOverrides: any) => {
+    dispatch(setEmulatorConfigOverrides(configOverrides));
   },
   setIsAutoSelectROMEnabled: (isEnabled: boolean) => {
 
