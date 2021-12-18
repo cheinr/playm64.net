@@ -3,7 +3,7 @@ import { Modal, Button, Card, Form, FormControl, InputGroup, OverlayTrigger, Too
 import {
   Link
 } from 'react-router-dom';
-import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/intputs/AdvancedEmulatorConfigOverridesInputComponent';
+import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/inputs/AdvancedEmulatorConfigOverridesInputComponent';
 import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
 import LinkButton from '../../../components/common/LinkButton';
 import RomSelector from '../../../components/inputs/RomSelector';
@@ -116,6 +116,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
         <div>
 
           <Modal
+            size="lg"
             show={shouldDisplayEmulatorConfigOverridesContainer}
             onHide={() => setShouldDisplayEmulatorConfigOverridesContainer(false)}
             centered

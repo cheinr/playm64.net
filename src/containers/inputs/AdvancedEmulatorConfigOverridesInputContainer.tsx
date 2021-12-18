@@ -1,7 +1,7 @@
 import { connect, ConnectedProps } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import AdvancedEmulatorConfigOverridesComponent from '../../components/intputs/AdvancedEmulatorConfigOverridesInputComponent';
+import AdvancedEmulatorConfigOverridesComponent from '../../components/inputs/AdvancedEmulatorConfigOverridesInputComponent';
 import { setEmulatorConfigOverrides } from '../../redux/actions';
 import { RootState } from '../../redux/reducers';
 

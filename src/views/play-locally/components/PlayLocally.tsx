@@ -5,7 +5,7 @@ import {
   Link
 } from 'react-router-dom';
 import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
-import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/intputs/AdvancedEmulatorConfigOverridesInputComponent';
+import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/inputs/AdvancedEmulatorConfigOverridesInputComponent';
 import RomSelector from '../../../components/inputs/RomSelector';
 import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
 import GameControlsDisplay from '../../../containers/GameControlsDisplayContainer';
@@ -98,6 +98,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
       <div>
 
         <Modal
+          size="lg"
           show={shouldDisplayEmulatorConfigOverridesContainer}
           onHide={() => setShouldDisplayEmulatorConfigOverridesContainer(false)}
           centered
