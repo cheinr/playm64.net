@@ -15,8 +15,7 @@ type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 const mapStateToProps = (state: RootState) => ({
   gameRoomPlayerInfo: state.roomPlayerInfo,
   uiState: state.uiState,
-  // TODO - Remove assumption player 0 is the host
-  localPlayerIsHost: state.roomPlayerInfo?.clientPlayerId === 0,
+  localPlayerIsHost: state.roomPlayerInfo?.clientPlayerIndex === 0,
   ping: state.ping,
   gameIsPendingStart: state.uiState
     === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION

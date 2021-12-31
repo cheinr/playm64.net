@@ -6,15 +6,19 @@ import { UI_STATE } from '../../../redux/reducers';
 
 const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
 
-
   console.log(props.gameRoomPlayerInfo);
   const players = props.gameRoomPlayerInfo
-    ? props.gameRoomPlayerInfo.playerNames
+    ? props.gameRoomPlayerInfo.clients
     : [];
 
-  const gamePads = players.map((playerName: string, index: number) => {
-    return (<GamePadDisplayContainer playerId={`P${index + 1}`} playerName={playerName} key={`GamePadDisplayContainer-${index}`} />);
-  });
+  const gamePads = players
+    .filter((player: any) => player.mappedController !== -1)
+    .map((player: any) => {
+      return (<GamePadDisplayContainer
+        playerId={`P${player.mappedController}`}
+        playerName={player.name}
+        key={`GamePadDisplayContainer-${player.mappedController}`} />);
+    });
 
   let pingColor = 'red';
   if (props.ping < 120) {
