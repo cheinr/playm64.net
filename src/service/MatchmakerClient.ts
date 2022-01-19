@@ -413,10 +413,8 @@ class MatchmakerClient {
       };
 
       const onError = (err: any) => {
-        this.uiStore?.dispatch(setConnectionStateMessage(
-          `Failed to join game: ${gameId}. ${err} `, true));
         this.onUnexpectedExceptionMessage = null;
-        reject();
+        reject(err);
       };
 
       this.gameConnectionListeners.push(onConnect);

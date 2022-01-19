@@ -221,8 +221,8 @@ export function joinGameRoom(gameRoomId: string, autoSelectROMEnabled?: boolean)
         });
       });
     }).catch((err) => {
-      console.error(err);
-      dispatch(setConnectionStateMessage(err, true));
+      console.error('Failed to join game: ', err);
+      dispatch(setConnectionStateMessage(`Failed to join game: ${err}`, true));
       dispatch(setUiState(UI_STATE.PENDING_MODE_SELECT));
     });
   };
@@ -254,45 +254,4 @@ export function setAliasInput(alias: string) {
 
 export function setPing(ping: number) {
   return { type: SET_PING, ping };
-}
-
-export function startLocalGame() {
-  return (dispatch: Dispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
-
-    dispatch(setUiState(UI_STATE.PLAYING_LOCAL_SESSION));
-
-    const state = getState();
-
-    setTimeout(() => {
-
-      createMupen64PlusWeb({
-        canvas: document.getElementById('canvas'),
-        romData: state.selectedRomData,
-        romPath: '/roms/tmp_rom_path',
-        beginStats: stats.begin,
-        endStats: stats.end,
-        coreConfig: {
-          emuMode: 0
-        },
-        romConfigOptionOverrides: state.emulatorConfigOverrides,
-        locateFile: (path: string, prefix: string) => {
-
-          console.log('path: %o', path);
-          console.log('env: %o', process.env.PUBLIC_URL);
-
-          const publicURL = process.env.PUBLIC_URL;
-
-          if (path.endsWith('.wasm') || path.endsWith('.data')) {
-            return publicURL + '/dist/' + path;
-          }
-
-          return prefix + path;
-        },
-        setErrorStatus: (errorMessage: string) => {
-          console.log('errorMessage: %s', errorMessage);
-          dispatch(setEmulatorErrorMessage(errorMessage));
-        }
-      });
-    });
-  };
 }

@@ -11,7 +11,6 @@ import {
   setIsAutoSelectROMEnabled,
   createGameRoom, joinGameRoom, setJoinGameRoomInput,
   toggleHostNewGameMenu,
-  startLocalGame,
   setHostingRegion,
   requestHostingRegionOptionsIfNotLoaded,
   setSelectedROMData
@@ -65,9 +64,6 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
 
     localStorage.setItem('isAutoSelectROMEnabled', JSON.stringify(isEnabled));
     dispatch(setIsAutoSelectROMEnabled(isEnabled));
-  },
-  startLocalGame: () => {
-    dispatch(startLocalGame());
   },
   onAliasInputKeyPress: (event: KeyboardEvent<HTMLInputElement>, aliasInput: string) => {
     if (event.key === 'Enter') {
