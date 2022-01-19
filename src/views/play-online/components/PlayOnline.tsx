@@ -90,6 +90,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
 
   if (props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
     || props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+    || props.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
     || props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION) {
 
     return (

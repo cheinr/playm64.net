@@ -69,8 +69,11 @@ export default function PlayLocally(props: PlayLocallyProps) {
               console.log('errorMessage: %s', errorMessage);
               // TODO dispatch(setEmulatorErrorMessage(errorMessage));
             }
+          }).then((controls) => {
+            controls.start();
+          }).catch((err) => {
+            console.error('Exception during emulator initialization: %o', err);
           });
-
         });
       }).catch((err) => {
         console.error('Exception during emulator initialization: %o', err);

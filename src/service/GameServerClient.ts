@@ -90,6 +90,7 @@ class GameServerClient {
 
   private gameStarted = false;
   private connectionClosed = false;
+  private emulatorControls: any | null = null;
 
   private readonly roomPlayerInfoUpdateListeners: Function[] = [];
   private readonly gameRoomDisconnectListeners: Function[] = [];
@@ -146,6 +147,27 @@ class GameServerClient {
   public requestGameStart(): void {
     this.rtcRoomControlChannel.send(JSON.stringify({
       type: 'request-game-start'
+    }));
+  }
+
+  public requestGamePause(): void {
+    this.rtcRoomControlChannel.send(JSON.stringify({
+      type: 'request-game-pause'
+    }));
+  }
+
+  public requestGameResume(): void {
+    this.rtcRoomControlChannel.send(JSON.stringify({
+      type: 'request-game-resume'
+    }));
+  }
+
+  private confirmGamePaused(pauseCounts: number[]): void {
+    this.rtcRoomControlChannel.send(JSON.stringify({
+      type: 'confirm-game-paused',
+      payload: {
+        pauseCounts
+      }
     }));
   }
 
@@ -219,7 +241,7 @@ class GameServerClient {
 
         const uiState = this.uiStore.getState();
 
-
+        const player = uiState.roomPlayerInfo.clients[uiState.roomPlayerInfo.clientPlayerIndex].mappedController;
         createMupen64PlusWeb({
           canvas: document.getElementById('canvas'),
           romData: uiState.selectedRomData,
@@ -230,7 +252,7 @@ class GameServerClient {
             emuMode: 0
           },
           netplayConfig: {
-            player: uiState.roomPlayerInfo.clientPlayerId + 1,
+            player,
             reliableChannel: uiState.gameServerConnection.rtcReliableChannel,
             unreliableChannel: uiState.gameServerConnection.rtcUnreliableChannel
           },
@@ -251,8 +273,35 @@ class GameServerClient {
             console.log('errorMessage: %s', errorMessage);
             this.uiStore.dispatch(setEmulatorErrorMessage(errorMessage));
           }
+        }).then((controls) => {
+          this.emulatorControls = controls;
+          controls.start();
+        }).catch((err) => {
+          console.error('Failed to start emulator: ', err);
         });
+
         break;
+
+      case 'pause-game':
+        if (this.emulatorControls) {
+          const pauseTarget = message.payload.pauseTargetCounts;
+
+          this.emulatorControls.pause(pauseTarget).then((actualPauseCounts: any) => {
+            console.log('Finished pausing at actual counts: %o', actualPauseCounts);
+
+            this.confirmGamePaused(actualPauseCounts);
+            this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION));
+          });
+        }
+        break;
+
+      case 'resume-game':
+        if (this.emulatorControls) {
+          this.emulatorControls.resume();
+          this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_NETPLAY_SESSION));
+        }
+        break;
+
 
       default:
         console.error('Unrecognized room control message: %o', message);

@@ -104,6 +104,34 @@ export function requestGameStart() {
   };
 }
 
+export function requestGamePause() {
+  return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+
+    const gameServerConnection: GameServerClient = getState()
+      .gameServerConnection;
+
+    if (gameServerConnection) {
+      gameServerConnection.requestGamePause();
+    } else {
+      console.error('requestGamePause called but no gameServerClient is present');
+    }
+  };
+}
+
+export function requestGameResume() {
+  return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+
+    const gameServerConnection: GameServerClient = getState()
+      .gameServerConnection;
+
+    if (gameServerConnection) {
+      gameServerConnection.requestGameResume();
+    } else {
+      console.error('requestGameResume called but no gameServerClient is present');
+    }
+  };
+}
+
 export function toggleHostNewGameMenu() {
   return { type: TOGGLE_HOST_NEW_GAME_MENU };
 }

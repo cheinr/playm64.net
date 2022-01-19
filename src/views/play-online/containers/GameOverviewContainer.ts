@@ -18,7 +18,8 @@ const mapStateToProps = (state: RootState) => ({
   gameRoomPlayerInfo: state.roomPlayerInfo,
   // TODO - Remove assumption player 0 is the host
   localPlayerIsHost: state.roomPlayerInfo?.clientPlayerId === 0,
-  waitingForNetplayGameStart: state.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
+  waitingForNetplayGameStart: state.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION,
+  gameIsPaused: state.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({

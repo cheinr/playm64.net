@@ -1,4 +1,4 @@
-import { requestGameStart } from '../../../redux/actions';
+import { requestGameStart, requestGamePause, requestGameResume } from '../../../redux/actions';
 import { connect, ConnectedProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -18,12 +18,19 @@ const mapStateToProps = (state: RootState) => ({
   localPlayerIsHost: state.roomPlayerInfo?.clientPlayerIndex === 0,
   ping: state.ping,
   gameIsPendingStart: state.uiState
-    === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
+    === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION,
+  gameIsPaused: state.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   onStartGameClick: () => {
     dispatch(requestGameStart());
+  },
+  onPauseGameClick: () => {
+    dispatch(requestGamePause());
+  },
+  onResumeGameClick: () => {
+    dispatch(requestGameResume());
   }
 });
 

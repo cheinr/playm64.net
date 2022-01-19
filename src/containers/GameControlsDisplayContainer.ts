@@ -8,6 +8,7 @@ import { RootState, UI_STATE } from '../redux/reducers';
 const mapStateToProps = (state: RootState) => ({
   inNetplaySession: state.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
     || state.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION
+    || state.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

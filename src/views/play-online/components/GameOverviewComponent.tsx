@@ -8,7 +8,10 @@ const GameOverviewComponent = (props: GameRoomOverviewProps) => {
       { props.waitingForNetplayGameStart &&
         <h5 id="joinCode">Join Code: {props.gameRoomId}</h5>
       }
-    </div >
+
+      { props.gameIsPaused &&
+        <h5 className="text-warning">PAUSED</h5>}
+    </div>
   );
 };
 
