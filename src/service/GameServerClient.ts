@@ -292,6 +292,8 @@ class GameServerClient {
             this.confirmGamePaused(actualPauseCounts);
             this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION));
           });
+        } else {
+          console.log('No emulator controls present!');
         }
         break;
 

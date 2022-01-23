@@ -20,6 +20,16 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
         key={`GamePadDisplayContainer-${player.mappedController}`} />);
     });
 
+  const spectatorPads = players
+    .filter((player: any) => player.mappedController === -1)
+    .map((player: any, index: number) => {
+      return (<GamePadDisplayContainer
+        playerId=''
+        playerName={player.name}
+        key={`GamePadSpectator-${index}`} />);
+    });
+
+
   let pingColor = 'red';
   if (props.ping < 120) {
     pingColor = 'yellow';
@@ -46,6 +56,15 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
       <div id="gamepads">
         {gamePads}
       </div>
+
+      {spectatorPads.length > 0 &&
+        <div>
+          <hr />
+          <h5>Spectators</h5>
+          {spectatorPads}
+          <hr />
+        </div>}
+
 
       {
         props.gameIsPendingStart && (
