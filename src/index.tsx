@@ -7,6 +7,9 @@ import './bootstrap.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+
 import { createStore, applyMiddleware, Store } from 'redux';
 import { Provider } from 'react-redux';
 import appReducer from './redux/reducers';
@@ -45,8 +48,6 @@ store.subscribe(() => {
 });
 
 
-
-
 window.addEventListener('gamepadconnected', function(e: any) {
   console.log(e);
 
@@ -71,7 +72,9 @@ Modal.setAppElement('#root');
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <DndProvider backend={HTML5Backend}>
+        <App />
+      </DndProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

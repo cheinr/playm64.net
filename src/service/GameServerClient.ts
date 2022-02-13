@@ -162,6 +162,16 @@ class GameServerClient {
     }));
   }
 
+  public requestClientControllerReassign(clientId: number, controllerNumber: number): void {
+    this.rtcRoomControlChannel.send(JSON.stringify({
+      type: 'reassign-client-controller',
+      payload: {
+        clientId,
+        desiredControllerIndex: controllerNumber
+      }
+    }));
+  }
+
   private confirmGamePaused(pauseCounts: number[]): void {
     this.rtcRoomControlChannel.send(JSON.stringify({
       type: 'confirm-game-paused',
@@ -235,12 +245,15 @@ class GameServerClient {
           return;
         }
 
+        const registrationId = message.payload.registrationId;
+
         this.gameStarted = true;
 
         this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_NETPLAY_SESSION));
 
         const uiState = this.uiStore.getState();
 
+        console.log('Starting game: %o', uiState.roomPlayerInfo);
         const player = uiState.roomPlayerInfo.clients[uiState.roomPlayerInfo.clientPlayerIndex].mappedController;
         createMupen64PlusWeb({
           canvas: document.getElementById('canvas'),
@@ -253,6 +266,7 @@ class GameServerClient {
           },
           netplayConfig: {
             player,
+            registrationId,
             reliableChannel: uiState.gameServerConnection.rtcReliableChannel,
             unreliableChannel: uiState.gameServerConnection.rtcUnreliableChannel
           },

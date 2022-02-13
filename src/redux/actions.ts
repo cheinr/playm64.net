@@ -132,6 +132,20 @@ export function requestGameResume() {
   };
 }
 
+export function requestClientControllerReassign(clientId: number, controllerId: number) {
+  return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+
+    const gameServerConnection: GameServerClient = getState()
+      .gameServerConnection;
+
+    if (gameServerConnection) {
+      gameServerConnection.requestClientControllerReassign(clientId, controllerId);
+    } else {
+      console.error('requestClientControllerReassign called but no gameServerClient is present');
+    }
+  };
+}
+
 export function toggleHostNewGameMenu() {
   return { type: TOGGLE_HOST_NEW_GAME_MENU };
 }

@@ -1,8 +1,10 @@
 import { Button } from 'react-bootstrap';
 
 import { GameRoomPlayerInfoProps } from '../containers/GameRoomPlayerInfoContainer';
+import ControllerPluginSlot from './ControllerPluginSlot';
 import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
 import { UI_STATE } from '../../../redux/reducers';
+
 
 const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
 
@@ -11,14 +13,39 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
     ? props.gameRoomPlayerInfo.clients
     : [];
 
+  const gamePads = Array.from({ length: 4 }, (x, i) => i).map((index) => {
+    const maybeMappedPlayer = players.find((player: any) => {
+      return player.mappedController === index + 1;
+    });
+
+
+    const gamePadDisplay = maybeMappedPlayer ? (
+      <GamePadDisplayContainer
+        playerId={`P${maybeMappedPlayer.mappedController}`}
+        playerName={maybeMappedPlayer.name}
+        clientId={maybeMappedPlayer.clientId}
+        key={`GamePadDisplayContainer-${maybeMappedPlayer.mappedController}`} />
+    ) : undefined;
+
+    const color = ['blue', 'red', 'green', 'yellow'][index];
+    return (<ControllerPluginSlot color={color} playerNumber={index + 1}>
+      { gamePadDisplay}
+    </ControllerPluginSlot >);
+  });
+  /*
   const gamePads = players
     .filter((player: any) => player.mappedController !== -1)
     .map((player: any) => {
-      return (<GamePadDisplayContainer
-        playerId={`P${player.mappedController}`}
-        playerName={player.name}
-        key={`GamePadDisplayContainer-${player.mappedController}`} />);
+      return (
+        <ControllerPluginSlot>
+          <GamePadDisplayContainer
+            playerId={`P${player.mappedController}`}
+            playerName={player.name}
+            key={`GamePadDisplayContainer-${player.mappedController}`} />
+        </ControllerPluginSlot>);
     });
+  
+  */
 
   const spectatorPads = players
     .filter((player: any) => player.mappedController === -1)
@@ -26,6 +53,7 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
       return (<GamePadDisplayContainer
         playerId=''
         playerName={player.name}
+        clientId={player.clientId}
         key={`GamePadSpectator-${index}`} />);
     });
 
@@ -53,7 +81,7 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
         </small>
       </div>
 
-      <div id="gamepads">
+      <div id="row gamepads" className="row g-1">
         {gamePads}
       </div>
 
@@ -104,13 +132,13 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
                   {!props.gameIsPaused &&
                     <Button variant="success" name="pauseGameButton" onClick={props.onPauseGameClick}>
                       Pause Game
-                    </Button>
+                   </Button>
                   }
 
                   {props.gameIsPaused &&
                     <Button variant="success" name="resumeGameButton" onClick={props.onResumeGameClick}>
                       Resume Game
-                    </Button>
+                   </Button>
                   }
                 </div>
 
