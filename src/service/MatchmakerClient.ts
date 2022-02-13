@@ -377,7 +377,7 @@ class MatchmakerClient {
 
         this.onUnexpectedExceptionMessage = (exceptionMessage: string) => {
           clearTimeout(createTimeout);
-          reject(`Unexpected exception while fetching creating game room: ${exceptionMessage}`);
+          reject(`Unexpected exception while fetching game room info: ${exceptionMessage}`);
         };
 
       }).catch((err) => {
