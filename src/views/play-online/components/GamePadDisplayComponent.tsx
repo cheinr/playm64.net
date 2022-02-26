@@ -18,12 +18,10 @@ const GamePadDisplayComponent = (props: GamePadDisplayProps) => {
       const dropResult = monitor.getDropResult<DropResult>();
       console.log(dropResult);
       if (item && dropResult) {
-        console.log(`You dropped ${props.clientId} into ${dropResult.playerNumber}`);
         props.requestClientControllerReassign(item.clientId, dropResult.playerNumber - 1);
       }
 
       if (item && !dropResult) {
-        console.log(`You unplugged ${item.clientId}!`);
         props.requestClientControllerReassign(item.clientId, -1);
       }
     },
