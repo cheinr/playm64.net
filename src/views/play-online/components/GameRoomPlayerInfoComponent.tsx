@@ -32,29 +32,15 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
       { gamePadDisplay}
     </ControllerPluginSlot >);
   });
-  /*
-  const gamePads = players
-    .filter((player: any) => player.mappedController !== -1)
-    .map((player: any) => {
-      return (
-        <ControllerPluginSlot>
-          <GamePadDisplayContainer
-            playerId={`P${player.mappedController}`}
-            playerName={player.name}
-            key={`GamePadDisplayContainer-${player.mappedController}`} />
-        </ControllerPluginSlot>);
-    });
-  
-  */
 
   const spectatorPads = players
     .filter((player: any) => player.mappedController === -1)
     .map((player: any, index: number) => {
-      return (<GamePadDisplayContainer
+      return (<div className="col-md-auto"><GamePadDisplayContainer
         playerId=''
         playerName={player.name}
         clientId={player.clientId}
-        key={`GamePadSpectator-${index}`} />);
+        key={`GamePadSpectator-${index}`} /></div>);
     });
 
 
@@ -85,11 +71,17 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
         {gamePads}
       </div>
 
+      {props.localPlayerCanReassignControllers &&
+        <p>drag and drop player controllers to reassign</p>
+      }
+
       {spectatorPads.length > 0 &&
         <div>
           <hr />
           <h5>Spectators</h5>
-          {spectatorPads}
+          <div className="row justify-content-md-center">
+            {spectatorPads}
+          </div>
           <hr />
         </div>}
 

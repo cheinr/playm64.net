@@ -13,9 +13,16 @@ type MyExtraArg = { matchmakerService: MatchmakerClient };
 type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 
 
-const mapStateToProps = (state: RootState) => ({
-  uiState: state.uiState
-});
+const mapStateToProps = (state: RootState) => {
+
+  const localPlayerIsHost = state.roomPlayerInfo?.clientPlayerIndex === 0;
+  const gameIsPaused = state.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION;
+  const gameIsPendingStart = state.uiState == UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION;
+  return {
+    uiState: state.uiState,
+    localClientCanReassignPlayers: localPlayerIsHost && (gameIsPaused || gameIsPendingStart)
+  };
+};
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   requestClientControllerReassign: (clientId: number, controllerNumber: number) => {

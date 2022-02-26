@@ -27,10 +27,13 @@ const GamePadDisplayComponent = (props: GamePadDisplayProps) => {
         props.requestClientControllerReassign(item.clientId, -1);
       }
     },
+    canDrag: (monitor) => {
+      return props.localClientCanReassignPlayers;
+    },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging
     })
-  }), [props.clientId]);
+  }), [props.clientId, props.localClientCanReassignPlayers]);
 
   const displayName = (props.uiState !== UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION
     && props.playerName !== null)
