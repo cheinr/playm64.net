@@ -1,6 +1,7 @@
 import md5 from 'md5';
 import SparkMD5 from 'spark-md5';
 import axios from 'axios';
+import JSZip from 'jszip';
 
 
 const ROMS_DB_VERSION = 2;
@@ -96,7 +97,37 @@ export async function loadROM(romGoodName: string): Promise<ArrayBuffer> {
 
 }
 
+function isZipFile(romData: ArrayBuffer): boolean {
+  const byteArrayView = new Uint8Array(romData, 0, 4);
+  return byteArrayView[0] === 0x50 &&
+    byteArrayView[1] === 0x4B &&
+    byteArrayView[2] === 0x03 &&
+    byteArrayView[3] === 0x04;
+}
+
 export async function persistROM(romData: ArrayBuffer): Promise<void> {
+  if (isZipFile(romData)) {
+    const zip = new JSZip();
+    return zip.loadAsync(romData).then(async (value) => {
+      const persistPromises: Promise<void>[] = [];
+
+      Object.values(value.files).forEach((file) => {
+        if (!file.dir) {
+          persistPromises.push(file.async('arraybuffer')
+            .then(async (unzippedData) => {
+              return doPersistROM(unzippedData);
+            }));
+        }
+      });
+
+      return Promise.all(persistPromises).then(() => {/* empty function */ });
+    });
+  } else {
+    return doPersistROM(romData);
+  }
+}
+
+async function doPersistROM(romData: ArrayBuffer): Promise<void> {
   return new Promise((resolve, reject) => {
     const connection = indexedDB.open('roms', ROMS_DB_VERSION);
 

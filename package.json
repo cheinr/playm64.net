@@ -57,6 +57,7 @@
     "jest-circus": "26.6.0",
     "jest-resolve": "26.6.0",
     "jest-watch-typeahead": "0.6.1",
+    "jszip": "^3.7.1",
     "md5": "^2.3.0",
     "mini-css-extract-plugin": "0.11.3",
     "mupen64plus-web": "~1.1.0",

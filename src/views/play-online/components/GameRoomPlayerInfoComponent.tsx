@@ -28,7 +28,8 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
     ) : undefined;
 
     const color = ['blue', 'red', 'green', 'yellow'][index];
-    return (<ControllerPluginSlot color={color} playerNumber={index + 1}>
+    return (<ControllerPluginSlot key={`ControllerPluginSlot-${index}`}
+      color={color} playerNumber={index + 1}>
       { gamePadDisplay}
     </ControllerPluginSlot >);
   });
