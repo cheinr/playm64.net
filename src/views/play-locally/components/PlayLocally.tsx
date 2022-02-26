@@ -1,15 +1,17 @@
 import createMupen64PlusWeb from 'mupen64plus-web';
 import { useEffect, useState } from 'react';
-import { Modal, Button, Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button, Card, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   Link
 } from 'react-router-dom';
-import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
+import LinkButton from '../../../components/common/LinkButton';
 import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/inputs/AdvancedEmulatorConfigOverridesInputComponent';
 import RomSelector from '../../../components/inputs/RomSelector';
 import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
 import GameControlsDisplay from '../../../containers/GameControlsDisplayContainer';
+import GameSaveManagementContainer from '../../../containers/GameSaveManagementContainer';
 import InputOptionsContainer from '../../../containers/InputOptionsContainer';
+import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
 import { loadROM } from '../../../romUtils';
 import stats from '../../../Stats';
 import { PlayLocallyProps } from '../containers/PlayLocallyContainer';
@@ -36,6 +38,10 @@ export default function PlayLocally(props: PlayLocallyProps) {
   const [
     shouldDisplayEmulatorConfigOverridesContainer,
     setShouldDisplayEmulatorConfigOverridesContainer
+  ] = useState(false);
+  const [
+    shouldDisplayGameSaveManagementModal,
+    setShouldDisplayGameSaveManagementModal
   ] = useState(false);
 
   useEffect(() => {
@@ -117,6 +123,23 @@ export default function PlayLocally(props: PlayLocallyProps) {
           </Modal.Body>
         </Modal>
 
+        <Modal
+          size="lg"
+          show={shouldDisplayGameSaveManagementModal}
+          onHide={() => setShouldDisplayGameSaveManagementModal(false)}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Manage Game Saves
+            </Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <GameSaveManagementContainer />
+          </Modal.Body>
+        </Modal>
+
 
         <div className="text-center my-3">
           <Link to="/">
@@ -138,6 +161,10 @@ export default function PlayLocally(props: PlayLocallyProps) {
 
         <div className="row">
           <RomSelector onROMSelect={(romName) => doSetSelectedROMName(romName)} />
+        </div>
+
+        <div className="row pb-3">
+          <LinkButton onClick={() => setShouldDisplayGameSaveManagementModal(true)}>Manage Game Saves</LinkButton>
         </div>
 
         { selectedROMName !== '' &&

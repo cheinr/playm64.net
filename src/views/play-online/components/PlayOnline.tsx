@@ -1,23 +1,23 @@
 import { KeyboardEvent, useEffect, useState } from 'react';
-import { Modal, Button, Card, Form, FormControl, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button, Card, Form, FormControl, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   Link
 } from 'react-router-dom';
-import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/inputs/AdvancedEmulatorConfigOverridesInputComponent';
-import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
 import LinkButton from '../../../components/common/LinkButton';
+import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/inputs/AdvancedEmulatorConfigOverridesInputComponent';
 import RomSelector from '../../../components/inputs/RomSelector';
 import GameControlsDisplayContainer from '../../../containers/GameControlsDisplayContainer';
+import GameSaveManagementContainer from '../../../containers/GameSaveManagementContainer';
 import InputOptionsContainer from '../../../containers/InputOptionsContainer';
+import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
 import ErrorMessageContainer from '../../../containers/inputs/ErrorMessageContainer';
 import Mupen64PlusEmuContainer from '../../../containers/Mupen64PlusEmuContainer';
 import { UI_STATE } from '../../../redux/reducers';
+import { listPersistedROMs } from '../../../romUtils';
 import GameOverviewContainer from '../containers/GameOverviewContainer';
 import GameRoomPlayerInfoContainer from '../containers/GameRoomPlayerInfoContainer';
 import { PlayOnlineProps } from '../containers/PlayOnlineContainer';
 import EditableAlias from './EditablePlayerAliasComponent';
-
-import { listPersistedROMs } from '../../../romUtils';
 
 export default function PlayOnline(props: PlayOnlineProps) {
 
@@ -27,6 +27,11 @@ export default function PlayOnline(props: PlayOnlineProps) {
     shouldDisplayEmulatorConfigOverridesContainer,
     setShouldDisplayEmulatorConfigOverridesContainer
   ] = useState(false);
+  const [
+    shouldDisplayGameSaveManagementModal,
+    setShouldDisplayGameSaveManagementModal
+  ] = useState(false);
+
 
   useEffect(() => {
     listPersistedROMs().then((romKeys) => {
@@ -133,6 +138,24 @@ export default function PlayOnline(props: PlayOnlineProps) {
             </Modal.Body>
           </Modal>
 
+          <Modal
+            size="lg"
+            show={shouldDisplayGameSaveManagementModal}
+            onHide={() => setShouldDisplayGameSaveManagementModal(false)}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Manage Game Saves
+              </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+              <GameSaveManagementContainer />
+            </Modal.Body>
+          </Modal>
+
+
           <div className="text-center pt-4">
             <div>
               <Link to="/">
@@ -175,6 +198,10 @@ export default function PlayOnline(props: PlayOnlineProps) {
             {(props.showHostingMenu || !props.isAutoSelectROMEnabled) &&
               <RomSelector onROMSelect={onROMSelect} onLoadedROMsChange={onLoadedROMsChange} />
             }
+
+            <div className="row pb-3">
+              <LinkButton onClick={() => setShouldDisplayGameSaveManagementModal(true)}>Manage Game Saves</LinkButton>
+            </div>
 
             {romSelected &&
               <div className="text-center pb-3">

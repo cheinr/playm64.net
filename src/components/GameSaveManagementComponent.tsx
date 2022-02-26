@@ -1,4 +1,6 @@
-import Modal from 'react-modal';
+import { Form, Table, Button, Tab, Tabs } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { putSaveFile, getAllSaveFiles } from 'mupen64plus-web';
 import React, { ReactNode, RefObject } from 'react';
 import { GameSaveManagementComponentProps } from '../containers/GameSaveManagementContainer';
@@ -32,12 +34,10 @@ const downloadFile = (fileEntry: any) => {
 };
 
 interface GameSaveManagementComponentState {
-  fileImportModalIsOpen: boolean,
   filesToImport: File[],
   importSuccessMessage: string,
   importFailureMessage: string,
 
-  fileExportModalIsOpen: boolean,
   fileEntriesToExport: any[];
 }
 
@@ -48,37 +48,15 @@ class GameSaveManagementComponent extends React.Component<any, GameSaveManagemen
   public constructor(props: GameSaveManagementComponentProps) {
     super(props);
     this.state = {
-      fileImportModalIsOpen: false,
       filesToImport: [],
       importSuccessMessage: '',
       importFailureMessage: '',
 
-      fileExportModalIsOpen: false,
       fileEntriesToExport: []
     };
   }
 
-  private openImportSaveModal() {
-    this.setState(Object.assign({}, this.state, {
-      fileImportModalIsOpen: true
-    }));
-  }
-
-  private closeImportSaveModal() {
-
-    this.setState(Object.assign({}, this.state, {
-      fileImportModalIsOpen: false,
-      filesToImport: [],
-      importSuccessMessage: '',
-      importFailureMessage: ''
-    }));
-  }
-
-  private openExportSaveModal() {
-
-    this.setState({
-      fileExportModalIsOpen: true
-    });
+  private loadSaveFiles() {
 
     getAllSaveFiles().then((saveFileEntries) => {
       this.setState({
@@ -86,13 +64,6 @@ class GameSaveManagementComponent extends React.Component<any, GameSaveManagemen
       });
     }).catch((err) => {
       console.error('Error loading save files from persistant storage: ', err);
-    });
-  }
-
-  private closeExportSaveModal() {
-
-    this.setState({
-      fileExportModalIsOpen: false
     });
   }
 
@@ -147,99 +118,81 @@ class GameSaveManagementComponent extends React.Component<any, GameSaveManagemen
       return (
         <tr key={'fileRow-' + fileEntry.fileKey.replaceAll('/')}>
           <td> {fileEntry.fileKey} </td>
-          <td><button onClick={() => downloadFile(fileEntry)}>download</button></td>
+          <td><Button variant="success" onClick={() => downloadFile(fileEntry)}>
+            <FontAwesomeIcon icon={faDownload} />
+          </Button></td>
         </tr >
       );
     });
 
     return (
       <div>
+        <br />
 
-        <Modal
-          isOpen={this.state.fileImportModalIsOpen}
-          contentLabel="Example Modal"
-          className="Modal"
-          overlayClassName="ModalOverlay"
-          onRequestClose={() => this.closeImportSaveModal()}
-        >
-          <div className="align-right">
-            <button onClick={() => this.closeImportSaveModal()}>Close</button>
-          </div>
+        <Tabs defaultActiveKey="importSaveFiles" className="mb-3"
+          onSelect={(k) => {
+            if (k === 'exportSaveFiles') {
+              this.loadSaveFiles();
+            }
+          }}>
+          <Tab eventKey="importSaveFiles" title="Import Saves">
+            <div>
+              <p>
+                Import your game savefiles here. For these to be picked up they must
+                have the following naming convention: "[romgoodname].[save extension]"
+              </p>
+              <p>
+                You can find a list of rom goodnames <a href="https://github.com/mupen64plus/mupen64plus-core/blob/master/data/mupen64plus.ini" target="_blank">here
+                <FontAwesomeIcon icon={faExternalLinkAlt} /></a>.
+              </p>
 
-          <br />
+            </div>
 
-          <div>
-            <p>
-              Import your game savefiles here. For these to be picked up they must
-              have the following naming convention: "[romgoodname].[save extension]"
-            </p>
-            <p>
-              You can find a list of rom goodnames <a href="https://github.com/mupen64plus/mupen64plus-core/blob/master/data/mupen64plus.ini">here</a>.
-            </p>
+            <br />
 
-          </div>
+            <div>
+              <Form.Group>
+                <Form.Control type="file" onChange={handleFiles} />
+              </Form.Group>
+            </div>
 
-          <br />
+            <br />
 
-          <div>
-            <input ref={this.inputRef} type="file" onChange={handleFiles} />
-          </div>
+            {
+              this.state.filesToImport.length > 0
+              && (<div className="row justify-content-start align-items-center">
+                <div className="col-md-auto">
+                  <Button onClick={() => importRoms()}>Import Selected Files</Button>
+                </div>
+                <div className="col-md-auto">
+                  <small> <b>note:</b> Any existing files with the same name will be overwritten</small>
+                </div>
+              </div>)
+            }
 
-          <br />
+            <p style={{ color: 'green' }}>{this.state.importSuccessMessage}</p>
+            <p style={{ color: 'red' }}>{this.state.importFailureMessage}</p>
 
-          {this.state.filesToImport.length > 0
-            && (<div>
-              <button onClick={() => importRoms()}>Import Selected Files</button>
-              <small> <b>note:</b> Any existing files with the same name will be overwritten</small>
-            </div>)}
-
-          <p style={{ color: 'green' }}>{this.state.importSuccessMessage}</p>
-          <p style={{ color: 'red' }}>{this.state.importFailureMessage}</p>
-
-          {this.state.importSuccessMessage !== ''
-            && (<div className="align-center">
-              <button onClick={() => this.closeImportSaveModal()}>Close</button>
-            </div>)}
-
-        </Modal>
-
-        <Modal
-          isOpen={this.state.fileExportModalIsOpen}
-          contentLabel="Example Modal"
-          className="Modal"
-          overlayClassName="ModalOverlay"
-          onRequestClose={() => this.closeExportSaveModal()}
-        >
-
-          <div className="align-right">
-            <button onClick={() => this.closeExportSaveModal()}>Close</button>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Save File</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {filesToExportTableRows}
-            </tbody>
-          </table>
-        </Modal>
-
-
-        <div>
-          <small>Manage Saves</small>
-        </div>
-        <button onClick={() => this.openImportSaveModal()}>Import Saves</button>
-        <button onClick={() => this.openExportSaveModal()}>Export Saves</button>
+          </Tab>
+          <Tab eventKey="exportSaveFiles" title="Export Saves">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Save File</th>
+                  <th />
+                </tr>
+              </thead>
+              <tbody>
+                {filesToExportTableRows}
+              </tbody>
+            </Table>
+          </Tab>
+        </Tabs>
       </div >
     );
   }
 
 }
-
 
 export default GameSaveManagementComponent;
 
