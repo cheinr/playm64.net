@@ -1,0 +1,53 @@
+
+/*#EmuContainer:not(:-webkit-full-screen),
+#EmuContainer:not(-moz-full-screen),
+#EmuContainer:not(-ms-fullscreen),
+#EmuContainer:not(fullscreen) {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    background-color: #000000;
+}
+
+#EmuContainer:-webkit-full-screen,
+#EmuContainer:-moz-full-screen,
+#EmuContainer:-ms-fullscreen,
+#EmuContainer:fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
+
+#EmuContainer:not(:-webkit-full-screen),
+#EmuContainer:not(-moz-full-screen),
+#EmuContainer:not(-ms-fullscreen),
+#EmuContainer:not(fullscreen) > div > canvas {
+    width: 640px;
+    height: 480px;
+}
+
+#EmuContainer:-webkit-full-screen,
+#EmuContainer:-moz-full-screen,
+#EmuContainer:-ms-fullscreen,
+#EmuContainer:fullscreen  > div > canvas {
+    max-width: calc(100vh / 3 * 4);
+    width: 100%;
+    height: auto;
+}*/
+
+#EmuContainer {
+    position: relative;
+    background-color: #000000;
+    width: 640px;
+    height: 480px;
+}
+
+.EmuOverlay {
+    position: absolute;
+}
+
+.EmuOverlayCenter {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

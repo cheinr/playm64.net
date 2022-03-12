@@ -172,6 +172,16 @@ class GameServerClient {
     }));
   }
 
+  public async forceDumpSaveFiles() {
+    if (this.emulatorControls) {
+      return this.emulatorControls.forceDumpSaveFiles().then(() => {
+        console.log('Finished dumping save files!');
+      });
+    } else {
+      throw 'Emulator isn\'t ready!';
+    }
+  }
+
   private confirmGamePaused(pauseCounts: number[]): void {
     this.rtcRoomControlChannel.send(JSON.stringify({
       type: 'confirm-game-paused',

@@ -31,9 +31,6 @@ const GameOverviewComponent = (props: GameRoomOverviewProps) => {
           )}
         </Overlay>
       </h5>
-
-      { props.gameIsPaused &&
-        <h5 className="text-warning">PAUSED</h5>}
     </div>
   );
 };

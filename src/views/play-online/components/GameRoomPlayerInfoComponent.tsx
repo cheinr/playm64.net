@@ -85,65 +85,7 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
           </div>
           <hr />
         </div>}
-
-
-      {
-        props.gameIsPendingStart && (
-
-          <div>
-            {
-              props.localPlayerIsHost && (
-                <div>
-                  <Button variant="success" name="startGameButton" onClick={props.onStartGameClick}>
-                    Start Game
-                  </Button>
-                </div>
-
-              )
-            }
-
-            {
-              !props.localPlayerIsHost && (
-                <small>
-                  waiting for P1 to start the game
-                </small>
-
-              )
-            }
-          </div>
-
-        )
-      }
-
-      {
-        !props.gameIsPendingStart && (
-
-          <div>
-            {
-              props.localPlayerIsHost && (
-                <div>
-                  {!props.gameIsPaused &&
-                    <Button variant="success" name="pauseGameButton" onClick={props.onPauseGameClick}>
-                      Pause Game
-                   </Button>
-                  }
-
-                  {props.gameIsPaused &&
-                    <Button variant="success" name="resumeGameButton" onClick={props.onResumeGameClick}>
-                      Resume Game
-                   </Button>
-                  }
-                </div>
-
-              )
-            }
-          </div>
-        )
-      }
-
     </div >
-
-
   );
 };
 

@@ -38,8 +38,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => ({
   hostRegionOptions: state.hostRegionOptions,
   hostingRegion: state.hostingRegion,
 
-  isHostingInitially: ownProps.isHostingInitially ?? false,
-
+  isHostingInitially: ownProps.isHostingInitially ?? false
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({

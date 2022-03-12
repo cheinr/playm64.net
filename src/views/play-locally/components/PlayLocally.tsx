@@ -7,7 +7,7 @@ import {
 import LinkButton from '../../../components/common/LinkButton';
 import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/inputs/AdvancedEmulatorConfigOverridesInputComponent';
 import RomSelector from '../../../components/inputs/RomSelector';
-import Mupen64PlusEmuComponent from '../../../components/Mupen64PlusEmuComponent';
+import Mupen64PlusEmuContainer from '../../../containers/Mupen64PlusEmuContainer';
 import GameControlsDisplay from '../../../containers/GameControlsDisplayContainer';
 import GameSaveManagementContainer from '../../../containers/GameSaveManagementContainer';
 import InputOptionsContainer from '../../../containers/InputOptionsContainer';
@@ -95,7 +95,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
         <h4 className="text-center">Playing {selectedROMName}</h4>
 
         <div className="text-center">
-          <Mupen64PlusEmuComponent />
+          <Mupen64PlusEmuContainer />
 
           <GameControlsDisplay />
         </div>
