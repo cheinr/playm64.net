@@ -1,6 +1,8 @@
 import { Table, Button, FormControl } from 'react-bootstrap';
 import { findAutoInputConfig, writeAutoInputConfig } from 'mupen64plus-web';
 import { useEffect, useRef, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 class GamepadPoller {
   lastGamepadState: { buttons: Array<boolean>, axes: Array<number> } = {
@@ -370,9 +372,9 @@ const ConfigureGamepadInputsComponent = (props: any) => {
       focusedInputMapping[1]('');
     };
 
-    const onKeyDown = (event: any) => {
+    const onChange = (event: any) => {
 
-      if (event.key === 'Backspace') {
+      if (event.nativeEvent.inputType === 'deleteContentBackward') {
         const selectionStart = event.target.selectionStart;
 
         if (selectionStart === 0) {
@@ -408,7 +410,7 @@ const ConfigureGamepadInputsComponent = (props: any) => {
         setInputDefinitions(currentInputDefinitions.join(' '));
       }
 
-      if (event.key === 'Delete') {
+      if (event.nativeEvent.inputType === 'deleteContentForward') {
         const selectionStart = event.target.selectionStart;
         const currentValue = inputMapping.value[0];
 
@@ -475,18 +477,29 @@ const ConfigureGamepadInputsComponent = (props: any) => {
             ref={inputMapping.inputRef}
             onFocus={onFocus}
             onBlur={onBlur}
-            onKeyDown={onKeyDown}
+            onChange={onChange}
             placeholder={placeholderText}
             disabled={loading}
           />
         </td>
-      </tr >
+      </tr>
     );
   });
 
+  const clearAll = () => {
+    inputMappings.forEach((inputMapping) => {
+      inputMapping.value[1]('');
+    });
+  };
 
   return (
     <div>
+      <Button variant="danger"
+        className="float-end"
+        onClick={clearAll}>
+        Clear All
+        &nbsp;<FontAwesomeIcon icon={faTrashAlt} />
+      </Button>
       <Table size="sm">
         <thead>
           <tr>
