@@ -170,6 +170,7 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
             }
           </div>
           <Button variant="secondary"
+            disabled={this.props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION}
             onClick={makeFullScreen}
             size="sm"
             className="col-md-auto mx-1">
