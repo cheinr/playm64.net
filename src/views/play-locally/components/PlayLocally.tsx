@@ -19,10 +19,10 @@ import { PlayLocallyProps } from '../containers/PlayLocallyContainer';
 export default function PlayLocally(props: PlayLocallyProps) {
 
   const [selectedROMName, setSelectedROMName] = useState('');
-  const [isPlaying, setIsPlaying] = useState(false);
 
-  const doSetSelectedROMName = (newSelectedROMName: string) => {
+  const doSetSelectedROM = (newSelectedROMName: string, romData: ArrayBuffer) => {
     if (newSelectedROMName !== selectedROMName) {
+      props.setSelectedROMData(romData);
 
       // TODO - Ideally we wouldn't be writing and reading to this from different components
       const existingPersistedOverrides: any = JSON.parse(localStorage.getItem(M64_EMU_CONFIG_OVERRIDES_KEY) ?? '{}');
@@ -44,51 +44,21 @@ export default function PlayLocally(props: PlayLocallyProps) {
     setShouldDisplayGameSaveManagementModal
   ] = useState(false);
 
+  const start = () => {
+    props.startPlaying();
+  };
+
   useEffect(() => {
 
-    if (isPlaying) {
-      loadROM(selectedROMName).then((romData: ArrayBuffer) => {
-        setTimeout(() => {
-          createMupen64PlusWeb({
-            canvas: document.getElementById('canvas'),
-            romData,
-            beginStats: stats.begin,
-            endStats: stats.end,
-            romConfigOptionOverrides: props.emulatorConfigOverrides,
-            coreConfig: {
-              emuMode: 0
-            },
-            locateFile: (path: string, prefix: string) => {
-
-              console.log('path: %o', path);
-              console.log('env: %o', process.env.PUBLIC_URL);
-
-              const publicURL = process.env.PUBLIC_URL;
-
-              if (path.endsWith('.wasm') || path.endsWith('.data')) {
-                return publicURL + '/dist/' + path;
-              }
-
-              return prefix + path;
-            },
-            setErrorStatus: (errorMessage: string) => {
-              console.log('errorMessage: %s', errorMessage);
-              // TODO dispatch(setEmulatorErrorMessage(errorMessage));
-            }
-          }).then((controls) => {
-            controls.start();
-          }).catch((err) => {
-            console.error('Exception during emulator initialization: %o', err);
-          });
-        });
-      }).catch((err) => {
-        console.error('Exception during emulator initialization: %o', err);
-      });
-    }
-  }, [selectedROMName, isPlaying]);
+    return function cleanup() {
+      if (props.isPlaying) {
+        props.stopPlaying();
+      }
+    };
+  }, [selectedROMName, props.isPlaying]);
 
 
-  if (isPlaying) {
+  if (props.isPlaying) {
 
     return (
       <div>
@@ -160,7 +130,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
         </div>
 
         <div className="row">
-          <RomSelector onROMSelect={(romName) => doSetSelectedROMName(romName)} />
+          <RomSelector onROMSelect={doSetSelectedROM} />
         </div>
 
         <div className="row pb-3">
@@ -181,7 +151,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
             ? <Button variant="success"
               size="lg"
               disabled={selectedROMName === ''}
-              onClick={() => setIsPlaying(true)}>
+              onClick={() => start()}>
               Play Locally
           </Button>
 
@@ -193,7 +163,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
                 <Button variant="success"
                   size="lg"
                   disabled={selectedROMName === ''}
-                  onClick={() => setIsPlaying(true)}
+                  onClick={() => start()}
                   style={{ pointerEvents: 'none' }}>
                   Play Locally
               </Button>

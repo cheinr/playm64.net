@@ -15,7 +15,9 @@ import {
   SET_HOSTING_REGION,
   SET_HOST_REGION_OPTIONS,
   SET_IS_AUTO_SELECT_ROM_ENABLED,
-  SET_EMULATOR_CONFIG_OVERRIDES
+  SET_EMULATOR_CONFIG_OVERRIDES,
+  SET_NETPLAY_REGISTRATION_ID,
+  SET_NETPLAY_PAUSE_COUNTS
 } from './actions';
 
 import { getRomShortName } from '../romUtils';
@@ -42,6 +44,8 @@ const initialState = {
   hostRegionOptions: null,
   hostingRegion: 'us-west-2',
   isAutoSelectROMEnabled: false,
+  netplayRegistrationId: null,
+  netplayPauseCounts: null,
   uiState: UI_STATE.PENDING_ROM_LOAD,
   selectedRomData: null,
   selectedRomShortName: null,
@@ -81,6 +85,16 @@ export default function appReducer(state: any, action: any) {
     case SET_DISPLAY_WELCOME_MODAL:
       return Object.assign({}, state, {
         displayWelcomeModal: action.displayWelcomeModal
+      });
+
+    case SET_NETPLAY_PAUSE_COUNTS:
+      return Object.assign({}, state, {
+        netplayPauseCounts: action.netplayPauseCounts
+      });
+
+    case SET_NETPLAY_REGISTRATION_ID:
+      return Object.assign({}, state, {
+        netplayRegistrationId: action.netplayRegistrationId
       });
 
     case SET_EMULATOR_ERROR_MESSAGE:

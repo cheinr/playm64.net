@@ -32,6 +32,8 @@ export const SET_JOIN_GAME_ROOM_INPUT = 'SET_JOIN_GAME_ROOM_INPUT';
 export const SET_HOST_REGION_OPTIONS = 'SET_HOST_REGION_OPTIONS';
 export const SET_ROOM_PLAYER_INFO = 'SET_ROOM_PLAYER_INFO';
 export const SET_GAME_SERVER_CONNECTION = 'SET_GAME_SERVER_CONNECTION';
+export const SET_NETPLAY_REGISTRATION_ID = 'SET_NETPLAY_REGISTRATION_ID';
+export const SET_NETPLAY_PAUSE_COUNTS = 'SET_NETPLAY_PAUSE_COUNTS';
 export const SET_PING = 'SET_PING';
 export const START_GAME = 'START_GAME';
 export const TOGGLE_HOST_NEW_GAME_MENU = 'TOGGLE_HOST_NEW_GAME_MENU';
@@ -68,6 +70,35 @@ export function setConnectionStateMessage(message: string, isError: boolean) {
       isError
     }
   };
+}
+
+export function confirmNetplayGamePaused(actualPauseCounts: number[]) {
+  return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+    const gameServerConnection = getState().gameServerConnection;
+
+    if (gameServerConnection) {
+      gameServerConnection.confirmGamePaused(actualPauseCounts);
+      dispatch(setUiState(UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION));
+    }
+  };
+}
+
+export function netplayReset() {
+  return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+    matchmakerService.reset();
+
+    dispatch(setConnectionStateMessage('', false));
+    dispatch(setNetplayPauseCounts(null));
+    dispatch(setNetplayRegistrationId(null));
+  };
+}
+
+export function setNetplayPauseCounts(netplayPauseCounts: number[] | null) {
+  return { type: SET_NETPLAY_PAUSE_COUNTS, netplayPauseCounts };
+}
+
+export function setNetplayRegistrationId(registrationId: number | null) {
+  return { type: SET_NETPLAY_REGISTRATION_ID, registrationId };
 }
 
 export function setEmulatorErrorMessage(message: string) {
@@ -225,9 +256,13 @@ export function joinGameRoom(gameRoomId: string, autoSelectROMEnabled?: boolean)
         dispatch(setGameServerConnection(gameServerClient));
 
         gameServerClient.onDisconnect(() => {
-          dispatch(setUiState(UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION));
-          alert('Lost connection to the game room, you will not be able to rejoin.'
-            + ' Please refresh the page to start a new session.');
+          const uiState = getState().uiState;
+
+          if (uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION || uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION) {
+            dispatch(setUiState(UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION));
+            alert('Lost connection to the game room, you will not be able to rejoin.'
+              + ' Please refresh the page to start a new session.');
+          }
         });
 
         gameServerClient.onRoomPlayerInfoUpdate((roomPlayerInfo: any) => {

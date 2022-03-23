@@ -7,8 +7,13 @@ import { UI_STATE } from '../redux/reducers';
 import stats from '../Stats';
 import './Mupen64PlusEmuComponent.css';
 
+import createMupen64PlusWeb from 'mupen64plus-web';
 
 interface Mupen64PlusEmuComponentState {
+  emulatorRunning: boolean;
+  emulatorPauseCounts?: number[];
+  emulatorControls?: any;
+  pauseButtonDisabled: boolean;
   shouldShowSaveDumpConfirmModal: boolean;
   saveDumpResultMessage: string;
   saveDumpErrorMessage: string;
@@ -20,6 +25,10 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
   private statsRef: RefObject<HTMLDivElement> = React.createRef();
   private displayStats = false;
   state: Mupen64PlusEmuComponentState = {
+    emulatorRunning: false,
+    emulatorPauseCounts: undefined,
+    emulatorControls: undefined,
+    pauseButtonDisabled: false,
     shouldShowSaveDumpConfirmModal: false,
     saveDumpResultMessage: '',
     saveDumpErrorMessage: '',
@@ -35,8 +44,87 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
     stats.dom.style.left = '';
     stats.dom.style.position = 'relative';
     stats.dom.style.zIndex = '1';
-    console.log(stats.dom);
     this.statsRef.current?.appendChild(stats.dom);
+
+    this.checkEmulatorStart();
+  }
+
+  public componentDidUpdate() {
+    this.checkEmulatorStart();
+    this.checkEmulatorPause();
+  }
+
+  public componentWillUnmount() {
+    if (this.state.emulatorControls) {
+      this.state.emulatorControls.stop();
+    }
+  }
+
+  private checkEmulatorPause() {
+    if (!this.state.emulatorPauseCounts && this.props.netplayPauseCounts) {
+
+      if (this.state.emulatorControls) {
+        this.state.emulatorControls.pause(this.props.netplayPauseCounts)
+          .then((actualPauseCounts: number[]) => {
+            this.props.confirmNetplayPause(actualPauseCounts);
+          });
+        this.setState({ emulatorPauseCounts: this.props.netplayPauseCounts });
+      }
+    }
+
+    if (this.state.emulatorPauseCounts && !this.props.netplayPauseCounts) {
+
+      if (this.state.emulatorControls) {
+        this.state.emulatorControls.resume();
+        this.setState({ emulatorPauseCounts: undefined });
+      }
+    }
+  }
+
+  private checkEmulatorStart() {
+    if (!this.state.emulatorRunning && (this.props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
+      || this.props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION
+      || this.props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+      || this.props.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION)) {
+
+      this.setState({ emulatorRunning: true });
+
+      createMupen64PlusWeb({
+        canvas: document.getElementById('canvas'),
+        romData: this.props.selectedRomData,
+        beginStats: stats.begin,
+        endStats: stats.end,
+        romConfigOptionOverrides: this.props.emulatorConfigOverrides,
+        coreConfig: {
+          emuMode: 0
+        },
+        netplayConfig: this.props.netplayConfig,
+        locateFile: (path: string, prefix: string) => {
+
+          console.log('path: %o', path);
+          console.log('env: %o', process.env.PUBLIC_URL);
+
+          const publicURL = process.env.PUBLIC_URL;
+
+          if (path.endsWith('.wasm') || path.endsWith('.data')) {
+            return publicURL + '/dist/' + path;
+          }
+
+          return prefix + path;
+        },
+        setErrorStatus: (errorMessage: string) => {
+          console.log('errorMessage: %s', errorMessage);
+          // TODO dispatch(setEmulatorErrorMessage(errorMessage));
+        }
+      }).then(async (controls) => {
+
+        this.setState({ emulatorControls: controls });
+        return controls.start();
+
+      }).catch((err) => {
+        console.error('Exception during emulator initialization: %o', err);
+      });
+    }
   }
 
   public render(): ReactNode {
@@ -81,6 +169,16 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
 
     const showSaveDumpConfirmModal = () => {
       this.setState({ shouldShowSaveDumpConfirmModal: true });
+    };
+
+    const onResumeNetplayGameClick = () => {
+      this.props.onResumeNetplayGameClick();
+
+      this.setState({ pauseButtonDisabled: true });
+      setTimeout(() => {
+        this.setState({ pauseButtonDisabled: false });
+      }, 3000);
+
     };
 
     return (
@@ -140,7 +238,7 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
         <div className="row">
           <div className="col">
 
-            {this.props.localPlayerIsHost &&
+            {this.props.isInNetplaySession && this.props.localPlayerIsHost &&
               <>
                 {this.props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
                   ? <Button variant='success'
@@ -154,13 +252,14 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
                       ? <Button variant='success'
                         size='sm'
                         className="float-start"
-                        onClick={this.props.onResumeNetplayGameClick}>
+                        onClick={onResumeNetplayGameClick}>
                         <FontAwesomeIcon icon={faPlay} />
                       </Button>
                       : <Button variant='success'
                         size='sm'
                         className="float-start"
-                        onClick={this.props.onPauseNetplayGameClick}>
+                        onClick={this.props.onPauseNetplayGameClick}
+                        disabled={this.state.pauseButtonDisabled}>
                         <FontAwesomeIcon icon={faPause} />
                       </Button>
                     }

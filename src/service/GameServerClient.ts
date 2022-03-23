@@ -1,7 +1,12 @@
 import pako from 'pako';
 
-import stats from '../Stats';
-import { setUiState, setPing, setEmulatorErrorMessage } from '../redux/actions';
+import {
+  setUiState,
+  setPing,
+  setEmulatorErrorMessage,
+  setNetplayRegistrationId,
+  setNetplayPauseCounts
+} from '../redux/actions';
 import { UI_STATE } from '../redux/reducers';
 
 import createMupen64PlusWeb from 'mupen64plus-web';
@@ -96,6 +101,8 @@ class GameServerClient {
   private readonly gameRoomDisconnectListeners: Function[] = [];
   private readonly pingDataPoints: number[] = [];
 
+  private checkPingInterval: any;
+
   constructor(gameRoomId: string, rtcRoomControlChannel: any, rtcReliableChannel: any, rtcUnreliableChannel: any, uiStore: any) {
     this.gameRoomId = gameRoomId;
 
@@ -108,7 +115,7 @@ class GameServerClient {
     this.rtcRoomControlChannel.onmessage = this.handleRoomControlMessage.bind(this);
 
     this.checkPing();
-    setInterval(() => {
+    this.checkPingInterval = setInterval(() => {
       this.checkPing();
     }, PING_CHECK_INTERVAL_MILLIS);
 
@@ -117,7 +124,6 @@ class GameServerClient {
       console.log('Reliable channel closed');
       if (!this.connectionClosed) {
         this.connectionClosed = true;
-
         this.gameRoomDisconnectListeners.forEach((cb) => cb());
       }
     };
@@ -129,6 +135,10 @@ class GameServerClient {
 
         this.gameRoomDisconnectListeners.forEach((cb) => cb());
       }
+    };
+
+    this.rtcRoomControlChannel.onclose = () => {
+      clearInterval(this.checkPingInterval);
     };
 
     this.rtcRoomControlChannel.send(JSON.stringify({
@@ -182,7 +192,7 @@ class GameServerClient {
     }
   }
 
-  private confirmGamePaused(pauseCounts: number[]): void {
+  public confirmGamePaused(pauseCounts: number[]): void {
     this.rtcRoomControlChannel.send(JSON.stringify({
       type: 'confirm-game-paused',
       payload: {
@@ -257,75 +267,23 @@ class GameServerClient {
 
         const registrationId = message.payload.registrationId;
 
-        this.gameStarted = true;
-
-        this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_NETPLAY_SESSION));
-
         const uiState = this.uiStore.getState();
-
         console.log('Starting game: %o', uiState.roomPlayerInfo);
-        const player = uiState.roomPlayerInfo.clients[uiState.roomPlayerInfo.clientPlayerIndex].mappedController;
-        createMupen64PlusWeb({
-          canvas: document.getElementById('canvas'),
-          romData: uiState.selectedRomData,
-          beginStats: stats.begin,
-          endStats: stats.end,
-          romConfigOptionOverrides: uiState.emulatorConfigOverrides,
-          coreConfig: {
-            emuMode: 0
-          },
-          netplayConfig: {
-            player,
-            registrationId,
-            reliableChannel: uiState.gameServerConnection.rtcReliableChannel,
-            unreliableChannel: uiState.gameServerConnection.rtcUnreliableChannel
-          },
-          locateFile: (path: string, prefix: string) => {
+        this.uiStore.dispatch(setNetplayRegistrationId(registrationId));
 
-            console.log('path: %o', path);
-            console.log('env: %o', process.env.PUBLIC_URL);
-
-            const publicURL = process.env.PUBLIC_URL;
-
-            if (path.endsWith('.wasm') || path.endsWith('.data')) {
-              return publicURL + '/dist/' + path;
-            }
-
-            return prefix + path;
-          },
-          setErrorStatus: (errorMessage: string) => {
-            console.log('errorMessage: %s', errorMessage);
-            this.uiStore.dispatch(setEmulatorErrorMessage(errorMessage));
-          }
-        }).then((controls) => {
-          this.emulatorControls = controls;
-          controls.start();
-        }).catch((err) => {
-          console.error('Failed to start emulator: ', err);
-        });
+        this.gameStarted = true;
+        this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_NETPLAY_SESSION));
 
         break;
 
       case 'pause-game':
-        if (this.emulatorControls) {
-          const pauseTarget = message.payload.pauseTargetCounts;
-
-          this.emulatorControls.pause(pauseTarget).then((actualPauseCounts: any) => {
-            console.log('Finished pausing at actual counts: %o', actualPauseCounts);
-
-            this.confirmGamePaused(actualPauseCounts);
-            this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION));
-          });
-        } else {
-          console.log('No emulator controls present!');
-        }
+        const pauseTarget = message.payload.pauseTargetCounts;
+        this.uiStore.dispatch(setNetplayPauseCounts(pauseTarget));
         break;
 
       case 'resume-game':
-        if (this.emulatorControls) {
-          this.emulatorControls.resume();
-          this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_NETPLAY_SESSION));
-        }
+        this.uiStore.dispatch(setNetplayPauseCounts(null));
+        this.uiStore.dispatch(setUiState(UI_STATE.PLAYING_IN_NETPLAY_SESSION));
         break;
 
 

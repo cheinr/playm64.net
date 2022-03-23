@@ -13,10 +13,13 @@ import {
   toggleHostNewGameMenu,
   setHostingRegion,
   requestHostingRegionOptionsIfNotLoaded,
-  setSelectedROMData
+  setSelectedROMData,
+  setUiState,
+  netplayReset
 } from '../../../redux/actions';
+
 import MatchmakerClient from '../../../service/MatchmakerClient';
-import { RootState } from '../../../redux/reducers';
+import { RootState, UI_STATE } from '../../../redux/reducers';
 
 
 type MyExtraArg = { matchmakerService: MatchmakerClient };
@@ -38,7 +41,10 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => ({
   hostRegionOptions: state.hostRegionOptions,
   hostingRegion: state.hostingRegion,
 
-  isHostingInitially: ownProps.isHostingInitially ?? false
+  isHostingInitially: ownProps.isHostingInitially ?? false,
+  isPlaying: state.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION
+    || state.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+    || state.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
@@ -85,6 +91,10 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   },
   setSelectedROMData: (romData: ArrayBuffer) => {
     dispatch(setSelectedROMData(romData));
+  },
+  stopPlaying: () => {
+    dispatch(setUiState(UI_STATE.PENDING_MODE_SELECT));
+    dispatch(netplayReset());
   }
 });
 

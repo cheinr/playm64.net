@@ -43,7 +43,11 @@ export default function PlayOnline(props: PlayOnlineProps) {
     }).catch((err) => {
       console.error('Unable to check for loaded ROMs: ', err);
     });
-  });
+
+    return function cleanup() {
+      props.stopPlaying();
+    };
+  }, []);
 
   const onLoadedROMsChange = (newROMNames: string[]) => {
     setLibraryHasROMSLoaded(newROMNames.length > 0);

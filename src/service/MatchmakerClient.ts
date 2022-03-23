@@ -65,6 +65,17 @@ class MatchmakerClient {
     this.uiStore = uiStore;
   }
 
+  public reset() {
+    if (this.rtcConnection) {
+      this.rtcConnection.close();
+      delete this.rtcConnection;
+      delete this.rtcRoomControlChannel;
+      delete this.rtcReliableChannel;
+      delete this.rtcUnreliableChannel;
+    }
+    delete this.activeGameServerClient;
+  }
+
   addGameConnectionListener(cb: Function) {
     this.gameConnectionListeners.push(cb);
   }
