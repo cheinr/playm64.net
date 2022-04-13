@@ -19,6 +19,12 @@ interface Mupen64PlusEmuComponentState {
   saveDumpErrorMessage: string;
 }
 
+function pauseCountsEqual(pauseCounts1: number[], pauseCounts2: number[]) {
+  return (pauseCounts1.length === pauseCounts2.length) && pauseCounts1.every((pauseCount, index) => {
+    return pauseCounts2[index] === pauseCount;
+  });
+}
+
 class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen64PlusEmuComponentState> {
 
   private canvasRef: RefObject<HTMLCanvasElement> = React.createRef();
@@ -61,14 +67,20 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
   }
 
   private checkEmulatorPause() {
-    if (!this.state.emulatorPauseCounts && this.props.netplayPauseCounts) {
 
-      if (this.state.emulatorControls) {
-        this.state.emulatorControls.pause(this.props.netplayPauseCounts)
-          .then((actualPauseCounts: number[]) => {
-            this.props.confirmNetplayPause(actualPauseCounts);
-          });
-        this.setState({ emulatorPauseCounts: this.props.netplayPauseCounts });
+
+    if (this.props.netplayPauseCounts) {
+
+      if (!this.state.emulatorPauseCounts
+        || !pauseCountsEqual(this.state.emulatorPauseCounts, this.props.netplayPauseCounts)) {
+
+        if (this.state.emulatorControls) {
+          this.state.emulatorControls.pause(this.props.netplayPauseCounts)
+            .then((actualPauseCounts: number[]) => {
+              this.props.confirmNetplayPause(actualPauseCounts);
+            });
+          this.setState({ emulatorPauseCounts: this.props.netplayPauseCounts });
+        }
       }
     }
 
