@@ -2,6 +2,7 @@ import {
   setConnectionStateMessage, setHostRegionOptions
 } from '../redux/actions';
 
+import { load } from 'recaptcha-v3';
 import { Store } from 'redux';
 import GameServerClient from './GameServerClient';
 
@@ -14,6 +15,10 @@ interface GameRoomParameters {
   romSimpleName: string,
   serverRegion: string
 }
+
+const RECAPTCHA_SITE_KEY = process.env.NODE_ENV === 'production'
+  ? '6LfKLcUfAAAAAIkVzCCUYhg6ZMy3ttzzFSV08GAw'
+  : '6LdF98kfAAAAAAtvKoAfO8kBYr4Ek2FM3VuM9Ak5';
 
 
 /*
@@ -56,8 +61,6 @@ class MatchmakerClient {
 
   constructor(matchmakingServiceEndpoint: string) {
 
-    // TODO - local connection
-    //this.socketEndpoint = "wss://yqet5adtzg.execute-api.us-west-2.amazonaws.com/dev";
     this.socketEndpoint = matchmakingServiceEndpoint;
   }
 
@@ -310,52 +313,58 @@ class MatchmakerClient {
 
     this.uiStore?.dispatch(setConnectionStateMessage('Creating a new Game Room', false));
 
-    return new Promise<GameRoomInfo>((resolve, reject) => {
-      this._connectAsync().then(() => {
-        if (this.socket === null) {
-          throw new Error('createGame: this.websocket must be created');
-        }
-
-        this.socket.send(JSON.stringify({
-          action: 'sendmessage',
-          data: {
-            type: 'create-game-room',
-            payload: {
-              romSimpleName,
-              serverRegion
-            }
-          }
-        }));
-
-        const createTimeout = setTimeout(() => {
-          this.onUnexpectedExceptionMessage = null;
-          this.uiStore?.dispatch(setConnectionStateMessage(
-            'Timed out waiting for a new game room to be created. Please refresh the page and try again', true));
-          reject('Timed out waiting for game server creation');
-        }, 90000);
-
-        this.onGameRoomCreateResponse = (gameRoomInfo: GameRoomInfo) => {
-          this.onUnexpectedExceptionMessage = null;
-          clearTimeout(createTimeout);
-
-          this.uiStore?.dispatch(setConnectionStateMessage(`Created game room '${gameRoomInfo.gameRoomId}'`, false));
-          resolve(gameRoomInfo);
-        };
-
-        this.onUnexpectedExceptionMessage = (exceptionMessage: string) => {
-          clearTimeout(createTimeout);
-          reject(`Unexpected exception while creating game room: ${exceptionMessage} `);
-        };
-
-      }).catch((err) => {
-        reject(err);
+    const connectAsyncPromise = this._connectAsync();
+    const recaptchaPromise = load(RECAPTCHA_SITE_KEY)
+      .then(async (recaptcha) => {
+        return recaptcha.execute('create_game_room');
       });
+
+    const results = await Promise.all([connectAsyncPromise, recaptchaPromise]);
+
+    const recaptchaToken = results[1];
+
+    return new Promise<GameRoomInfo>((resolve, reject) => {
+      if (this.socket === null) {
+        throw new Error('createGame: this.websocket must be created');
+      }
+
+      this.socket.send(JSON.stringify({
+        action: 'sendmessage',
+        data: {
+          type: 'create-game-room',
+          payload: {
+            romSimpleName,
+            serverRegion,
+            recaptchaToken
+          }
+        }
+      }));
+
+      const createTimeout = setTimeout(() => {
+        this.onUnexpectedExceptionMessage = null;
+        this.uiStore?.dispatch(setConnectionStateMessage(
+          'Timed out waiting for a new game room to be created. Please refresh the page and try again', true));
+        reject('Timed out waiting for game server creation');
+      }, 90000);
+
+      this.onGameRoomCreateResponse = (gameRoomInfo: GameRoomInfo) => {
+        this.onUnexpectedExceptionMessage = null;
+        clearTimeout(createTimeout);
+
+        this.uiStore?.dispatch(setConnectionStateMessage(`Created game room '${gameRoomInfo.gameRoomId}'`, false));
+        resolve(gameRoomInfo);
+      };
+
+      this.onUnexpectedExceptionMessage = (exceptionMessage: string) => {
+        clearTimeout(createTimeout);
+        reject(`Unexpected exception while creating game room: ${exceptionMessage} `);
+      };
     });
 
   }
 
   async getGameRoomParameters(gameRoomId: string): Promise<GameRoomParameters> {
-    return new Promise<GameRoomParameters>((resolve, reject) => {
+    return await new Promise<GameRoomParameters>((resolve, reject) => {
       this._connectAsync().then(() => {
         if (this.socket === null) {
           throw new Error('createGame: this.websocket must be created');
