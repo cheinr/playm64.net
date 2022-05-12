@@ -7,21 +7,6 @@ import { HomeProps } from '../containers/HomeContainer';
 
 export default function Home(props: HomeProps) {
 
-  const history = useHistory();
-
-  const goToPlayOnline = (isHosting: boolean) => {
-
-    if (isHosting && !props.showHostingMenu) {
-      props.toggleHostingMenu();
-    }
-
-    if (!isHosting && props.showHostingMenu) {
-      props.toggleHostingMenu();
-    }
-
-    history.push('/play-online');
-  };
-
   return (
     <div>
 
@@ -30,23 +15,25 @@ export default function Home(props: HomeProps) {
         <div>
           <span>
 
-            <Button
-              variant="primary"
-              className="m-2"
-              size="lg"
-              onClick={() => goToPlayOnline(true)}>
+            <Link to="play-online?host=true">
+              <Button
+                variant="primary"
+                className="m-2"
+                size="lg">
 
-              Host Game
-            </Button>
+                Host Game
+              </Button>
+            </Link>
 
-            <Button
-              variant="primary"
-              className="m-2"
-              size="lg"
-              onClick={() => goToPlayOnline(false)}>
+            <Link to="play-online">
+              <Button
+                variant="primary"
+                className="m-2"
+                size="lg">
 
-              Join Game
-            </Button>
+                Join Game
+              </Button>
+            </Link>
 
           </span>
         </div>

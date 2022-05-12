@@ -11,7 +11,6 @@ import {
   SET_PING,
   SET_CONNECTED_GAMEPAD,
   SET_CONNECTION_STATE_MESSAGE,
-  TOGGLE_HOST_NEW_GAME_MENU,
   SET_HOSTING_REGION,
   SET_HOST_REGION_OPTIONS,
   SET_IS_AUTO_SELECT_ROM_ENABLED,
@@ -157,12 +156,6 @@ export default function appReducer(state: any, action: any) {
       return Object.assign({}, state, {
         ping: action.ping
       });
-
-    case TOGGLE_HOST_NEW_GAME_MENU:
-      return Object.assign({}, state, {
-        displayHostNewGameMenu: state.displayHostNewGameMenu ? false : true
-      });
-
   }
 
   return initialState;

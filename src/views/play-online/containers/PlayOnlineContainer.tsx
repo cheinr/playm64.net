@@ -10,7 +10,6 @@ import {
   setEmulatorConfigOverrides,
   setIsAutoSelectROMEnabled,
   createGameRoom, joinGameRoom, setJoinGameRoomInput,
-  toggleHostNewGameMenu,
   setHostingRegion,
   requestHostingRegionOptionsIfNotLoaded,
   setSelectedROMData,
@@ -82,8 +81,7 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
     event.preventDefault();
     dispatch(setAlias(''));
   },
-  toggleHostingMenu: () => {
-    dispatch(toggleHostNewGameMenu());
+  requestHostingRegionOptionsIfNotLoaded: () => {
     dispatch(requestHostingRegionOptionsIfNotLoaded());
   },
   onHostingRegionSelectChange: (event: ChangeEvent<HTMLSelectElement>) => {

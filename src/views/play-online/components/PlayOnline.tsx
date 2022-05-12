@@ -1,7 +1,8 @@
 import { KeyboardEvent, useEffect, useState } from 'react';
 import { Button, Card, Form, FormControl, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
-  Link
+  Link,
+  useLocation
 } from 'react-router-dom';
 import LinkButton from '../../../components/common/LinkButton';
 import { M64_EMU_CONFIG_OVERRIDES_KEY } from '../../../components/inputs/AdvancedEmulatorConfigOverridesInputComponent';
@@ -32,8 +33,10 @@ export default function PlayOnline(props: PlayOnlineProps) {
     setShouldDisplayGameSaveManagementModal
   ] = useState(false);
 
+  props.requestHostingRegionOptionsIfNotLoaded();
 
   useEffect(() => {
+
     listPersistedROMs().then((romKeys) => {
       setLibraryHasROMSLoaded(romKeys.length > 0);
 
@@ -48,6 +51,9 @@ export default function PlayOnline(props: PlayOnlineProps) {
       props.stopPlaying();
     };
   }, []);
+
+  const urlSearchParams = new URLSearchParams(useLocation().search);
+  const shouldShowHostingMenu = urlSearchParams.get('host') === 'true';
 
   const onLoadedROMsChange = (newROMNames: string[]) => {
     setLibraryHasROMSLoaded(newROMNames.length > 0);
@@ -188,7 +194,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
 
           <div>
 
-            {!props.showHostingMenu && libraryHasROMSLoaded &&
+            {!shouldShowHostingMenu && libraryHasROMSLoaded &&
               <Form onClick={toggleAutoSelectROMEnabled}>
                 <div className="mb-3">
                   <Form.Check type="checkbox" label="Auto select ROM from your library?"
@@ -199,7 +205,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
               </Form>
             }
 
-            {(props.showHostingMenu || !props.isAutoSelectROMEnabled) &&
+            {(shouldShowHostingMenu || !props.isAutoSelectROMEnabled) &&
               <RomSelector onROMSelect={onROMSelect} onLoadedROMsChange={onLoadedROMsChange} />
             }
 
@@ -217,7 +223,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
 
 
             { /* TODO - HostingFormComponent */
-              props.showHostingMenu &&
+              shouldShowHostingMenu &&
 
               <div className="text-center">
 
@@ -262,15 +268,14 @@ export default function PlayOnline(props: PlayOnlineProps) {
                 </div>
                 <div>
                   <small>or - &nbsp;
-                    <LinkButton onClick={() => props.toggleHostingMenu()} >join an existing game</LinkButton>
+                    <Link to="/play-online" replace={true}>join an existing game</Link>
                   </small>
                 </div>
-
               </div>
             }
 
             { /* TODO - GameRoomJoinComponent */
-              !props.showHostingMenu &&
+              !shouldShowHostingMenu &&
 
               <div className="row justify-content-center py-2">
                 <div className="col-8">
@@ -313,9 +318,9 @@ export default function PlayOnline(props: PlayOnlineProps) {
 
                 <div className="text-center">
                   <small>or - &nbsp;
-                    <LinkButton onClick={() => { props.toggleHostingMenu(); }}>
+                    <Link to="/play-online?host=true" replace={true}>
                       host a new game
-                    </LinkButton>
+                    </Link>
                   </small>
                 </div>
               </div>

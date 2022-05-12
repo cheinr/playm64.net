@@ -36,7 +36,6 @@ export const SET_NETPLAY_REGISTRATION_ID = 'SET_NETPLAY_REGISTRATION_ID';
 export const SET_NETPLAY_PAUSE_COUNTS = 'SET_NETPLAY_PAUSE_COUNTS';
 export const SET_PING = 'SET_PING';
 export const START_GAME = 'START_GAME';
-export const TOGGLE_HOST_NEW_GAME_MENU = 'TOGGLE_HOST_NEW_GAME_MENU';
 
 export function setConnectedGamepad(maybeGamepad: any) {
   return { type: SET_CONNECTED_GAMEPAD, connectedGamepad: maybeGamepad };
@@ -175,10 +174,6 @@ export function requestClientControllerReassign(clientId: number, controllerId: 
       console.error('requestClientControllerReassign called but no gameServerClient is present');
     }
   };
-}
-
-export function toggleHostNewGameMenu() {
-  return { type: TOGGLE_HOST_NEW_GAME_MENU };
 }
 
 export function createGameRoom() {

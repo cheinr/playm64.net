@@ -5,7 +5,6 @@ import { ThunkDispatch } from 'redux-thunk';
 import Home from '../components/Home';
 import {
   setDisplayWelcomeModal,
-  toggleHostNewGameMenu,
   requestHostingRegionOptionsIfNotLoaded
 } from '../../../redux/actions';
 import MatchmakerClient from '../../../service/MatchmakerClient';
@@ -20,10 +19,6 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
-  toggleHostingMenu: () => {
-    dispatch(toggleHostNewGameMenu());
-    dispatch(requestHostingRegionOptionsIfNotLoaded());
-  },
   displayWelcomeMessage: () => {
     dispatch(setDisplayWelcomeModal(true));
   }
