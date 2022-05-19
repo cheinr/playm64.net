@@ -1,7 +1,5 @@
 import { Button } from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom';
-import LinkButton from '../../../components/common/LinkButton';
-import WelcomeMessageModal from '../../../containers/WelcomeModalContainer';
+import { Link } from 'react-router-dom';
 import { HomeProps } from '../containers/HomeContainer';
 
 
@@ -46,14 +44,6 @@ export default function Home(props: HomeProps) {
               </Button>
             </Link>
           </span>
-
-          <WelcomeMessageModal />
-        </div>
-
-        <div className="pt-5">
-          <LinkButton onClick={() => props.displayWelcomeMessage()}>
-            welcome message
-          </LinkButton>
         </div>
       </div>
     </div >

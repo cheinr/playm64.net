@@ -1,6 +1,5 @@
 import {
   SET_ALIAS,
-  SET_DISPLAY_WELCOME_MODAL,
   SET_EMULATOR_ERROR_MESSAGE,
   SET_SELECTED_ROM_DATA,
   SET_UI_STATE,
@@ -79,11 +78,6 @@ export default function appReducer(state: any, action: any) {
     case SET_CONNECTION_STATE_MESSAGE:
       return Object.assign({}, state, {
         connectionStateMessage: action.connectionStateMessage
-      });
-
-    case SET_DISPLAY_WELCOME_MODAL:
-      return Object.assign({}, state, {
-        displayWelcomeModal: action.displayWelcomeModal
       });
 
     case SET_NETPLAY_PAUSE_COUNTS:

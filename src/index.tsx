@@ -13,7 +13,7 @@ import { DndProvider } from 'react-dnd';
 import { createStore, applyMiddleware, Store } from 'redux';
 import { Provider } from 'react-redux';
 import appReducer from './redux/reducers';
-import { setAlias, setConnectedGamepad, setDisplayWelcomeModal, setIsAutoSelectROMEnabled } from './redux/actions';
+import { setAlias, setConnectedGamepad, setIsAutoSelectROMEnabled } from './redux/actions';
 
 import MatchmakerService from './service/MatchmakerClient';
 
@@ -34,9 +34,7 @@ const alias = maybePersistedAlias ? maybePersistedAlias : '';
 store.dispatch(setAlias(alias));
 
 // TODO - move preference keys to definitions file
-const disableWelcomeMessage = localStorage.getItem('disableWelcomeModal') ? true : false;
 const isAutoSelectROMEnabled = JSON.parse(localStorage.getItem('isAutoSelectROMEnabled') ?? 'false');
-store.dispatch(setDisplayWelcomeModal(!disableWelcomeMessage));
 store.dispatch(setIsAutoSelectROMEnabled(isAutoSelectROMEnabled));
 
 store.subscribe(() => {

@@ -6,24 +6,22 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Prompt
+  Prompt,
+  Link
 } from 'react-router-dom';
 
 import Home from './views/home/containers/HomeContainer';
 import PlayLocally from './views/play-locally/containers/PlayLocallyContainer';
 import PlayOnline from './views/play-online/containers/PlayOnlineContainer';
+import PrivacyPolicy from './views/privacy-policy/PrivacyPolicy';
+import About from './views/about/About';
 import { RootState, UI_STATE } from './redux/reducers';
-import { setDisplayWelcomeModal } from './redux/actions';
 
 const mapStateToProps = (state: RootState) => ({
   uiState: state.uiState
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  displayWelcomeMessage: () => {
-    delete localStorage.disableWelcomeModal;
-    dispatch(setDisplayWelcomeModal(true));
-  }
 });
 
 const connector = connect(
@@ -46,15 +44,17 @@ function App(props: AppProps) {
 
   return (
     <Router>
-      <div className="app container h-100">
+      <div className="app container">
         <div />
-        <div className="row align-items-center justify-content-center h-100">
+        <div className="row wrapper align-items-center justify-content-center">
 
           <div className="col" />
           <div className="col">
 
             <div className="text-center py-4" >
-              <img src="/title.png" />
+              <Link to="/">
+                <img src="/title.png" />
+              </Link>
             </div>
 
             <Switch>
@@ -75,6 +75,13 @@ function App(props: AppProps) {
                 <PlayOnline />
               </Route>
 
+              <Route path="/privacy-policy">
+                <PrivacyPolicy />
+              </Route>
+
+              <Route path="/about">
+                <About />
+              </Route>
 
               <Route path="/">
                 <Home />
@@ -83,6 +90,13 @@ function App(props: AppProps) {
             </Switch>
           </div>
           <div className="col" />
+        </div>
+
+        <div className="footer text-center">
+          <span>
+            <Link to="/about">about</Link>&nbsp;|&nbsp;
+            <Link to="/privacy-policy">privacy policy</Link>
+          </span>
         </div>
 
       </div>
