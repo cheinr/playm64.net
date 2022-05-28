@@ -1,18 +1,13 @@
 import { Action, Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import createMupen64PlusWeb from 'mupen64plus-web';
-
-import stats from '../Stats';
+import { loadROMByShortName } from '../romUtils';
 import GameServerClient from '../service/GameServerClient';
-import MatchmakerClient from '../service/MatchmakerClient';
-
-import MatchmakerService, { GameRoomInfo } from '../service/MatchmakerClient';
+import { default as MatchmakerService, GameRoomInfo } from '../service/MatchmakerClient';
 import { RootState, UI_STATE } from './reducers';
 
-import { loadROMByShortName } from '../romUtils';
 
 // TODO move somewhere common
-type MyExtraArg = { matchmakerService: MatchmakerClient };
+type MyExtraArg = { matchmakerService: MatchmakerService };
 type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 
 
@@ -37,6 +32,22 @@ export const SET_PING = 'SET_PING';
 export const START_GAME = 'START_GAME';
 
 export function setConnectedGamepad(maybeGamepad: any) {
+
+  return (dispatch: MyThunkDispatch, getState: () => RootState, { matchmakerService }: { matchmakerService: MatchmakerService }) => {
+
+    dispatch(doSetConnectedGamepad(maybeGamepad));
+
+    const gameServerConnection = getState().gameServerConnection;
+
+    if (gameServerConnection) {
+
+      const isGamepadConnected = maybeGamepad ? true : false;
+      gameServerConnection.setIsGamepadConnected(isGamepadConnected);
+    }
+  };
+}
+
+function doSetConnectedGamepad(maybeGamepad: any) {
   return { type: SET_CONNECTED_GAMEPAD, connectedGamepad: maybeGamepad };
 }
 
@@ -258,6 +269,8 @@ export function joinGameRoom(gameRoomId: string, autoSelectROMEnabled?: boolean)
         gameServerClient.onRoomPlayerInfoUpdate((roomPlayerInfo: any) => {
           dispatch(setRoomPlayerInfo(roomPlayerInfo));
         });
+
+        gameServerClient.setIsGamepadConnected(getState().connectedGamepad ? true : false);
       });
     }).catch((err) => {
       console.error('Failed to join game: ', err);

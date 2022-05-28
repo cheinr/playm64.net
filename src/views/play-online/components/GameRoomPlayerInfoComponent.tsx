@@ -24,6 +24,7 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
         playerId={`P${maybeMappedPlayer.mappedController}`}
         playerName={maybeMappedPlayer.name}
         clientId={maybeMappedPlayer.clientId}
+        isGamepadConnected={maybeMappedPlayer.isGamepadConnected}
         key={`GamePadDisplayContainer-${maybeMappedPlayer.mappedController}`} />
     ) : undefined;
 
@@ -41,6 +42,7 @@ const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
         playerId=''
         playerName={player.name}
         clientId={player.clientId}
+        isGamepadConnected={player.isGamepadConnected}
         key={`GamePadSpectator-${index}`} /></div>);
     });
 

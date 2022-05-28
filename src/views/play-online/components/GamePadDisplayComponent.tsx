@@ -1,6 +1,6 @@
 import { useDrag } from 'react-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGamepad } from '@fortawesome/free-solid-svg-icons';
+import { faGamepad, faKeyboard } from '@fortawesome/free-solid-svg-icons';
 
 import { GamePadDisplayProps } from '../containers/GamePadDisplayContainer';
 import { UI_STATE } from '../../../redux/reducers';
@@ -38,11 +38,15 @@ const GamePadDisplayComponent = (props: GamePadDisplayProps) => {
     ? props.playerName
     : '<no input>';
 
+  const icon = props.isGamepadConnected
+    ? <FontAwesomeIcon icon={faGamepad} size="4x" />
+    : <FontAwesomeIcon icon={faKeyboard} size="4x" />;
+
   return (
     <div ref={drag} className="gamepad-display py-2">
 
       <div>
-        <FontAwesomeIcon icon={faGamepad} size="4x" />
+        {icon}
       </div>
       <div>
         <small>{displayName}</small>

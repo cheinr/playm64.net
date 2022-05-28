@@ -40,7 +40,8 @@ type OwnProps = {
   playerName: string,
   playerId: string,
   clientId: number,
-  uiState: UI_STATE
+  uiState: UI_STATE,
+  isGamepadConnected: boolean
 };
 
 export type GamePadDisplayProps = OwnProps & ConnectedProps<typeof connector>;

@@ -1,16 +1,8 @@
 import pako from 'pako';
-
 import {
-  setUiState,
-  setPing,
-  setEmulatorErrorMessage,
-  setNetplayRegistrationId,
-  setNetplayPauseCounts
+  setNetplayPauseCounts, setNetplayRegistrationId, setPing, setUiState
 } from '../redux/actions';
 import { UI_STATE } from '../redux/reducers';
-
-import createMupen64PlusWeb from 'mupen64plus-web';
-
 
 export interface BinaryRTCDataChannel {
 
@@ -197,6 +189,15 @@ class GameServerClient {
       type: 'confirm-game-paused',
       payload: {
         pauseCounts
+      }
+    }));
+  }
+
+  public setIsGamepadConnected(isGamepadConnected: boolean) {
+    this.rtcRoomControlChannel.send(JSON.stringify({
+      type: 'set-is-local-gamepad-connected',
+      payload: {
+        isGamepadConnected
       }
     }));
   }

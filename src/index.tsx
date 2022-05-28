@@ -1,21 +1,22 @@
 import React from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
-import thunk from 'redux-thunk';
-import './index.css';
-import './bootstrap.min.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
-
-import { createStore, applyMiddleware, Store } from 'redux';
 import { Provider } from 'react-redux';
-import appReducer from './redux/reducers';
+import { Action, applyMiddleware, createStore, Store } from 'redux';
+import thunk, { ThunkDispatch } from 'redux-thunk';
+import App from './App';
+import './bootstrap.min.css';
+import './index.css';
 import { setAlias, setConnectedGamepad, setIsAutoSelectROMEnabled } from './redux/actions';
-
+import appReducer, { RootState } from './redux/reducers';
+import reportWebVitals from './reportWebVitals';
 import MatchmakerService from './service/MatchmakerClient';
+
+
+type MyExtraArg = { matchmakerService: MatchmakerService };
+type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
 
 const matchmakerURL = (process.env.NODE_ENV === 'production')
   ? 'wss://ahcv76zlb4.execute-api.us-west-2.amazonaws.com/prod'
@@ -37,6 +38,7 @@ store.dispatch(setAlias(alias));
 const isAutoSelectROMEnabled = JSON.parse(localStorage.getItem('isAutoSelectROMEnabled') ?? 'false');
 store.dispatch(setIsAutoSelectROMEnabled(isAutoSelectROMEnabled));
 
+
 store.subscribe(() => {
   const alias = store.getState().alias;
 
@@ -50,7 +52,7 @@ window.addEventListener('gamepadconnected', function(e: any) {
   console.log(e);
 
   if (!store.getState().connectedGamepad) {
-    store.dispatch(setConnectedGamepad(e.gamepad));
+    (store.dispatch as MyThunkDispatch)(setConnectedGamepad(e.gamepad));
   }
 });
 
@@ -58,7 +60,7 @@ window.addEventListener('gamepaddisconnected', function(e: any) {
 
   const currentConnectedJoystickIndex = store.getState().connectedGamepad?.index;
   if (e.gamepad.index === currentConnectedJoystickIndex) {
-    store.dispatch(setConnectedGamepad(null));
+    (store.dispatch as MyThunkDispatch)(setConnectedGamepad(null));
   }
 });
 
