@@ -39,8 +39,13 @@ export function setConnectedGamepad(maybeGamepad: any) {
 
     const gameServerConnection = getState().gameServerConnection;
 
-    if (gameServerConnection) {
+    const uiState = getState().uiState;
+    const emulatorStarted = uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+      || uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION
+      || uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
+      || uiState === UI_STATE.PLAYING_LOCAL_SESSION;
 
+    if (gameServerConnection && !emulatorStarted) {
       const isGamepadConnected = maybeGamepad ? true : false;
       gameServerConnection.setIsGamepadConnected(isGamepadConnected);
     }
