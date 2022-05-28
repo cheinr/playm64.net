@@ -11,7 +11,7 @@
     cursor: pointer;
 }
 
-td.selected {
+table>tbody>tr>td.selected {
     background-color: #257AFD;
     text-decoration: underline;
 }
