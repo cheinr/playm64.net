@@ -116,8 +116,8 @@ export function setNetplayPauseCounts(netplayPauseCounts: number[] | null) {
   return { type: SET_NETPLAY_PAUSE_COUNTS, netplayPauseCounts };
 }
 
-export function setNetplayRegistrationId(registrationId: number | null) {
-  return { type: SET_NETPLAY_REGISTRATION_ID, registrationId };
+export function setNetplayRegistrationId(netplayRegistrationId: number | null) {
+  return { type: SET_NETPLAY_REGISTRATION_ID, netplayRegistrationId };
 }
 
 export function setEmulatorErrorMessage(message: string) {

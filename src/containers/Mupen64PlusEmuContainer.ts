@@ -23,7 +23,7 @@ const mapStateToProps = (state: RootState) => {
     && state.uiState !== UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
     ? {
       player: state.roomPlayerInfo.clients[state.roomPlayerInfo.clientPlayerIndex].mappedController,
-      registrationId: state.registrationId,
+      registrationId: state.netplayRegistrationId,
       reliableChannel: state.gameServerConnection.rtcReliableChannel,
       unreliableChannel: state.gameServerConnection.rtcUnreliableChannel
     }
