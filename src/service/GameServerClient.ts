@@ -1,6 +1,6 @@
 import pako from 'pako';
 import {
-  setNetplayPauseCounts, setNetplayRegistrationId, setPing, setUiState
+  setNetplayClientLag, setNetplayPauseCounts, setNetplayRegistrationId, setPing, setUiState
 } from '../redux/actions';
 import { UI_STATE } from '../redux/reducers';
 
@@ -259,6 +259,13 @@ class GameServerClient {
         });
 
         break;
+
+      case 'client-lag': {
+        const clientId = message.payload.clientId;
+        const lag = message.payload.lag;
+        this.uiStore.dispatch(setNetplayClientLag(clientId, lag));
+        break;
+      }
 
       case 'start-game':
 

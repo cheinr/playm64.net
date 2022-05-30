@@ -20,7 +20,8 @@ const mapStateToProps = (state: RootState) => {
   const gameIsPendingStart = state.uiState == UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION;
   return {
     uiState: state.uiState,
-    localClientCanReassignPlayers: localPlayerIsHost && (gameIsPaused || gameIsPendingStart)
+    localClientCanReassignPlayers: localPlayerIsHost && (gameIsPaused || gameIsPendingStart),
+    netplayClientLags: state.netplayClientLags
   };
 };
 

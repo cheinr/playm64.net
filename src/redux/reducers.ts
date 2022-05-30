@@ -15,7 +15,8 @@ import {
   SET_IS_AUTO_SELECT_ROM_ENABLED,
   SET_EMULATOR_CONFIG_OVERRIDES,
   SET_NETPLAY_REGISTRATION_ID,
-  SET_NETPLAY_PAUSE_COUNTS
+  SET_NETPLAY_PAUSE_COUNTS,
+  SET_NETPLAY_CLIENT_LAG
 } from './actions';
 
 import { getRomShortName } from '../romUtils';
@@ -44,6 +45,7 @@ const initialState = {
   isAutoSelectROMEnabled: false,
   netplayRegistrationId: null,
   netplayPauseCounts: null,
+  netplayClientLags: {},
   uiState: UI_STATE.PENDING_ROM_LOAD,
   selectedRomData: null,
   selectedRomShortName: null,
@@ -114,6 +116,13 @@ export default function appReducer(state: any, action: any) {
     case SET_IS_AUTO_SELECT_ROM_ENABLED:
       return Object.assign({}, state, {
         isAutoSelectROMEnabled: action.isAutoSelectROMEnabled
+      });
+
+    case SET_NETPLAY_CLIENT_LAG:
+      return Object.assign({}, state, {
+        netplayClientLags: Object.assign({}, state.netplayClientLags, {
+          [action.clientId]: action.lag
+        })
       });
 
     case SET_UI_STATE:
