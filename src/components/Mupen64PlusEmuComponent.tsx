@@ -118,7 +118,7 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
 
           const publicURL = process.env.PUBLIC_URL;
 
-          if (path.endsWith('.wasm') || path.endsWith('.data')) {
+          if (path.endsWith('.wasm') || path.endsWith('.data') || (path.includes('index') && path.endsWith('worker.js'))) {
             return publicURL + '/dist/' + path;
           }
 
