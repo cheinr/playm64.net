@@ -48,12 +48,12 @@ function App(props: AppProps) {
         <div />
         <div className="row wrapper align-items-center justify-content-center">
 
-          <div className="col" />
+          <div className="col-1" />
           <div className="col">
 
             <div className="text-center py-4" >
               <Link to="/">
-                <img src="/title.png" />
+                <img className="title-image" src="/title.png" />
               </Link>
             </div>
 
@@ -89,7 +89,7 @@ function App(props: AppProps) {
 
             </Switch>
           </div>
-          <div className="col" />
+          <div className="col-1" />
         </div>
 
         <div className="footer text-center">
