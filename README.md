@@ -1,6 +1,10 @@
-# Getting Started with Create React App
+<p align="center">
+  <img src="public/title.png">
+</p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Try it now at [playm64.net](https://playm64.net)
+
+[playm64.net](https://playm64.net) is a react frontend that makes use of https://github.com/cheinr/mupen64plus-web; connecting it to a working backend multiplayer matchmaking and hosting service for netplay support.
 
 ## Available Scripts
 
