@@ -57,10 +57,14 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
   }
 });
 
+type OwnProps = {
+  children?: React.ReactNode
+}
+
 const connector = connect(
   mapStateToProps,
   mapDispatchToProps
 );
 
-export type Mupen64PlusEmuProps = ConnectedProps<typeof connector>;
+export type Mupen64PlusEmuProps = OwnProps & ConnectedProps<typeof connector>;
 export default connector(Mupen64PlusEmuComponent);

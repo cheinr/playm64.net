@@ -1,53 +1,47 @@
 
-/*#EmuContainer:not(:-webkit-full-screen),
-#EmuContainer:not(-moz-full-screen),
-#EmuContainer:not(-ms-fullscreen),
 #EmuContainer:not(fullscreen) {
     position: relative;
-    width: 640px;
-    height: 480px;
+    aspect-ratio: 4/3;
+    width: 100%;
+    height: auto;
     background-color: #000000;
 }
 
-#EmuContainer:-webkit-full-screen,
-#EmuContainer:-moz-full-screen,
-#EmuContainer:-ms-fullscreen,
 #EmuContainer:fullscreen {
     width: 100vw;
     height: 100vh;
+    background-color: #000000;
 }
 
-#EmuContainer:not(:-webkit-full-screen),
-#EmuContainer:not(-moz-full-screen),
-#EmuContainer:not(-ms-fullscreen),
 #EmuContainer:not(fullscreen) > div > canvas {
-    width: 640px;
-    height: 480px;
+    position: relative;
+    aspect-ratio: 4/3;
+    width: 100%;
+    height: auto;
 }
 
-#EmuContainer:-webkit-full-screen,
-#EmuContainer:-moz-full-screen,
-#EmuContainer:-ms-fullscreen,
 #EmuContainer:fullscreen  > div > canvas {
     max-width: calc(100vh / 3 * 4);
     width: 100%;
     height: auto;
-}*/
+}
 
-#EmuContainer {
-    position: relative;
-    background-color: #000000;
-    width: 640px;
-    height: 480px;
+#EmuDisplayColumn {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .EmuOverlay {
     position: absolute;
 }
 
+
 .EmuOverlayCenter {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    z-index: 10;
 }

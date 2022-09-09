@@ -113,13 +113,14 @@ export default function PlayOnline(props: PlayOnlineProps) {
 
         <GameOverviewContainer />
 
-        <Mupen64PlusEmuContainer />
+        <Mupen64PlusEmuContainer>
+          <ErrorMessageContainer />
 
-        <ErrorMessageContainer />
+          <GameRoomPlayerInfoContainer />
 
-        <GameRoomPlayerInfoContainer />
+          <GameControlsDisplayContainer />
 
-        <GameControlsDisplayContainer />
+        </Mupen64PlusEmuContainer>
       </div>
 
     );

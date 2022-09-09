@@ -28,6 +28,8 @@ function pauseCountsEqual(pauseCounts1: number[], pauseCounts2: number[]) {
 class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen64PlusEmuComponentState> {
 
   private canvasRef: RefObject<HTMLCanvasElement> = React.createRef();
+  private emuContainerRef: RefObject<HTMLDivElement> = React.createRef();
+  private emuDisplayColumnRef: RefObject<HTMLDivElement> = React.createRef();
   private statsRef: RefObject<HTMLDivElement> = React.createRef();
   private displayStats = false;
   state: Mupen64PlusEmuComponentState = {
@@ -46,6 +48,12 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
       this.statsRef.current!.style.display = 'none';
     }
 
+    this.resizeCanvas();
+
+    window.addEventListener('resize', (e) => {
+      this.resizeCanvas();
+    });
+
     stats.dom.style.top = '';
     stats.dom.style.left = '';
     stats.dom.style.position = 'relative';
@@ -63,6 +71,29 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
   public componentWillUnmount() {
     if (this.state.emulatorControls) {
       this.state.emulatorControls.stop();
+    }
+  }
+
+  private resizeCanvas() {
+    if (this.canvasRef.current && this.emuDisplayColumnRef.current && this.emuDisplayColumnRef.current.parentElement) {
+
+      const containerWidth = Math.min(this.emuDisplayColumnRef.current.parentElement.offsetWidth, 640);
+      const containerHeight = Math.min(this.emuDisplayColumnRef.current.parentElement.offsetHeight, 480);
+
+      const neededContainerHeightForWidth = containerWidth * (3 / 4);
+      const neededContainerWidthForHeight = containerHeight * (4 / 3);
+
+      const heightToUse = (neededContainerHeightForWidth > containerHeight)
+        ? containerHeight
+        : neededContainerHeightForWidth;
+
+      const widthToUse = (neededContainerHeightForWidth > containerHeight)
+        ? neededContainerWidthForHeight
+        : containerWidth;
+
+      this.emuDisplayColumnRef.current.style.width = `${widthToUse}px`;
+      this.canvasRef.current.width = widthToUse;
+      this.canvasRef.current.height = heightToUse;
     }
   }
 
@@ -142,7 +173,7 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
   public render(): ReactNode {
 
     const makeFullScreen = () => {
-      this.canvasRef.current?.requestFullscreen().catch((err) => {
+      this.emuContainerRef.current?.requestFullscreen().catch((err) => {
         console.error('Error while requesting full screen: ', err);
       });
     };
@@ -170,7 +201,7 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
         this.props.gameServerConnection.forceDumpSaveFiles().then(() => {
           this.setState({ saveDumpResultMessage: 'Successfully dumped save files!' });
         }).catch((err: any) => {
-          this.setState({ saveDumpErrorMessage: `Failed to dump save files: ${err}` });
+          this.setState({ saveDumpErrorMessage: `Failed to dump save files: ${err} ` });
         });
       }
     };
@@ -218,94 +249,101 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
           </Modal.Footer>
         </Modal>
 
-        <div id="EmuContainer">
-          <div>
+        <div id="EmuDisplayColumn" ref={this.emuDisplayColumnRef}>
 
-            <div id="stats" ref={this.statsRef} className="EmuOverlay"></div>
+          <div id="EmuContainer" ref={this.emuContainerRef}>
+            <div>
 
-            {this.props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION &&
-              <div className="EmuOverlayCenter">
+              <div id="stats" ref={this.statsRef} className="EmuOverlay"></div>
 
-                {this.props.localPlayerIsHost
-                  ? <Button variant="success" onClick={this.props.onStartNetplayGameClick}>Start Game</Button>
-                  : <>waiting for host to start the game</>
-                }
-              </div>
-            }
+              {this.props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION &&
+                <div className="EmuOverlayCenter">
 
-            {this.props.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION &&
-              <div className="EmuOverlayCenter">
-                <h5 className="text-warning">PAUSED</h5>
-              </div>
-            }
+                  {this.props.localPlayerIsHost
+                    ? <Button variant="success" onClick={this.props.onStartNetplayGameClick}>Start Game</Button>
+                    : <>waiting for host to start the game</>
+                  }
+                </div>
+              }
 
-            <canvas
-              ref={this.canvasRef}
-              className="emscripten"
-              id="canvas"
-              onContextMenu={(event) => event.preventDefault()}></canvas>
-          </div>
-        </div>
+              {this.props.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION &&
+                <div className="EmuOverlayCenter">
+                  <h5 className="text-warning">PAUSED</h5>
+                </div>
+              }
 
-        <div className="row">
-          <div className="col">
-
-            {this.props.isInNetplaySession && this.props.localPlayerIsHost &&
-              <>
-                {this.props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
-                  ? <Button variant='success'
-                    size='sm'
-                    className="float-start"
-                    onClick={this.props.onStartNetplayGameClick}>
-                    <FontAwesomeIcon icon={faPlay} />
-                  </Button>
-                  : <>
-                    {this.props.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
-                      ? <Button variant='success'
-                        size='sm'
-                        className="float-start"
-                        onClick={onResumeNetplayGameClick}>
-                        <FontAwesomeIcon icon={faPlay} />
-                      </Button>
-                      : <Button variant='success'
-                        size='sm'
-                        className="float-start"
-                        onClick={this.props.onPauseNetplayGameClick}
-                        disabled={this.state.pauseButtonDisabled}>
-                        <FontAwesomeIcon icon={faPause} />
-                      </Button>
-                    }
-                  </>
-                }
-              </>
-            }
-          </div>
-          <Button variant="secondary"
-            disabled={this.props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION}
-            onClick={makeFullScreen}
-            size="sm"
-            className="col-md-auto mx-1">
-            Fullscreen
-          </Button>
-          <Button variant="secondary"
-            onClick={toggleStats}
-            size="sm"
-            className="col-md-auto mx-1">
-            Toggle Stats
-          </Button>
-
-          <div className="col">
-            {this.props.isInNetplaySession && !this.props.localPlayerIsHost &&
-              <DropdownButton size='sm'
-                title={(<FontAwesomeIcon icon={faFileDownload} />)}
-                className="float-end">
-                <Dropdown.Item onClick={showSaveDumpConfirmModal}>
-                  Sync Netplay Saves
-               </Dropdown.Item>
-              </DropdownButton>
-            }
+              <canvas
+                ref={this.canvasRef}
+                className="emscripten"
+                id="canvas"
+                onContextMenu={(event) => event.preventDefault()}></canvas>
+            </div>
           </div>
 
+          <div className="row">
+            <div className="col-auto mr-auto">
+
+              {this.props.isInNetplaySession && this.props.localPlayerIsHost &&
+                <>
+                  {this.props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION
+                    ? <Button variant='success'
+                      size='sm'
+                      className="float-start"
+                      onClick={this.props.onStartNetplayGameClick}>
+                      <FontAwesomeIcon icon={faPlay} />
+                    </Button>
+                    : <>
+                      {this.props.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
+                        ? <Button variant='success'
+                          size='sm'
+                          className="float-start"
+                          onClick={onResumeNetplayGameClick}>
+                          <FontAwesomeIcon icon={faPlay} />
+                        </Button>
+                        : <Button variant='success'
+                          size='sm'
+                          className="float-start"
+                          onClick={this.props.onPauseNetplayGameClick}
+                          disabled={this.state.pauseButtonDisabled}>
+                          <FontAwesomeIcon icon={faPause} />
+                        </Button>
+                      }
+                    </>
+                  }
+                </>
+              }
+            </div>
+            <div className="col-auto mx-auto">
+              <Button variant="secondary"
+                disabled={this.props.uiState === UI_STATE.PENDING_GAME_START_IN_NETPLAY_SESSION}
+                onClick={makeFullScreen}
+                size="sm"
+                className="mx-1">
+                Fullscreen
+              </Button>
+              <Button variant="secondary"
+                onClick={toggleStats}
+                size="sm"
+                className="mx-1">
+                Toggle Stats
+              </Button>
+            </div>
+
+            <div className="col-auto ml-auto">
+              {this.props.isInNetplaySession && !this.props.localPlayerIsHost &&
+                <DropdownButton size='sm'
+                  title={(<FontAwesomeIcon icon={faFileDownload} />)}
+                  className="float-end">
+                  <Dropdown.Item onClick={showSaveDumpConfirmModal}>
+                    Sync Netplay Saves
+                 </Dropdown.Item>
+                </DropdownButton>
+              }
+            </div>
+          </div>
+          <div className="row">
+            {this.props.children}
+          </div>
         </div>
       </div >
     );
