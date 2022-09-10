@@ -81,15 +81,11 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
       const containerHeight = Math.min(this.emuDisplayColumnRef.current.parentElement.offsetHeight, 480);
 
       const neededContainerHeightForWidth = containerWidth * (3 / 4);
-      const neededContainerWidthForHeight = containerHeight * (4 / 3);
 
+      const widthToUse = containerWidth;
       const heightToUse = (neededContainerHeightForWidth > containerHeight)
         ? containerHeight
         : neededContainerHeightForWidth;
-
-      const widthToUse = (neededContainerHeightForWidth > containerHeight)
-        ? neededContainerWidthForHeight
-        : containerWidth;
 
       this.emuDisplayColumnRef.current.style.width = `${widthToUse}px`;
       this.canvasRef.current.width = widthToUse;
