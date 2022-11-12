@@ -77,8 +77,14 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
   private resizeCanvas() {
     if (this.canvasRef.current && this.emuDisplayColumnRef.current && this.emuDisplayColumnRef.current.parentElement) {
 
-      const containerWidth = Math.min(this.emuDisplayColumnRef.current.parentElement.offsetWidth, 640);
-      const containerHeight = Math.min(this.emuDisplayColumnRef.current.parentElement.offsetHeight, 480);
+      const isFullscreen = !!document.fullscreenElement;
+
+      const containerWidth = isFullscreen
+        ? window.innerWidth
+        : Math.min(this.emuDisplayColumnRef.current.parentElement.offsetWidth, 640);
+      const containerHeight = isFullscreen
+        ? window.innerHeight
+        : Math.min(this.emuDisplayColumnRef.current.parentElement.offsetHeight, 480);
 
       const neededContainerHeightForWidth = containerWidth * (3 / 4);
 
