@@ -1,7 +1,8 @@
+import { ReactElement } from 'react';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-export default function PrivacyPolicy() {
+export default function PrivacyPolicy(): ReactElement {
   return (
     <div>
 

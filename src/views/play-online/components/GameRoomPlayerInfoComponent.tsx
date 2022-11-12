@@ -1,12 +1,11 @@
-import { Button } from 'react-bootstrap';
-
 import { GameRoomPlayerInfoProps } from '../containers/GameRoomPlayerInfoContainer';
 import ControllerPluginSlot from './ControllerPluginSlot';
 import GamePadDisplayContainer from '../containers/GamePadDisplayContainer';
 import { UI_STATE } from '../../../redux/reducers';
+import { ReactElement } from 'react';
 
 
-const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps) => {
+const GameRoomPlayerInfoComponent = (props: GameRoomPlayerInfoProps): ReactElement => {
 
   console.log(props.gameRoomPlayerInfo);
   const players = props.gameRoomPlayerInfo

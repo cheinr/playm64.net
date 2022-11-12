@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { KeyboardEvent, ReactElement, useEffect, useState } from 'react';
 import { Button, Card, Form, FormControl, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import {
   Link,
@@ -20,7 +20,7 @@ import GameRoomPlayerInfoContainer from '../containers/GameRoomPlayerInfoContain
 import { PlayOnlineProps } from '../containers/PlayOnlineContainer';
 import EditableAlias from './EditablePlayerAliasComponent';
 
-export default function PlayOnline(props: PlayOnlineProps) {
+export default function PlayOnline(props: PlayOnlineProps): ReactElement {
 
   const [romSelected, setRomSelected] = useState(false);
   const [libraryHasROMSLoaded, setLibraryHasROMSLoaded] = useState(false);
@@ -55,7 +55,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
   const urlSearchParams = new URLSearchParams(useLocation().search);
   const shouldShowHostingMenu = urlSearchParams.get('host') === 'true';
 
-  const onLoadedROMsChange = (newROMNames: string[]) => {
+  const onLoadedROMsChange = (newROMNames: string[]): void => {
     setLibraryHasROMSLoaded(newROMNames.length > 0);
   };
 
@@ -70,18 +70,18 @@ export default function PlayOnline(props: PlayOnlineProps) {
     });
   }
 
-  const onJoinCodeInputKeyDown = (e: KeyboardEvent<any>) => {
+  const onJoinCodeInputKeyDown = (e: KeyboardEvent<any>): void => {
     if (e.key === 'Enter') {
       joinGame();
     }
   };
 
-  const toggleAutoSelectROMEnabled = () => {
+  const toggleAutoSelectROMEnabled = (): void => {
     props.setIsAutoSelectROMEnabled(!props.isAutoSelectROMEnabled);
   };
 
   const [selectedROMName, setSelectedROMName] = useState('');
-  const onROMSelect = (romName: string, romData: ArrayBuffer) => {
+  const onROMSelect = (romName: string, romData: ArrayBuffer): void => {
 
     if (selectedROMName !== romName) {
       props.setSelectedROMData(romData);
@@ -97,7 +97,7 @@ export default function PlayOnline(props: PlayOnlineProps) {
     setRomSelected(true);
   };
 
-  const joinGame = () => {
+  const joinGame = (): void => {
     if (props.joinGameRoomInput && props.alias && (romSelected || props.isAutoSelectROMEnabled)) {
       props.joinGame(props.joinGameRoomInput, props.isAutoSelectROMEnabled);
     }

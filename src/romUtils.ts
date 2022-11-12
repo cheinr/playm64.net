@@ -3,7 +3,6 @@ import SparkMD5 from 'spark-md5';
 import axios from 'axios';
 import JSZip from 'jszip';
 
-
 const ROMS_DB_VERSION = 2;
 
 const onUpgradeNeeded = function(event: any) {
