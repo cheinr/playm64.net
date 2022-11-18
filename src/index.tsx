@@ -13,7 +13,9 @@ import { setAlias, setConnectedGamepad, setIsAutoSelectROMEnabled } from './redu
 import appReducer, { RootState } from './redux/reducers';
 import reportWebVitals from './reportWebVitals';
 import MatchmakerService from './service/MatchmakerClient';
-
+import { gamepadSimulator } from './GamepadSimulator';
+import { UI_STATE } from './redux/reducers';
+import { mobileCheck } from './utils';
 
 type MyExtraArg = { matchmakerService: MatchmakerService };
 type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
@@ -47,9 +49,27 @@ store.subscribe(() => {
   }
 });
 
+const isMobile = mobileCheck();
+
+if (isMobile) {
+  gamepadSimulator.create();
+}
 
 window.addEventListener('gamepadconnected', function(e: any) {
   console.log(e);
+  const uiState = store.getState().uiState;
+  const emulatorStarted = uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+    || uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION
+    || uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
+    || uiState === UI_STATE.PLAYING_LOCAL_SESSION;
+
+  if (!emulatorStarted
+    && gamepadSimulator.isActive()
+    && e.gamepad.id !== gamepadSimulator.fakeController.id) {
+
+    console.log('Non touchscreen controller detected! Using that over playm64 touch controls');
+    gamepadSimulator.destroy();
+  }
 
   if (!store.getState().connectedGamepad) {
     (store.dispatch as MyThunkDispatch)(setConnectedGamepad(e.gamepad));
@@ -58,11 +78,31 @@ window.addEventListener('gamepadconnected', function(e: any) {
 
 window.addEventListener('gamepaddisconnected', function(e: any) {
 
-  const currentConnectedJoystickIndex = store.getState().connectedGamepad?.index;
-  if (e.gamepad.index === currentConnectedJoystickIndex) {
+  const currentConnectedGamepad = store.getState().connectedGamepad;
+  if (e.gamepad.index === currentConnectedGamepad?.index
+    && e.gamepad.id === currentConnectedGamepad?.id) {
+
     (store.dispatch as MyThunkDispatch)(setConnectedGamepad(null));
+
+    const uiState = store.getState().uiState;
+    const emulatorStarted = uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
+      || uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION
+      || uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION
+      || uiState === UI_STATE.PLAYING_LOCAL_SESSION;
+
+    if (isMobile
+      && e.gamepad.id !== gamepadSimulator.fakeController.id
+      && !emulatorStarted) {
+
+      gamepadSimulator.create();
+      gamepadSimulator.connect();
+    }
   }
 });
+
+if (isMobile) {
+  gamepadSimulator.connect();
+}
 
 
 matchmakerService.setUiStore(store);

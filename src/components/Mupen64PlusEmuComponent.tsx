@@ -6,7 +6,7 @@ import { Mupen64PlusEmuProps } from '../containers/Mupen64PlusEmuContainer';
 import { UI_STATE } from '../redux/reducers';
 import stats from '../Stats';
 import './Mupen64PlusEmuComponent.css';
-
+import TouchControlsOverlay from './inputs/TouchControlsOverlay';
 import createMupen64PlusWeb from 'mupen64plus-web';
 
 interface Mupen64PlusEmuComponentState {
@@ -31,6 +31,7 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
   private emuContainerRef: RefObject<HTMLDivElement> = React.createRef();
   private emuDisplayColumnRef: RefObject<HTMLDivElement> = React.createRef();
   private statsRef: RefObject<HTMLDivElement> = React.createRef();
+  private joystickZoneRef: RefObject<HTMLDivElement> = React.createRef();
   private displayStats = false;
   state: Mupen64PlusEmuComponentState = {
     emulatorRunning: false,
@@ -273,6 +274,9 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
                   <h5 className="text-warning">PAUSED</h5>
                 </div>
               }
+
+              {this.props.isUsingTouchControls &&
+                <TouchControlsOverlay />}
 
               <canvas
                 ref={this.canvasRef}

@@ -6,6 +6,7 @@ import Mupen64PlusEmuComponent from '../components/Mupen64PlusEmuComponent';
 import { RootState, UI_STATE } from '../redux/reducers';
 import { requestGameStart, requestGamePause, requestGameResume, confirmNetplayGamePaused } from '../redux/actions';
 import MatchmakerClient from '../service/MatchmakerClient';
+import { gamepadSimulator } from '../GamepadSimulator';
 
 type MyExtraArg = { matchmakerService: MatchmakerClient };
 type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
@@ -29,10 +30,14 @@ const mapStateToProps = (state: RootState) => {
     }
     : { player: 0 };
 
+  const isUsingTouchControls = state.connectedGamepad
+    && (state.connectedGamepad.id === gamepadSimulator.fakeController.id);
+
   return {
     gameServerConnection: state.gameServerConnection,
     selectedRomData: state.selectedRomData,
     isInNetplaySession,
+    isUsingTouchControls,
     uiState: state.uiState,
     localPlayerIsHost: (state.roomPlayerInfo?.clientPlayerIndex === 0),
 

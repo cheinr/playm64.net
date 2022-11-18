@@ -1,0 +1,100 @@
+.button {
+    position: absolute;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    z-index: 5;
+    opacity: .6;
+    border-radius: 50%;
+    
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.buttonZ {
+    width: 100px;
+    height: 35px;
+    left: 10px;
+    border-radius: 10%;
+    background-color: #6e6e6d;
+}
+
+.buttonL {
+    width: 100px;
+    height: 35px;
+
+    left: 10px;
+    top: 50px;
+    border-radius: 15%;
+    background-color: #6e6e6d;
+}
+
+.buttonR {
+    width: 100px;
+    height: 35px;
+    right: 10px;
+    border-radius: 10%;
+    background-color: #6e6e6d;
+}
+
+.buttonA {
+    width: 60px;
+    height: 60px;
+    right: 35px;
+    bottom: 30px;
+    background-color: #102395;
+}
+.buttonB {
+    width: 60px;
+    height: 60px;
+    right: 95px;
+    bottom: 80px;
+    background-color: #04AA6D;
+}
+
+.buttonCUp {
+    width: 45px;
+    height: 45px;
+    right: 60px;
+    bottom: min(calc(50% + 40px), 260px);
+    background-color: #f5dd0a;
+    color: #6e6d66;
+}
+.buttonCDown {
+    width: 45px;
+    height: 45px;
+    right: 60px;
+    bottom: min(calc(50% - 40px), 180px);
+    background-color: #f0dd37;
+    color: #6e6d66;
+}
+.buttonCLeft {
+    width: 45px;
+    height: 45px;
+    right: 100px;
+    bottom: min(50%, 220px);
+    background-color: #f0dd37;
+    color: #6e6d66;
+}
+.buttonCRight {
+    width: 45px;
+    height: 45px;
+    right: 20px;
+    bottom: min(50%, 220px);
+    background-color: #f0dd37;
+    color: #6e6d66;
+}
+.buttonStart {
+    font-size: 11px;
+    width: 60px;
+    height: 60px;
+    left: calc(50% - 25px);
+    background-color: #cf2317;
+}

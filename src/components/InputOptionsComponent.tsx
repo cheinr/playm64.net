@@ -6,6 +6,7 @@ import ConfigureGamepadInputsComponent from './inputs/ConfigureGamepadInputsComp
 import LinkButton from '../components/common/LinkButton';
 import { InputOptionsProps } from '../containers/InputOptionsContainer';
 import { useState } from 'react';
+import { gamepadSimulator } from '../GamepadSimulator';
 
 const InputOptionsComponent = (props: InputOptionsProps) => {
 
@@ -33,7 +34,9 @@ const InputOptionsComponent = (props: InputOptionsProps) => {
           <small>
             {props.connectedGamepad.id}
             <div>
-              <LinkButton onClick={() => { setIsModalOpen(true); }}>configure</LinkButton>
+              {props.connectedGamepad.id !== gamepadSimulator.fakeController.id &&
+                <LinkButton onClick={() => { setIsModalOpen(true); }}>configure</LinkButton>
+              }
             </div>
           </small>
         </div>

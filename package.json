@@ -61,6 +61,7 @@
     "md5": "^2.3.0",
     "mini-css-extract-plugin": "0.11.3",
     "mupen64plus-web": "1.4.1",
+    "nipplejs": "^0.10.0",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pako": "^2.0.3",
     "pnp-webpack-plugin": "1.6.4",
