@@ -1,5 +1,5 @@
 import { Table, Button, FormControl } from 'react-bootstrap';
-import { findAutoInputConfig, writeAutoInputConfig } from 'mupen64plus-web';
+import { findAutoInputConfig, preloadAutoInputConfig, writeAutoInputConfig } from 'mupen64plus-web';
 import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -248,7 +248,13 @@ const ConfigureGamepadInputsComponent = (props: any) => {
   useEffect(() => {
 
     gamepadPoller.startPolling();
-    findAutoInputConfig(props.gamepadName.slice(0, 63)).then((result: any) => {
+
+    const getAutoInputConfig = async () => {
+      await preloadAutoInputConfig('/dist', false);
+      return await findAutoInputConfig(props.gamepadName.slice(0, 63));
+    };
+
+    getAutoInputConfig().then((result: any) => {
       console.log('Found autoInputConfig: ', result);
 
       if (result) {
