@@ -26,8 +26,8 @@ export default function About() {
       <p>
 
         Expect to find many issues, ranging from graphical glitches, to games crashing completely, and
-        anything in between. For the best experience, try to use the latest Firefox or Chrome-based browser available. Check out the <a href='https://github.com/cheinr/mupen64plus-web' target="_blank">project fork on github <FontAwesomeIcon icon={faExternalLinkAlt} /></a>, and if you're
-    interested in a more stable emulation experience check out the <a href="https://m64p.github.io/" target="_blank">m64p emulator <FontAwesomeIcon icon={faExternalLinkAlt} /></a> (no affiliation with playm64.net).
+        anything in between. For the best experience, try to use the latest Firefox or Chrome-based browser available. Check out the <a href='https://github.com/cheinr/playm64.net' target="_blank">project fork on github <FontAwesomeIcon icon={faExternalLinkAlt} /></a>, and if you're
+    interested in a more stable emulation experience check out the <a href="https://simple64.github.io/" target="_blank">simple64 emulator <FontAwesomeIcon icon={faExternalLinkAlt} /></a> (no affiliation with playm64.net).
 
       </p>
       <p>
