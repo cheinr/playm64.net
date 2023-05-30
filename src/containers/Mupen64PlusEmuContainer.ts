@@ -63,7 +63,8 @@ const mapDispatchToProps = (dispatch: MyThunkDispatch) => ({
 });
 
 type OwnProps = {
-  children?: React.ReactNode
+  children?: React.ReactNode,
+  emuMode: number
 }
 
 const connector = connect(

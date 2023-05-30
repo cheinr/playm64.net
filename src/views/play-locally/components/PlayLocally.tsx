@@ -1,6 +1,6 @@
 import createMupen64PlusWeb from 'mupen64plus-web';
 import { useEffect, useState } from 'react';
-import { Button, Card, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button, Card, Modal, OverlayTrigger, Tooltip, Form } from 'react-bootstrap';
 import {
   Link
 } from 'react-router-dom';
@@ -44,6 +44,11 @@ export default function PlayLocally(props: PlayLocallyProps) {
     setShouldDisplayGameSaveManagementModal
   ] = useState(false);
 
+  const [
+    shouldUseDynarec,
+    setShouldUseDynarec
+  ] = useState(true);
+
   const start = () => {
     props.startPlaying();
   };
@@ -65,7 +70,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
         <h4 className="text-center">Playing {selectedROMName}</h4>
 
         <div className="text-center">
-          <Mupen64PlusEmuContainer />
+          <Mupen64PlusEmuContainer emuMode={shouldUseDynarec ? 2 : 1} />
 
           <GameControlsDisplay />
         </div>
@@ -145,6 +150,18 @@ export default function PlayLocally(props: PlayLocallyProps) {
           </div>
         }
 
+        <div className="row pb-3">
+          <div className="col-4 d-flex" />
+          <div className="col-4 d-flex justify-content-center">
+            <Form.Check type="checkbox"
+              id="dynarec-enable-checkbox"
+              label="enable dynarec"
+              checked={shouldUseDynarec}
+              onChange={(e) => setShouldUseDynarec(e.target.checked)}
+            />
+          </div>
+          <div className="col-4 d-flex" />
+        </div>
 
         <div className="text-center">
           {selectedROMName !== ''

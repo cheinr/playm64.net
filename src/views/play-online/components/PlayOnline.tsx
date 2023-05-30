@@ -113,7 +113,7 @@ export default function PlayOnline(props: PlayOnlineProps): ReactElement {
 
         <GameOverviewContainer />
 
-        <Mupen64PlusEmuContainer>
+        <Mupen64PlusEmuContainer emuMode={1}>
           <ErrorMessageContainer />
 
           <GameRoomPlayerInfoContainer />
