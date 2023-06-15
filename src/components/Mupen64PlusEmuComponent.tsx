@@ -142,7 +142,8 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
         endStats: stats.end,
         romConfigOptionOverrides: this.props.emulatorConfigOverrides,
         coreConfig: {
-          emuMode: this.props.emuMode
+          emuMode: this.props.emuMode,
+          mainLoopTimingMode: 1
         },
         netplayConfig: this.props.netplayConfig,
         locateFile: (path: string, prefix: string) => {
