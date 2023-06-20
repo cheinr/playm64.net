@@ -9,7 +9,12 @@ import thunk, { ThunkDispatch } from 'redux-thunk';
 import App from './App';
 import './bootstrap.min.css';
 import './index.css';
-import { setAlias, setConnectedGamepad, setIsAutoSelectROMEnabled } from './redux/actions';
+import {
+  setAlias,
+  setConnectedGamepad,
+  setIsAutoSelectROMEnabled,
+  setIsDynarecEnabled
+} from './redux/actions';
 import appReducer, { RootState } from './redux/reducers';
 import reportWebVitals from './reportWebVitals';
 import MatchmakerService from './service/MatchmakerClient';
@@ -40,6 +45,8 @@ store.dispatch(setAlias(alias));
 const isAutoSelectROMEnabled = JSON.parse(localStorage.getItem('isAutoSelectROMEnabled') ?? 'false');
 store.dispatch(setIsAutoSelectROMEnabled(isAutoSelectROMEnabled));
 
+const isDynarecEnabled = JSON.parse(localStorage.getItem('isDynarecEnabled') ?? 'false');
+store.dispatch(setIsDynarecEnabled(isDynarecEnabled));
 
 store.subscribe(() => {
   const alias = store.getState().alias;

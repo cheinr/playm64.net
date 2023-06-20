@@ -19,6 +19,7 @@ export const SET_EMULATOR_ERROR_MESSAGE = 'SET_EMULATOR_ERROR_MESSAGE';
 export const SET_EMULATOR_CONFIG_OVERRIDES = 'SET_EMULATOR_CONFIG_OVERRIDES';
 export const SET_HOSTING_REGION = 'SET_HOSTING_REGION';
 export const SET_IS_AUTO_SELECT_ROM_ENABLED = 'SET_IS_AUTO_SELECT_ROM_ENABLED';
+export const SET_IS_DYNAREC_ENABLED = 'SET_IS_DYNAREC_ENABLED';
 export const SET_NETPLAY_CLIENT_LAG = 'SET_NETPLAY_CLIENT_LAG';
 export const SET_SELECTED_ROM_DATA = 'SET_SELECTED_ROM_DATA';
 export const SET_UI_STATE = 'SET_UI_STATE';
@@ -71,6 +72,10 @@ export function setNetplayClientLag(clientId: number, lag: number) {
 
 export function setIsAutoSelectROMEnabled(isAutoSelectROMEnabled: boolean) {
   return { type: SET_IS_AUTO_SELECT_ROM_ENABLED, isAutoSelectROMEnabled };
+}
+
+export function setIsDynarecEnabled(isDynarecEnabled: boolean) {
+  return { type: SET_IS_DYNAREC_ENABLED, isDynarecEnabled };
 }
 
 export function requestHostingRegionOptionsIfNotLoaded() {

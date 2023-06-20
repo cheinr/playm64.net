@@ -12,8 +12,6 @@ import GameControlsDisplay from '../../../containers/GameControlsDisplayContaine
 import GameSaveManagementContainer from '../../../containers/GameSaveManagementContainer';
 import InputOptionsContainer from '../../../containers/InputOptionsContainer';
 import AdvancedEmulatorConfigOverridesContainer from '../../../containers/inputs/AdvancedEmulatorConfigOverridesInputContainer';
-import { loadROM } from '../../../romUtils';
-import stats from '../../../Stats';
 import { PlayLocallyProps } from '../containers/PlayLocallyContainer';
 
 export default function PlayLocally(props: PlayLocallyProps) {
@@ -44,11 +42,6 @@ export default function PlayLocally(props: PlayLocallyProps) {
     setShouldDisplayGameSaveManagementModal
   ] = useState(false);
 
-  const [
-    shouldUseDynarec,
-    setShouldUseDynarec
-  ] = useState(true);
-
   const start = () => {
     props.startPlaying();
   };
@@ -70,7 +63,7 @@ export default function PlayLocally(props: PlayLocallyProps) {
         <h4 className="text-center">Playing {selectedROMName}</h4>
 
         <div className="text-center">
-          <Mupen64PlusEmuContainer emuMode={shouldUseDynarec ? 2 : 1} />
+          <Mupen64PlusEmuContainer emuMode={props.isDynarecEnabled ? 2 : 1} />
 
           <GameControlsDisplay />
         </div>
@@ -155,9 +148,9 @@ export default function PlayLocally(props: PlayLocallyProps) {
           <div className="col-4 d-flex justify-content-center">
             <Form.Check type="checkbox"
               id="dynarec-enable-checkbox"
-              label="enable dynarec"
-              checked={shouldUseDynarec}
-              onChange={(e) => setShouldUseDynarec(e.target.checked)}
+              label="enable dynarec (experimental)"
+              checked={props.isDynarecEnabled}
+              onChange={(e) => props.setIsDynarecEnabled(e.target.checked)}
             />
           </div>
           <div className="col-4 d-flex" />

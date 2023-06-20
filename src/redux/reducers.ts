@@ -13,6 +13,7 @@ import {
   SET_HOSTING_REGION,
   SET_HOST_REGION_OPTIONS,
   SET_IS_AUTO_SELECT_ROM_ENABLED,
+  SET_IS_DYNAREC_ENABLED,
   SET_EMULATOR_CONFIG_OVERRIDES,
   SET_NETPLAY_REGISTRATION_ID,
   SET_NETPLAY_PAUSE_COUNTS,
@@ -43,6 +44,7 @@ const initialState = {
   hostRegionOptions: null,
   hostingRegion: 'us-west-2',
   isAutoSelectROMEnabled: false,
+  isDynarecEnabled: false,
   netplayRegistrationId: null,
   netplayPauseCounts: null,
   netplayClientLags: {},
@@ -116,6 +118,11 @@ export default function appReducer(state: any, action: any) {
     case SET_IS_AUTO_SELECT_ROM_ENABLED:
       return Object.assign({}, state, {
         isAutoSelectROMEnabled: action.isAutoSelectROMEnabled
+      });
+
+    case SET_IS_DYNAREC_ENABLED:
+      return Object.assign({}, state, {
+        isDynarecEnabled: action.isDynarecEnabled
       });
 
     case SET_NETPLAY_CLIENT_LAG:
