@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import { Provider } from 'react-redux';
 import { Action, applyMiddleware, createStore, Store } from 'redux';
 import thunk, { ThunkDispatch } from 'redux-thunk';
+import { isMobile } from 'react-device-detect';
 import App from './App';
 import './bootstrap.min.css';
 import './index.css';
@@ -20,7 +21,6 @@ import reportWebVitals from './reportWebVitals';
 import MatchmakerService from './service/MatchmakerClient';
 import { gamepadSimulator } from './GamepadSimulator';
 import { UI_STATE } from './redux/reducers';
-import { mobileCheck } from './utils';
 
 type MyExtraArg = { matchmakerService: MatchmakerService };
 type MyThunkDispatch = ThunkDispatch<RootState, MyExtraArg, Action>;
@@ -55,8 +55,6 @@ store.subscribe(() => {
     localStorage.setItem('playerAlias', alias);
   }
 });
-
-const isMobile = mobileCheck();
 
 if (isMobile) {
   gamepadSimulator.create();
