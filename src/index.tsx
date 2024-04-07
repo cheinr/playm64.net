@@ -2,7 +2,7 @@ import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom';
-import { createRoot } from 'react-dom/client';
+import { createRoot, Container } from 'react-dom/client';
 import Modal from 'react-modal';
 import { Provider } from 'react-redux';
 import { Action, applyMiddleware, createStore, Store } from 'redux';
@@ -114,7 +114,7 @@ matchmakerService.setUiStore(store);
 
 Modal.setAppElement('#root');
 
-const root = createRoot(document.getElementById('root'));
+const root = createRoot(document.getElementById('root') as Container);
 
 root.render(
     <React.StrictMode>

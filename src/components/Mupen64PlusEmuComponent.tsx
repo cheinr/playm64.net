@@ -10,7 +10,6 @@ import TouchControlsOverlay from './inputs/TouchControlsOverlay';
 import createMupen64PlusWeb from 'mupen64plus-web';
 
 interface Mupen64PlusEmuComponentState {
-  emulatorRunning: boolean;
   emulatorPauseCounts?: number[];
   emulatorControls?: any;
   pauseButtonDisabled: boolean;
