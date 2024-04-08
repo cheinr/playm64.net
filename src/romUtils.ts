@@ -1,4 +1,3 @@
-import md5 from 'md5';
 import SparkMD5 from 'spark-md5';
 import axios from 'axios';
 import JSZip from 'jszip';

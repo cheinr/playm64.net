@@ -19,7 +19,7 @@ class CompressedBinaryRTCChannelWrapper implements BinaryRTCDataChannel {
   private readonly delegate: RTCDataChannel;
 
   onclose: ((ev: Event) => any) | null = null;
-  onerror: ((ev: RTCErrorEvent) => any) | null = null;
+  onerror: ((ev: Event) => any) | null = null;
   onmessage: ((ev: MessageEvent) => any) | null = null;
   onopen: ((ev: Event) => any) | null = null;
 
@@ -33,7 +33,7 @@ class CompressedBinaryRTCChannelWrapper implements BinaryRTCDataChannel {
       if (this.onclose) this.onclose(event);
     };
 
-    this.delegate.onerror = (event: RTCErrorEvent) => {
+    this.delegate.onerror = (event: Event) => {
       if (this.onerror) this.onerror(event);
     };
 

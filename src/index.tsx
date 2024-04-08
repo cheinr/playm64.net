@@ -2,10 +2,11 @@ import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom';
+import { createRoot, Container } from 'react-dom/client';
 import Modal from 'react-modal';
 import { Provider } from 'react-redux';
 import { Action, applyMiddleware, createStore, Store } from 'redux';
-import thunk, { ThunkDispatch } from 'redux-thunk';
+import { thunk, ThunkDispatch, withExtraArgument } from 'redux-thunk';
 import { isMobile } from 'react-device-detect';
 import App from './App';
 import './bootstrap.min.css';
@@ -31,8 +32,7 @@ const matchmakerURL = (process.env.NODE_ENV === 'production')
 
 const matchmakerService = new MatchmakerService(matchmakerURL);
 
-const store: Store = createStore(appReducer, applyMiddleware(
-  thunk.withExtraArgument({
+const store: Store = createStore(appReducer, applyMiddleware(withExtraArgument({
     matchmakerService
   })
 ));
@@ -114,15 +114,16 @@ matchmakerService.setUiStore(store);
 
 Modal.setAppElement('#root');
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <DndProvider backend={HTML5Backend}>
-        <App />
-      </DndProvider>
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
+const root = createRoot(document.getElementById('root') as Container);
+
+root.render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <DndProvider backend={HTML5Backend}>
+                <App />
+            </DndProvider>
+        </Provider>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -35,12 +35,14 @@ export default connector(EditablePlayerAlias);
 function EditablePlayerAlias(props: EditablePlayerAliasProps) {
 
   const [aliasInput, setAliasInput] = useState('');
-  const [showModal, setShowModal] = useState<boolean | null>(null);
+  const [performInitialShowModalCheck, setPerformInitialShowModalCheck] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const inputRef = createRef<HTMLInputElement>();
 
   useEffect(() => {
-    if (showModal === null) {
+    if (performInitialShowModalCheck) {
+      setPerformInitialShowModalCheck(false);
       if (!props.alias) {
         setShowModal(true);
       } else {

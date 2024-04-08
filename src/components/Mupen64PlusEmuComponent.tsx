@@ -10,7 +10,6 @@ import TouchControlsOverlay from './inputs/TouchControlsOverlay';
 import createMupen64PlusWeb from 'mupen64plus-web';
 
 interface Mupen64PlusEmuComponentState {
-  emulatorRunning: boolean;
   emulatorPauseCounts?: number[];
   emulatorControls?: any;
   pauseButtonDisabled: boolean;
@@ -32,9 +31,9 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
   private emuDisplayColumnRef: RefObject<HTMLDivElement> = React.createRef();
   private statsRef: RefObject<HTMLDivElement> = React.createRef();
   private joystickZoneRef: RefObject<HTMLDivElement> = React.createRef();
+  private emulatorRunning: Boolean = false;
   private displayStats = false;
-  state: Mupen64PlusEmuComponentState = {
-    emulatorRunning: false,
+    state: Mupen64PlusEmuComponentState = {
     emulatorPauseCounts: undefined,
     emulatorControls: undefined,
     pauseButtonDisabled: false,
@@ -128,12 +127,13 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
   }
 
   private checkEmulatorStart() {
-    if (!this.state.emulatorRunning && (this.props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
+
+    if (!this.emulatorRunning && (this.props.uiState === UI_STATE.PLAYING_LOCAL_SESSION
       || this.props.uiState === UI_STATE.PLAYING_IN_DISCONNECTED_NETPLAY_SESSION
       || this.props.uiState === UI_STATE.PLAYING_IN_NETPLAY_SESSION
       || this.props.uiState === UI_STATE.PLAYING_IN_PAUSED_NETPLAY_SESSION)) {
 
-      this.setState({ emulatorRunning: true });
+      this.emulatorRunning = true;
 
       createMupen64PlusWeb({
         canvas: document.getElementById('canvas'),
@@ -149,9 +149,9 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
         locateFile: (path: string, prefix: string) => {
 
           console.log('path: %o', path);
-          console.log('env: %o', process.env.PUBLIC_URL);
+            //console.log('env: %o', process.env.PUBLIC_URL);
 
-          const publicURL = process.env.PUBLIC_URL;
+          const publicURL = '';//process.env.PUBLIC_URL;
 
           if (path.endsWith('.wasm') || path.endsWith('.data') || (path.includes('index') && path.endsWith('worker.js'))) {
             return publicURL + '/dist/' + path;
