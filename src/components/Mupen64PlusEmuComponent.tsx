@@ -7,7 +7,7 @@ import { UI_STATE } from '../redux/reducers';
 import stats from '../Stats';
 import './Mupen64PlusEmuComponent.css';
 import TouchControlsOverlay from './inputs/TouchControlsOverlay';
-import createMupen64PlusWeb from 'mupen64plus-web';
+import createMupen64PlusWeb, { mainMupen64PlusWebJsFileName } from 'mupen64plus-web';
 
 interface Mupen64PlusEmuComponentState {
   emulatorPauseCounts?: number[];
@@ -140,6 +140,7 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
         romData: this.props.selectedRomData,
         beginStats: stats.begin,
         endStats: stats.end,
+        mainScriptUrlOrBlob: `/dist/${mainMupen64PlusWebJsFileName}`,
         romConfigOptionOverrides: this.props.emulatorConfigOverrides,
         coreConfig: {
           emuMode: this.props.emuMode,
