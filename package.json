@@ -7,7 +7,7 @@
         "clean": "rm -rf public/dist",
         "mkdirs": "mkdir -p public/dist",
         "copy-dependencies": "cp -r ./node_modules/mupen64plus-web/bin/web/index* ./node_modules/mupen64plus-web/bin/web/mupen64plus.json ./node_modules/mupen64plus-web/bin/web/data/InputAutoCfg.ini ./public/dist",
-        "dev": "npm run mkdirs && npm run copy-dependencies && vite --force",
+        "dev": "npm run mkdirs && npm run copy-dependencies && vite",
         "build": "npm run mkdirs && npm run copy-dependencies && tsc && vite build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
@@ -19,7 +19,7 @@
         "@originjs/vite-plugin-commonjs": "^1.0.3",
         "axios": "^1.6.8",
         "jszip": "^3.10.1",
-        "mupen64plus-web": "1.5.5",
+        "mupen64plus-web": "1.5.4",
         "nipplejs": "^0.10.1",
         "react": "^18.2.0",
         "react-bootstrap": "^2.10.2",
