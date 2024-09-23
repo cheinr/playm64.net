@@ -7,7 +7,7 @@
         "clean": "rm -rf public/dist",
         "mkdirs": "mkdir -p public/dist",
         "copy-dependencies": "cp -r ./node_modules/mupen64plus-web/bin/web/index* ./node_modules/mupen64plus-web/bin/web/mupen64plus.json ./node_modules/mupen64plus-web/bin/web/data/InputAutoCfg.ini ./public/dist",
-        "dev": "npm run mkdirs && npm run copy-dependencies && vite",
+        "dev": "npm run mkdirs && npm run copy-dependencies && vite --force",
         "build": "npm run mkdirs && npm run copy-dependencies && tsc && vite build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
