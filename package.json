@@ -19,7 +19,7 @@
         "@originjs/vite-plugin-commonjs": "^1.0.3",
         "axios": "^1.6.8",
         "jszip": "^3.10.1",
-        "mupen64plus-web": "1.5.4",
+        "mupen64plus-web": "1.5.7",
         "nipplejs": "^0.10.1",
         "react": "^18.2.0",
         "react-bootstrap": "^2.10.2",
