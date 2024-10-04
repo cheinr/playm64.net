@@ -1,5 +1,5 @@
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { faUpload, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MouseEvent, useEffect, useState } from 'react';
 import { Button, ButtonGroup, Dropdown, Spinner, Table } from 'react-bootstrap';
@@ -79,10 +79,12 @@ const RomSelector = function(props: RomSelectorProps) {
         <td className={className} onClick={onSelectROM}>
           {romName}
           <span className="float-end">
-            <Button variant="danger" size="sm" onClick={onDeleteROM}>X</Button>
+            <Button variant="danger" size="sm" onClick={onDeleteROM}>
+              <FontAwesomeIcon icon={faTrashCan} className="text-center" />
+            </Button>
           </span>
         </td>
-      </tr >
+      </tr>
     );
   });
 
