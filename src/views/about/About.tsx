@@ -27,11 +27,11 @@ export default function About() {
 
         Expect to find many issues, ranging from graphical glitches, to games crashing completely, and
         anything in between. For the best experience, try to use the latest Firefox or Chrome-based browser available. Check out the <a href='https://github.com/cheinr/playm64.net' target="_blank">project fork on github <FontAwesomeIcon icon={faExternalLinkAlt} /></a>, and if you're
-    interested in a more stable emulation experience check out the <a href="https://simple64.github.io/" target="_blank">simple64 emulator <FontAwesomeIcon icon={faExternalLinkAlt} /></a> (no affiliation with playm64.net).
+        interested in a more stable emulation experience check out the <a href="https://simple64.github.io/" target="_blank">simple64 emulator <FontAwesomeIcon icon={faExternalLinkAlt} /></a> (no affiliation with playm64.net).
 
       </p>
       <p>
-        Users are required to provide their own ROMs to emulate -- playm64.net does not distribute ROMs.
+        With the exception of the Mupen64Plus Test ROM available <a href='https://github.com/mupen64plus/mupen64plus-rom' target="_blank">here <FontAwesomeIcon icon={faExternalLinkAlt} /></a> under a GPL-2.0 license, users are required to provide their own ROM files to emulate. This site does not distribute ROM files between players.
       </p>
 
     </div >

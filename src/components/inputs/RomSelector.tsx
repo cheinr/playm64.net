@@ -1,7 +1,8 @@
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MouseEvent, useEffect, useState } from 'react';
-import { Button, Spinner, Table } from 'react-bootstrap';
+import { Button, ButtonGroup, Dropdown, Spinner, Table } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import { listPersistedROMs, loadROM, persistROM, deleteROM } from '../../romUtils';
 import './RomSelector.css';
@@ -10,6 +11,8 @@ interface RomSelectorProps {
   onROMSelect(romName: string, romData: ArrayBuffer): void;
   onLoadedROMsChange?: (loadedROMKeys: string[]) => void;
 }
+
+const MUPEN64PLUS_DEMO_ROM_NAME = "Mupen64Plus Demo by Marshallh (GPL)";
 
 const RomSelector = function(props: RomSelectorProps) {
 
@@ -29,6 +32,7 @@ const RomSelector = function(props: RomSelectorProps) {
     });
   }, []);
 
+  const demoROMLoaded = romNames.includes(MUPEN64PLUS_DEMO_ROM_NAME);
 
   const rows = romNames.map((romName, index) => {
 
@@ -82,6 +86,27 @@ const RomSelector = function(props: RomSelectorProps) {
     );
   });
 
+  const loadTestROM = () => {
+
+    axios.get('/m64p_test_rom.v64', {
+      responseType: 'arraybuffer'
+    }).then((resp) => {
+
+      persistROM(resp.data).catch((err) => {
+        console.error('Error while persisting test ROM: ', err);
+        setErrorMessage(`Exception while loading test ROM: ${err}`);
+      }).then(() => {
+        return listPersistedROMs().then((roms) => {
+          setRomNames(roms.sort());
+          setIsProcessingNewROMs(false);
+          if (props.onLoadedROMsChange) {
+            props.onLoadedROMsChange(roms.sort());
+          }
+        });
+      });
+    });
+  }
+
   const onFileChange = (files: any) => {
 
     setErrorMessage('');
@@ -109,78 +134,68 @@ const RomSelector = function(props: RomSelectorProps) {
     });
   };
 
+  const displaySpinner = isProcessingNewROMs || isLoading;
+  const displayRows = rows.length > 0 || isLoading || isProcessingNewROMs;
 
-  if (rows.length > 0 || isLoading || isProcessingNewROMs) {
+  return (
+    <div>
 
-    const displaySpinner = isProcessingNewROMs || isLoading;
+      <Dropzone onDrop={onFileChange} noClick>
+        {({ getRootProps, getInputProps, open }) => (
+          <section>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
 
-    return (
-      <div>
 
-        <Dropzone onDrop={onFileChange} noClick>
-          {({ getRootProps, getInputProps, open }) => (
-            <section>
-              <div {...getRootProps()}>
+              {displaySpinner &&
+                <Spinner animation="border" className="overlay-spinner" />}
+
+              <Table variant="dark" className="mb-0">
+
+                <thead>
+                  <tr>
+                    <th>
+                      <div>
+                        Select a Rom
+
+
+                        <Dropdown as={ButtonGroup} className="float-end">
+                          <Button onClick={open}>Load ROMs</Button>
+
+                          {!demoROMLoaded && (<>
+
+                            <Dropdown.Toggle split id="dropdown-split-basic" />
+                            <Dropdown.Menu>
+                              <Dropdown.Item onClick={loadTestROM}>Download Mupen64Plus Demo ROM</Dropdown.Item>
+                            </Dropdown.Menu> </>)}
+
+                        </Dropdown>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+
+                {displayRows && (<tbody className="rom-table-wrapper">
+                  {rows}
+                </tbody>)}
+              </Table>
+              {/*For some reason removing this node completely messes with the "Load ROMs" button */}
+              <div className="romDropZone text-center" onClick={open} style={displayRows ? { display: 'none' } : {}}>
+                <FontAwesomeIcon icon={faUpload} size="4x" className="text-center" />
                 <input {...getInputProps()} />
-
-
-                {displaySpinner &&
-                  <Spinner animation="border" className="overlay-spinner" />}
-
-                <Table variant="dark">
-
-                  <thead>
-                    <tr>
-                      <th>
-                        <div>
-                          Select a Rom
-
-                          <Button className="float-end" onClick={open}>
-                            Load ROMs
-                          </Button>
-
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="rom-table-wrapper">
-                    {rows}
-                  </tbody>
-                </Table>
-
+                <p>Click or drag to load ROMs to play</p>
               </div>
 
-            </section>
-          )}
-        </Dropzone>
-        <div className="text-danger">
-          {errorMessage}
-        </div>
-      </div >
-    );
-  } else {
-    return (
-      <div>
-        <div id="romUploadContainer">
-          <Dropzone onDrop={onFileChange}>
-            {({ getRootProps, getInputProps }) => (
-              <section>
-                <div {...getRootProps()} className="romDropZone text-center">
-                  <FontAwesomeIcon icon={faUpload} size="4x" className="text-center" />
-                  <input {...getInputProps()} />
-                  <p>Click or drag to load ROMs to play</p>
-                </div>
-              </section>
-            )}
-          </Dropzone>
-        </div>
+            </div>
 
-        <div className="text-danger">
-          {errorMessage}
-        </div>
+          </section>
+        )}
+      </Dropzone>
+      <div className="text-danger">
+        {errorMessage}
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default RomSelector;
