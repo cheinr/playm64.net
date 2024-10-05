@@ -87,7 +87,6 @@ class GameServerClient {
 
   private gameStarted = false;
   private connectionClosed = false;
-  private emulatorControls: any | null = null;
 
   private readonly roomPlayerInfoUpdateListeners: Function[] = [];
   private readonly gameRoomDisconnectListeners: Function[] = [];
@@ -172,16 +171,6 @@ class GameServerClient {
         desiredControllerIndex: controllerNumber
       }
     }));
-  }
-
-  public async forceDumpSaveFiles() {
-    if (this.emulatorControls) {
-      return this.emulatorControls.forceDumpSaveFiles().then(() => {
-        console.log('Finished dumping save files!');
-      });
-    } else {
-      throw 'Emulator isn\'t ready!';
-    }
   }
 
   public confirmGamePaused(pauseCounts: number[]): void {

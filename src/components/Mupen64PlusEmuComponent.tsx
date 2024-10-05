@@ -195,18 +195,20 @@ class Mupen64PlusEmuComponent extends React.Component<Mupen64PlusEmuProps, Mupen
 
     const dumpNetplaySaveFiles = () => {
 
-      if (this.props.gameServerConnection) {
+      this.setState({
+        saveDumpResultMessage: '',
+        saveDumpErrorMessage: ''
+      });
 
-        this.setState({
-          saveDumpResultMessage: '',
-          saveDumpErrorMessage: ''
-        });
-
-        this.props.gameServerConnection.forceDumpSaveFiles().then(() => {
+      if (this.state.emulatorControls) {
+        this.state.emulatorControls.forceDumpSaveFiles().then(() => {
+          console.log('Finished dumping save files!');
           this.setState({ saveDumpResultMessage: 'Successfully dumped save files!' });
         }).catch((err: any) => {
           this.setState({ saveDumpErrorMessage: `Failed to dump save files: ${err} ` });
         });
+      } else {
+        this.setState({ saveDumpErrorMessage: `Failed to dump save files: Emulator isn't ready!` });
       }
     };
 
