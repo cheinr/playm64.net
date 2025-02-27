@@ -31,7 +31,7 @@ export default function About() {
 
       </p>
       <p>
-        With the exception of the Mupen64Plus Test ROM available <a href='https://github.com/mupen64plus/mupen64plus-rom' target="_blank">here <FontAwesomeIcon icon={faExternalLinkAlt} /></a> under a GPL-2.0 license, users are required to provide their own ROM files to emulate. This site does not distribute ROM files between players.
+        With the exception of the Mupen64Plus Test ROM available <a href='https://github.com/mupen64plus/mupen64plus-rom' target="_blank">here <FontAwesomeIcon icon={faExternalLinkAlt} /></a> under a GPL-2.0 license, and the <a href='https://github.com/cheinr/tankshootout64' target="_blank">TankShootout64 ROM<FontAwesomeIcon icon={faExternalLinkAlt} /></a>, users are required to provide their own ROM files to emulate. This site does not distribute ROM files between players.
       </p>
 
     </div >

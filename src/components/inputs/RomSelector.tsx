@@ -12,7 +12,7 @@ interface RomSelectorProps {
   onLoadedROMsChange?: (loadedROMKeys: string[]) => void;
 }
 
-const MUPEN64PLUS_DEMO_ROM_NAME = "Mupen64Plus Demo by Marshallh (GPL)";
+const TANKSHOOTOUT_DEMO_ROM_NAME = "Tank Shootout 64 (Unknown ROM)";
 
 const RomSelector = function(props: RomSelectorProps) {
 
@@ -32,7 +32,7 @@ const RomSelector = function(props: RomSelectorProps) {
     });
   }, []);
 
-  const demoROMLoaded = romNames.includes(MUPEN64PLUS_DEMO_ROM_NAME);
+  const demoROMLoaded = romNames.includes(TANKSHOOTOUT_DEMO_ROM_NAME);
 
   const rows = romNames.map((romName, index) => {
 
@@ -90,7 +90,7 @@ const RomSelector = function(props: RomSelectorProps) {
 
   const loadTestROM = () => {
 
-    axios.get('/m64p_test_rom.v64', {
+    axios.get('/tankshootout64.emu-compat.z64', {
       responseType: 'arraybuffer'
     }).then((resp) => {
 
@@ -168,7 +168,7 @@ const RomSelector = function(props: RomSelectorProps) {
 
                             <Dropdown.Toggle split id="dropdown-split-basic" />
                             <Dropdown.Menu>
-                              <Dropdown.Item onClick={loadTestROM}>Download Mupen64Plus Demo ROM</Dropdown.Item>
+                              <Dropdown.Item onClick={loadTestROM}>Download TankShootout64 Demo ROM</Dropdown.Item>
                             </Dropdown.Menu> </>)}
 
                         </Dropdown>
