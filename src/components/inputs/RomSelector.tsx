@@ -90,7 +90,7 @@ const RomSelector = function(props: RomSelectorProps) {
 
   const loadTestROM = () => {
 
-    axios.get('/tankshootout64.emu-compat.a40aba63.z64', {
+    axios.get('/tankshootout64.emu-compat.515c7fc.z64', {
       responseType: 'arraybuffer'
     }).then((resp) => {
 
